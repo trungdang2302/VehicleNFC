@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import Util.RmaAPIUtils;
+import model.User;
 import remote.RmaAPIService;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -108,7 +109,8 @@ public class MainActivity extends Activity {
                 }
             }
             buildTagViews(msgs);
-            getServerInfo();
+//            getServerInfo();
+            getUserInfo();
         }
     }
     private void buildTagViews(NdefMessage[] msgs) {
@@ -238,6 +240,26 @@ public class MainActivity extends Activity {
                 Toast.makeText(context, "Failed to Connect to server", Toast.LENGTH_LONG ).show();
             }
         });
+    }
 
+
+    public void getUserInfo(){
+        RmaAPIService mService = RmaAPIUtils.getAPIService();
+
+        mService.getUserById(1).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    User user = response.body();
+                    System.out.println("ccccc");
+                    Toast.makeText(context, user.getPhone()+", " +user.getVehicleNumber(), Toast.LENGTH_LONG ).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Toast.makeText(context, "Failed to Connect to server", Toast.LENGTH_LONG ).show();
+            }
+        });
     }
 }

@@ -46,6 +46,34 @@ INSERT INTO `tbl_meter` VALUES (1,'A4_Quang Trung',10,1);
 UNLOCK TABLES;
 
 --
+-- Table structure for table `tbl_meter_has_tbl_vehicle_type`
+--
+
+DROP TABLE IF EXISTS `tbl_meter_has_tbl_vehicle_type`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_meter_has_tbl_vehicle_type` (
+  `tbl_meter_id` int(11) NOT NULL,
+  `tbl_meter_tbl_meter_status_id` int(11) NOT NULL,
+  `tbl_vehicle_type_id` int(11) NOT NULL,
+  PRIMARY KEY (`tbl_meter_id`,`tbl_meter_tbl_meter_status_id`,`tbl_vehicle_type_id`),
+  KEY `fk_tbl_meter_has_tbl_vehicle_type_tbl_vehicle_type1_idx` (`tbl_vehicle_type_id`),
+  KEY `fk_tbl_meter_has_tbl_vehicle_type_tbl_meter1_idx` (`tbl_meter_id`,`tbl_meter_tbl_meter_status_id`),
+  CONSTRAINT `fk_tbl_meter_has_tbl_vehicle_type_tbl_meter1` FOREIGN KEY (`tbl_meter_id`, `tbl_meter_tbl_meter_status_id`) REFERENCES `tbl_meter` (`id`, `tbl_meter_status_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbl_meter_has_tbl_vehicle_type_tbl_vehicle_type1` FOREIGN KEY (`tbl_vehicle_type_id`) REFERENCES `tbl_vehicle_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_meter_has_tbl_vehicle_type`
+--
+
+LOCK TABLES `tbl_meter_has_tbl_vehicle_type` WRITE;
+/*!40000 ALTER TABLE `tbl_meter_has_tbl_vehicle_type` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_meter_has_tbl_vehicle_type` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tbl_meter_status`
 --
 
@@ -67,33 +95,6 @@ LOCK TABLES `tbl_meter_status` WRITE;
 /*!40000 ALTER TABLE `tbl_meter_status` DISABLE KEYS */;
 INSERT INTO `tbl_meter_status` VALUES (1,'Active'),(2,'De-active');
 /*!40000 ALTER TABLE `tbl_meter_status` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `tbl_meter_status_has_tbl_vehicle_type`
---
-
-DROP TABLE IF EXISTS `tbl_meter_status_has_tbl_vehicle_type`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_meter_status_has_tbl_vehicle_type` (
-  `tbl_meter_status_id` int(11) NOT NULL,
-  `tbl_vehicle_type_id` int(11) NOT NULL,
-  PRIMARY KEY (`tbl_meter_status_id`,`tbl_vehicle_type_id`),
-  KEY `fk_tbl_meter_status_has_tbl_vehicle_type_tbl_vehicle_type1_idx` (`tbl_vehicle_type_id`),
-  KEY `fk_tbl_meter_status_has_tbl_vehicle_type_tbl_meter_status1_idx` (`tbl_meter_status_id`),
-  CONSTRAINT `fk_tbl_meter_status_has_tbl_vehicle_type_tbl_meter_status1` FOREIGN KEY (`tbl_meter_status_id`) REFERENCES `tbl_meter_status` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tbl_meter_status_has_tbl_vehicle_type_tbl_vehicle_type1` FOREIGN KEY (`tbl_vehicle_type_id`) REFERENCES `tbl_vehicle_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tbl_meter_status_has_tbl_vehicle_type`
---
-
-LOCK TABLES `tbl_meter_status_has_tbl_vehicle_type` WRITE;
-/*!40000 ALTER TABLE `tbl_meter_status_has_tbl_vehicle_type` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tbl_meter_status_has_tbl_vehicle_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -226,4 +227,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-09-23 13:34:26
+-- Dump completed on 2018-09-23 14:19:12

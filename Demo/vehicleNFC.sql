@@ -29,7 +29,7 @@ CREATE TABLE `tbl_meter` (
   `location` varchar(255) NOT NULL,
   `price` int(11) DEFAULT NULL,
   `tbl_meter_status_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`,`tbl_meter_status_id`),
+  PRIMARY KEY (`id`),
   KEY `fk_tbl_meter_tbl_meter_status1_idx` (`tbl_meter_status_id`),
   CONSTRAINT `fk_tbl_meter_tbl_meter_status1` FOREIGN KEY (`tbl_meter_status_id`) REFERENCES `tbl_meter_status` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
@@ -54,12 +54,11 @@ DROP TABLE IF EXISTS `tbl_meter_has_tbl_vehicle_type`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_meter_has_tbl_vehicle_type` (
   `tbl_meter_id` int(11) NOT NULL,
-  `tbl_meter_tbl_meter_status_id` int(11) NOT NULL,
   `tbl_vehicle_type_id` int(11) NOT NULL,
-  PRIMARY KEY (`tbl_meter_id`,`tbl_meter_tbl_meter_status_id`,`tbl_vehicle_type_id`),
+  PRIMARY KEY (`tbl_meter_id`,`tbl_vehicle_type_id`),
   KEY `fk_tbl_meter_has_tbl_vehicle_type_tbl_vehicle_type1_idx` (`tbl_vehicle_type_id`),
-  KEY `fk_tbl_meter_has_tbl_vehicle_type_tbl_meter1_idx` (`tbl_meter_id`,`tbl_meter_tbl_meter_status_id`),
-  CONSTRAINT `fk_tbl_meter_has_tbl_vehicle_type_tbl_meter1` FOREIGN KEY (`tbl_meter_id`, `tbl_meter_tbl_meter_status_id`) REFERENCES `tbl_meter` (`id`, `tbl_meter_status_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  KEY `fk_tbl_meter_has_tbl_vehicle_type_tbl_meter1_idx` (`tbl_meter_id`),
+  CONSTRAINT `fk_tbl_meter_has_tbl_vehicle_type_tbl_meter1` FOREIGN KEY (`tbl_meter_id`) REFERENCES `tbl_meter` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbl_meter_has_tbl_vehicle_type_tbl_vehicle_type1` FOREIGN KEY (`tbl_vehicle_type_id`) REFERENCES `tbl_vehicle_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -110,16 +109,16 @@ CREATE TABLE `tbl_transaction` (
   `date_check_out` date NOT NULL,
   `date_ended` date NOT NULL,
   `price` int(11) NOT NULL,
-  `tbl_user_id` int(11) NOT NULL,
   `tbl_meter_id` int(11) NOT NULL,
   `tbl_transaction_status_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`,`tbl_user_id`,`tbl_meter_id`,`tbl_transaction_status_id`),
-  KEY `fk_tbl_transaction_tbl_user_idx` (`tbl_user_id`),
+  `tbl_user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
   KEY `fk_tbl_transaction_tbl_meter1_idx` (`tbl_meter_id`),
   KEY `fk_tbl_transaction_tbl_transaction_status1_idx` (`tbl_transaction_status_id`),
+  KEY `fk_tbl_transaction_tbl_user1_idx` (`tbl_user_id`),
   CONSTRAINT `fk_tbl_transaction_tbl_meter1` FOREIGN KEY (`tbl_meter_id`) REFERENCES `tbl_meter` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbl_transaction_tbl_transaction_status1` FOREIGN KEY (`tbl_transaction_status_id`) REFERENCES `tbl_transaction_status` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tbl_transaction_tbl_user` FOREIGN KEY (`tbl_user_id`) REFERENCES `tbl_user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_tbl_transaction_tbl_user1` FOREIGN KEY (`tbl_user_id`) REFERENCES `tbl_user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -173,7 +172,7 @@ CREATE TABLE `tbl_user` (
   `vehicle_number` varchar(10) NOT NULL,
   `license_plate_id` varchar(10) NOT NULL,
   `tbl_vehicle_type_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`,`tbl_vehicle_type_id`),
+  PRIMARY KEY (`id`),
   UNIQUE KEY `phone_number_UNIQUE` (`phone_number`),
   KEY `fk_tbl_user_tbl_vehicle_type1_idx` (`tbl_vehicle_type_id`),
   CONSTRAINT `fk_tbl_user_tbl_vehicle_type1` FOREIGN KEY (`tbl_vehicle_type_id`) REFERENCES `tbl_vehicle_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -227,4 +226,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-09-23 14:19:12
+-- Dump completed on 2018-09-23 17:17:48

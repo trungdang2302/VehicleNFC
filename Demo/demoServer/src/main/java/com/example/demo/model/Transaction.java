@@ -5,6 +5,8 @@
  */
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -56,12 +58,15 @@ public class Transaction implements Serializable {
     @NotNull
     @Column(name = "price")
     private int price;
+    @JsonIgnore
     @JoinColumn(name = "tbl_meter_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Meter meterId;
+    @JsonIgnore
     @JoinColumn(name = "tbl_transaction_status_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private TransactionStatus transactionStatusId;
+    @JsonIgnore
     @JoinColumn(name = "tbl_user_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private User userId;
@@ -167,7 +172,7 @@ public class Transaction implements Serializable {
 
     @Override
     public String toString() {
-        return "sample.model.Transaction[ id=" + id + " ]";
+        return "sample.model.TransactionRepository[ id=" + id + " ]";
     }
     
 }

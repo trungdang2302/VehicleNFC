@@ -164,11 +164,11 @@ public class User implements Serializable {
 //    }
 //
 //    @XmlTransient
-//    public List<Transaction> getTransactionList() {
+//    public List<TransactionRepository> getTransactionList() {
 //        return transactionList;
 //    }
 //
-//    public void setTransactionList(List<Transaction> transactionList) {
+//    public void setTransactionList(List<TransactionRepository> transactionList) {
 //        this.transactionList = transactionList;
 //    }
 

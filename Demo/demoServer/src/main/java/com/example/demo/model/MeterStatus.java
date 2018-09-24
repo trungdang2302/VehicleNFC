@@ -5,6 +5,8 @@
  */
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
@@ -42,11 +44,13 @@ public class MeterStatus implements Serializable {
     @Size(max = 45)
     @Column(name = "name")
     private String name;
+    @JsonIgnore
     @JoinTable(name = "tbl_meter_status_has_tbl_vehicle_type", joinColumns = {
         @JoinColumn(name = "tbl_meter_status_id", referencedColumnName = "id")}, inverseJoinColumns = {
         @JoinColumn(name = "tbl_vehicle_type_id", referencedColumnName = "id")})
     @ManyToMany
     private List<VehicleType> vehicleTypeList;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "meterStatusId")
     private List<Meter> meterList;
 

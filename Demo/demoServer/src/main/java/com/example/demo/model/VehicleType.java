@@ -5,6 +5,8 @@
  */
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
@@ -40,10 +42,13 @@ public class VehicleType implements Serializable {
     @Size(max = 45)
     @Column(name = "name")
     private String name;
+    @JsonIgnore
     @ManyToMany(mappedBy = "vehicleTypeList")
     private List<MeterStatus> meterStatusList;
+    @JsonIgnore
     @ManyToMany(mappedBy = "vehicleTypeList")
     private List<Meter> meterList;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "vehicleTypeId")
     private List<User> userList;
 

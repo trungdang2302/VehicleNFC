@@ -95,31 +95,31 @@ public class Meter implements Serializable {
         this.price = price;
     }
 
-    @XmlTransient
-    public List<VehicleType> getVehicleTypeList() {
-        return vehicleTypeList;
-    }
+//    @XmlTransient
+//    public List<VehicleType> getVehicleTypeList() {
+//        return vehicleTypeList;
+//    }
 
-    public void setVehicleTypeList(List<VehicleType> vehicleTypeList) {
-        this.vehicleTypeList = vehicleTypeList;
-    }
+//    public void setVehicleTypeList(List<VehicleType> vehicleTypeList) {
+//        this.vehicleTypeList = vehicleTypeList;
+//    }
+//
+//    public MeterStatus getMeterStatusId() {
+//        return meterStatusId;
+//    }
 
-    public MeterStatus getMeterStatusId() {
-        return meterStatusId;
-    }
+//    public void setMeterStatusId(MeterStatus meterStatusId) {
+//        this.meterStatusId = meterStatusId;
+//    }
 
-    public void setMeterStatusId(MeterStatus meterStatusId) {
-        this.meterStatusId = meterStatusId;
-    }
+//    @XmlTransient
+//    public List<Transaction> getTransactionList() {
+//        return transactionList;
+//    }
 
-    @XmlTransient
-    public List<Transaction> getTransactionList() {
-        return transactionList;
-    }
-
-    public void setTransactionList(List<Transaction> transactionList) {
-        this.transactionList = transactionList;
-    }
+//    public void setTransactionList(List<Transaction> transactionList) {
+//        this.transactionList = transactionList;
+//    }
 
     @Override
     public int hashCode() {

@@ -5,6 +5,8 @@
  */
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
@@ -39,6 +41,7 @@ public class TransactionStatus implements Serializable {
     @Size(max = 45)
     @Column(name = "name")
     private String name;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "transactionStatusId")
     private List<Transaction> transactionList;
 

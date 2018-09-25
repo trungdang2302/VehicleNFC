@@ -197,8 +197,7 @@ public class MainActivity extends Activity {
 
     @Override
     public void onPause(){
-        super.onPause();
-        WriteModeOff();
+        super.onPause();c''
     }
 
     @Override

@@ -31,9 +31,8 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "tbl_user")
-@XmlRootElement
 public class User implements Serializable {
-    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -69,26 +68,12 @@ public class User implements Serializable {
     @Size(min = 1, max = 10)
     @Column(name = "license_plate_id")
     private String licensePlateId;
+
     @JoinColumn(name = "tbl_vehicle_type_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private VehicleType vehicleTypeId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
-    private List<Transaction> transactionList;
 
     public User() {
-    }
-
-    public User(Integer id) {
-        this.id = id;
-    }
-
-    public User(Integer id, String phoneNumber, String password, int money, String vehicleNumber, String licensePlateId) {
-        this.id = id;
-        this.phoneNumber = phoneNumber;
-        this.password = password;
-        this.money = money;
-        this.vehicleNumber = vehicleNumber;
-        this.licensePlateId = licensePlateId;
     }
 
     public Integer getId() {
@@ -155,46 +140,7 @@ public class User implements Serializable {
         this.licensePlateId = licensePlateId;
     }
 
-//    public VehicleType getVehicleTypeId() {
-//        return vehicleTypeId;
-//    }
-//
-//    public void setVehicleTypeId(VehicleType vehicleTypeId) {
-//        this.vehicleTypeId = vehicleTypeId;
-//    }
-//
-//    @XmlTransient
-//    public List<TransactionRepository> getTransactionList() {
-//        return transactionList;
-//    }
-//
-//    public void setTransactionList(List<TransactionRepository> transactionList) {
-//        this.transactionList = transactionList;
-//    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
+    public VehicleType getVehicleTypeId() {
+        return vehicleTypeId;
     }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof User)) {
-            return false;
-        }
-        User other = (User) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "sample.model.User[ id=" + id + " ]";
-    }
-    
 }

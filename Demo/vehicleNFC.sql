@@ -69,6 +69,7 @@ CREATE TABLE `tbl_meter_has_tbl_vehicle_type` (
 
 LOCK TABLES `tbl_meter_has_tbl_vehicle_type` WRITE;
 /*!40000 ALTER TABLE `tbl_meter_has_tbl_vehicle_type` DISABLE KEYS */;
+INSERT INTO `tbl_meter_has_tbl_vehicle_type` VALUES (1,1),(1,2);
 /*!40000 ALTER TABLE `tbl_meter_has_tbl_vehicle_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -105,9 +106,9 @@ DROP TABLE IF EXISTS `tbl_transaction`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_transaction` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `data_check_in` date NOT NULL,
-  `date_check_out` date NOT NULL,
-  `date_ended` date NOT NULL,
+  `date_check_in` bigint(20) NOT NULL,
+  `date_check_out` bigint(20) DEFAULT NULL,
+  `date_ended` bigint(20) NOT NULL,
   `price` int(11) NOT NULL,
   `tbl_meter_id` int(11) NOT NULL,
   `tbl_transaction_status_id` int(11) NOT NULL,
@@ -119,7 +120,7 @@ CREATE TABLE `tbl_transaction` (
   CONSTRAINT `fk_tbl_transaction_tbl_meter1` FOREIGN KEY (`tbl_meter_id`) REFERENCES `tbl_meter` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbl_transaction_tbl_transaction_status1` FOREIGN KEY (`tbl_transaction_status_id`) REFERENCES `tbl_transaction_status` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbl_transaction_tbl_user1` FOREIGN KEY (`tbl_user_id`) REFERENCES `tbl_user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -128,6 +129,7 @@ CREATE TABLE `tbl_transaction` (
 
 LOCK TABLES `tbl_transaction` WRITE;
 /*!40000 ALTER TABLE `tbl_transaction` DISABLE KEYS */;
+INSERT INTO `tbl_transaction` VALUES (1,20180924000000,20180924000000,20180924000000,177,1,1,1),(22,1537803359567,NULL,1537803359567,10,1,1,1),(23,1537803443443,NULL,1537803443443,10,1,1,1),(24,1537803937279,NULL,1537803937279,10,1,1,1),(25,1537804894117,NULL,1537804894117,10,1,1,1),(26,1537848270219,NULL,1537848270219,10,1,1,1),(27,1537849808029,NULL,1537849808029,10,1,1,1),(28,1537854238743,NULL,1537854238743,10,1,1,1);
 /*!40000 ALTER TABLE `tbl_transaction` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -226,4 +228,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-09-23 17:17:48
+-- Dump completed on 2018-09-25 21:49:08

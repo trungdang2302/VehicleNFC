@@ -31,9 +31,8 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "tbl_vehicle_type")
-@XmlRootElement
 public class VehicleType implements Serializable {
-    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -42,15 +41,6 @@ public class VehicleType implements Serializable {
     @Size(max = 45)
     @Column(name = "name")
     private String name;
-    @JsonIgnore
-    @ManyToMany(mappedBy = "vehicleTypeList")
-    private List<MeterStatus> meterStatusList;
-    @JsonIgnore
-    @ManyToMany(mappedBy = "vehicleTypeList")
-    private List<Meter> meterList;
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "vehicleTypeId")
-    private List<User> userList;
 
     public VehicleType() {
     }
@@ -74,57 +64,4 @@ public class VehicleType implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-
-    @XmlTransient
-    public List<MeterStatus> getMeterStatusList() {
-        return meterStatusList;
-    }
-
-    public void setMeterStatusList(List<MeterStatus> meterStatusList) {
-        this.meterStatusList = meterStatusList;
-    }
-
-    @XmlTransient
-    public List<Meter> getMeterList() {
-        return meterList;
-    }
-
-    public void setMeterList(List<Meter> meterList) {
-        this.meterList = meterList;
-    }
-
-    @XmlTransient
-    public List<User> getUserList() {
-        return userList;
-    }
-
-    public void setUserList(List<User> userList) {
-        this.userList = userList;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof VehicleType)) {
-            return false;
-        }
-        VehicleType other = (VehicleType) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "sample.model.VehicleType[ id=" + id + " ]";
-    }
-    
 }

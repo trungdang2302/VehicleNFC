@@ -33,9 +33,8 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "tbl_meter")
-@XmlRootElement
 public class Meter implements Serializable {
-    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -48,29 +47,19 @@ public class Meter implements Serializable {
     private String location;
     @Column(name = "price")
     private Integer price;
+
     @JoinTable(name = "tbl_meter_has_tbl_vehicle_type", joinColumns = {
         @JoinColumn(name = "tbl_meter_id", referencedColumnName = "id")}, inverseJoinColumns = {
         @JoinColumn(name = "tbl_vehicle_type_id", referencedColumnName = "id")})
     @ManyToMany
     private List<VehicleType> vehicleTypeList;
+
     @JoinColumn(name = "tbl_meter_status_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private MeterStatus meterStatusId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "meterId")
-    private List<Transaction> transactionList;
 
     public Meter() {
     }
-
-    public Meter(Integer id) {
-        this.id = id;
-    }
-
-    public Meter(Integer id, String location) {
-        this.id = id;
-        this.location = location;
-    }
-
     public Integer getId() {
         return id;
     }
@@ -95,55 +84,11 @@ public class Meter implements Serializable {
         this.price = price;
     }
 
-//    @XmlTransient
-//    public List<VehicleType> getVehicleTypeList() {
-//        return vehicleTypeList;
-//    }
-
-//    public void setVehicleTypeList(List<VehicleType> vehicleTypeList) {
-//        this.vehicleTypeList = vehicleTypeList;
-//    }
-//
-//    public MeterStatus getMeterStatusId() {
-//        return meterStatusId;
-//    }
-
-//    public void setMeterStatusId(MeterStatus meterStatusId) {
-//        this.meterStatusId = meterStatusId;
-//    }
-
-//    @XmlTransient
-//    public List<Transaction> getTransactionList() {
-//        return transactionList;
-//    }
-
-//    public void setTransactionList(List<Transaction> transactionList) {
-//        this.transactionList = transactionList;
-//    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
+    public MeterStatus getMeterStatusId() {
+        return meterStatusId;
     }
 
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Meter)) {
-            return false;
-        }
-        Meter other = (Meter) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+    public List<VehicleType> getVehicleTypeList(){
+        return  vehicleTypeList;
     }
-
-    @Override
-    public String toString() {
-        return "sample.model.Meter[ id=" + id + " ]";
-    }
-    
 }

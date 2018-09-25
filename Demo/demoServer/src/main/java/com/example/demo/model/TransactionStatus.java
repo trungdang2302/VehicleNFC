@@ -30,9 +30,8 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "tbl_transaction_status")
-@XmlRootElement
 public class TransactionStatus implements Serializable {
-    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -41,15 +40,8 @@ public class TransactionStatus implements Serializable {
     @Size(max = 45)
     @Column(name = "name")
     private String name;
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "transactionStatusId")
-    private List<Transaction> transactionList;
 
     public TransactionStatus() {
-    }
-
-    public TransactionStatus(Integer id) {
-        this.id = id;
     }
 
     public Integer getId() {
@@ -67,39 +59,4 @@ public class TransactionStatus implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-
-    @XmlTransient
-    public List<Transaction> getTransactionList() {
-        return transactionList;
-    }
-
-    public void setTransactionList(List<Transaction> transactionList) {
-        this.transactionList = transactionList;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof TransactionStatus)) {
-            return false;
-        }
-        TransactionStatus other = (TransactionStatus) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "sample.model.TransactionStatus[ id=" + id + " ]";
-    }
-    
 }

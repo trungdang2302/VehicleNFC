@@ -33,9 +33,8 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "tbl_meter_status")
-@XmlRootElement
 public class MeterStatus implements Serializable {
-    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -44,23 +43,9 @@ public class MeterStatus implements Serializable {
     @Size(max = 45)
     @Column(name = "name")
     private String name;
-    @JsonIgnore
-    @JoinTable(name = "tbl_meter_status_has_tbl_vehicle_type", joinColumns = {
-        @JoinColumn(name = "tbl_meter_status_id", referencedColumnName = "id")}, inverseJoinColumns = {
-        @JoinColumn(name = "tbl_vehicle_type_id", referencedColumnName = "id")})
-    @ManyToMany
-    private List<VehicleType> vehicleTypeList;
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "meterStatusId")
-    private List<Meter> meterList;
 
     public MeterStatus() {
     }
-
-    public MeterStatus(Integer id) {
-        this.id = id;
-    }
-
     public Integer getId() {
         return id;
     }
@@ -76,48 +61,30 @@ public class MeterStatus implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-
-    @XmlTransient
-    public List<VehicleType> getVehicleTypeList() {
-        return vehicleTypeList;
-    }
-
-    public void setVehicleTypeList(List<VehicleType> vehicleTypeList) {
-        this.vehicleTypeList = vehicleTypeList;
-    }
-
-    @XmlTransient
-    public List<Meter> getMeterList() {
-        return meterList;
-    }
-
-    public void setMeterList(List<Meter> meterList) {
-        this.meterList = meterList;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof MeterStatus)) {
-            return false;
-        }
-        MeterStatus other = (MeterStatus) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "sample.model.MeterStatus[ id=" + id + " ]";
-    }
-    
+//
+//    @Override
+//    public int hashCode() {
+//        int hash = 0;
+//        hash += (id != null ? id.hashCode() : 0);
+//        return hash;
+//    }
+//
+//    @Override
+//    public boolean equals(Object object) {
+//        // TODO: Warning - this method won't work in the case the id fields are not set
+//        if (!(object instanceof MeterStatus)) {
+//            return false;
+//        }
+//        MeterStatus other = (MeterStatus) object;
+//        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+//            return false;
+//        }
+//        return true;
+//    }
+//
+//    @Override
+//    public String toString() {
+//        return "sample.model.MeterStatus[ id=" + id + " ]";
+//    }
+//
 }

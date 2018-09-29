@@ -143,4 +143,8 @@ public class User implements Serializable {
     public VehicleType getVehicleTypeId() {
         return vehicleTypeId;
     }
+
+    public void setVehicleTypeId(VehicleType vehicleTypeId) {
+        this.vehicleTypeId = vehicleTypeId;
+    }
 }

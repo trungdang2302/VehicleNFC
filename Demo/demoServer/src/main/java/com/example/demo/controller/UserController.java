@@ -37,13 +37,13 @@ public class UserController {
 
     @GetMapping(value = "/getUser")
     public ModelAndView userPage1(ModelAndView mav) {
-        mav.setViewName("user");
+        mav.setViewName("create-user");
         return mav;
     }
 
     @PostMapping(value = "/create-user")
     public String createUser(@ModelAttribute("user") User user) {
-        ModelAndView mav = new ModelAndView("user");
+        ModelAndView mav = new ModelAndView("create-user");
         String hashedID = "";
         // Cần đoạn lấy thông tin xe
        Optional<VehicleType> vehicleTypeOptional = vehicleTypeService.getVehicleTypeById(1);

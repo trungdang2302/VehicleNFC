@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.Config.PaginationEnum;
+import com.example.demo.Config.SearchCriteria;
 import com.example.demo.model.User;
 import com.example.demo.model.VehicleType;
 import com.example.demo.service.UserService;
@@ -9,7 +10,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.ResponseEntity.status;
@@ -73,5 +79,26 @@ public class UserController {
     public ModelAndView home(ModelAndView mav) {
         mav.setViewName("index");
         return mav;
+    }
+
+    @GetMapping("/search-user")
+    public ResponseEntity<List<User>> searchUser(@RequestParam(value = "search", required = false) String search) {
+        List<SearchCriteria> params = new ArrayList<SearchCriteria>();
+        if (search != null) {
+            Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
+            Matcher matcher = pattern.matcher(search + ",");
+            while (matcher.find()) {
+                params.add(new SearchCriteria(matcher.group(1),
+                        matcher.group(2), matcher.group(3)));
+            }
+            System.out.println("PArams: "+search);
+            for (SearchCriteria criteria: params) {
+                System.out.println("Key: "+criteria.getKey());
+                System.out.println("Operation: "+criteria.getOperation());
+                System.out.println("Value: "+criteria.getValue());
+            }
+        }
+
+        return ResponseEntity.status(OK).body(userService.searchUser(params));
     }
 }

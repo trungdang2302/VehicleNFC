@@ -1,16 +1,14 @@
 package com.example.demo.controller;
 
+import com.example.demo.Config.PaginationEnum;
 import com.example.demo.model.User;
 import com.example.demo.model.VehicleType;
-import com.example.demo.repository.VehicleTypeRepository;
 import com.example.demo.service.UserService;
 import com.example.demo.service.VehicleTypeService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.util.Base64;
 import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.OK;
@@ -28,37 +26,52 @@ public class UserController {
         this.vehicleTypeService = vehicleTypeService;
     }
 
-    @GetMapping(value = {"/{id}"})
-    public ResponseEntity<Optional<User>> getUserById(@PathVariable("id") String userId){
-        Integer id = Integer.parseInt(userId);
+    @GetMapping(value = {"/getUser/{id}"})
+    public ResponseEntity<Optional<User>> getUserById(@PathVariable("id") Integer id) {
         System.out.println("getting user info...");
         return status(OK).body(userService.getUserById(id));
     }
 
-    @GetMapping(value = "/getUser")
-    public ModelAndView userPage1(ModelAndView mav) {
-        mav.setViewName("create-user");
-        return mav;
-    }
-
     @PostMapping(value = "/create-user")
-    public String createUser(@ModelAttribute("user") User user) {
-        ModelAndView mav = new ModelAndView("create-user");
+    public String createUser(User user) {
         String hashedID = "";
         // Cần đoạn lấy thông tin xe
-       Optional<VehicleType> vehicleTypeOptional = vehicleTypeService.getVehicleTypeById(1);
+        Optional<VehicleType> vehicleTypeOptional = vehicleTypeService.getVehicleTypeById(user.getVehicleTypeId().getId());
 
-       if (vehicleTypeOptional.isPresent()) {
-           VehicleType vehicleType =  vehicleTypeOptional.get();
-           user.setVehicleTypeId(vehicleType);
-           userService.createUser(user);
-       }
-       Optional<User> userOptional = userService.getUserByPhone(user.getPhoneNumber());
-       if (userOptional.isPresent()) {
-           User userDB = userOptional.get();
-           int userId = userDB.getId();
-          hashedID = userService.hashID(userId);
-       }
+        if (vehicleTypeOptional.isPresent()) {
+            VehicleType vehicleType = vehicleTypeOptional.get();
+            user.setVehicleTypeId(vehicleType);
+            userService.createUser(user);
+        }
+        Optional<User> userOptional = userService.getUserByPhone(user.getPhoneNumber());
+        if (userOptional.isPresent()) {
+            User userDB = userOptional.get();
+            int userId = userDB.getId();
+            hashedID = userService.hashID(userId);
+        }
         return hashedID;
+    }
+
+    @PostMapping("/save-user")
+    public String updateUser(User user) {
+        userService.updateUser(user);
+        return "Success";
+    }
+
+    @PostMapping("/delete-user/{id}")
+    public String deleteUser(Integer id) {
+        userService.deleteUser(id);
+        return "Success";
+    }
+    //    JsonPagination
+    @GetMapping("/get-users-json")
+    public ResponseEntity<Page<User>> getUsers(@RequestParam(defaultValue = "0") Integer page) {
+        return ResponseEntity.status(OK).body(userService.getAllUser(page, PaginationEnum.userPageSize.getNumberOfRows()));
+    }
+
+    @GetMapping("/get-user")
+    public ModelAndView home(ModelAndView mav) {
+        mav.setViewName("index");
+        return mav;
     }
 }

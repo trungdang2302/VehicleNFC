@@ -151,9 +151,9 @@ function emptyPaginationLi() {
     $('#pagination').empty();
 }
 
-function loadData(data) {
+function loadData(res) {
     var content = "";
-    content = data.content;
+    content = res.data;
     var row = "";
     for (i = 0; i < content.length; i++) {
         row = '<tr>';
@@ -172,12 +172,12 @@ function loadData(data) {
         $('#user-table tbody').append(row);
     }
 
-    var pageNumber = data.pageable.pageNumber;
+    var pageNumber = res.pageNumber;
     console.log("page: " + pageNumber);
-    console.log("Total Page: " + data.totalPages);
+    console.log("Total Page: " + res.totalPages);
     var currentPage;
     var li = "";
-    for (currentPage = 0; currentPage <= data.totalPages - 1; currentPage++) {
+    for (currentPage = 0; currentPage <= res.totalPages - 1; currentPage++) {
         if (currentPage === pageNumber) {
             li = '<li class="nav-item active">\n' +
                 '<a href="#" class="nav-link" onclick="getUserByPageNumber(' + currentPage + ')">' + currentPage + '</a>\n' +

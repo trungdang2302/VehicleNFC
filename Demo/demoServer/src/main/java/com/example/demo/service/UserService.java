@@ -9,6 +9,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -57,8 +59,9 @@ public class UserService {
     }
 
     public void deleteUser(Integer id) {
-         userRepository.deleteById(id);
+        userRepository.deleteById(id);
     }
+
     public String hashID(Integer id) {
         ByteBuffer b = ByteBuffer.allocate(4);
         //b.order(ByteOrder.BIG_ENDIAN); // optional, the initial order of a byte buffer is always BIG_ENDIAN.
@@ -101,6 +104,34 @@ public class UserService {
 
         List<User> result = entityManager.createQuery(query).getResultList();
         return result;
+    }
+
+    public List<User> getUsers(int pagNumber, int pageSize) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
+        Root<User> from = criteriaQuery.from(User.class);
+
+        CriteriaQuery<User> select = criteriaQuery.select(from);
+        TypedQuery<User> typedQuery = entityManager.createQuery(select);
+//        Long count = getTotalUsers();
+//        while(pagNumber < count.intValue()) {
+            typedQuery.setFirstResult(pagNumber * pageSize);
+            typedQuery.setMaxResults(pageSize);
+//            pagNumber += pageSize;
+//        }
+        List<User> listUsers = typedQuery.getResultList();
+        return listUsers;
+    }
+
+    public Long getTotalUsers(int pageSize) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> countQuery = criteriaBuilder
+                .createQuery(Long.class);
+        countQuery.select(criteriaBuilder.count(
+                countQuery.from(User.class)));
+        Long count = entityManager.createQuery(countQuery)
+                .getSingleResult();
+        return (long) (count/pageSize)+1;
     }
 
 }

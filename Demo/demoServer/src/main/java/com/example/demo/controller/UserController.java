@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.Config.PaginationEnum;
+import com.example.demo.Config.ResponseObject;
 import com.example.demo.Config.SearchCriteria;
 import com.example.demo.model.User;
 import com.example.demo.model.VehicleType;
@@ -71,8 +72,14 @@ public class UserController {
     }
     //    JsonPagination
     @GetMapping("/get-users-json")
-    public ResponseEntity<Page<User>> getUsers(@RequestParam(defaultValue = "0") Integer page) {
-        return ResponseEntity.status(OK).body(userService.getAllUser(page, PaginationEnum.userPageSize.getNumberOfRows()));
+    public ResponseEntity<ResponseObject> getUsers(@RequestParam(defaultValue = "0") Integer page) {
+//        return ResponseEntity.status(OK).body(userService.getAllUser(page, PaginationEnum.userPageSize.getNumberOfRows()));
+        List<User> listUser = userService.getUsers(page, PaginationEnum.userPageSize.getNumberOfRows());
+        ResponseObject response = new ResponseObject();
+        response.setData(listUser);
+        response.setPageNumber(page);
+        response.setTotalPages(userService.getTotalUsers(PaginationEnum.userPageSize.getNumberOfRows()).intValue());
+        return ResponseEntity.status(OK).body(response);
     }
 
     @GetMapping("/get-user")
@@ -82,7 +89,8 @@ public class UserController {
     }
 
     @GetMapping("/search-user")
-    public ResponseEntity<List<User>> searchUser(@RequestParam(value = "search", required = false) String search) {
+    public ResponseEntity<List<User>> searchUser(@RequestParam(value = "search", required = false) String search
+            , @RequestParam(value = "page", required = false, defaultValue = "0") Integer page) {
         List<SearchCriteria> params = new ArrayList<SearchCriteria>();
         if (search != null) {
             Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");

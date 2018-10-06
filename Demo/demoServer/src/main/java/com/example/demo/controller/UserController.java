@@ -88,25 +88,10 @@ public class UserController {
         return mav;
     }
 
-    @GetMapping("/search-user")
-    public ResponseEntity<List<User>> searchUser(@RequestParam(value = "search", required = false) String search
-            , @RequestParam(value = "page", required = false, defaultValue = "0") Integer page) {
-        List<SearchCriteria> params = new ArrayList<SearchCriteria>();
-        if (search != null) {
-            Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
-            Matcher matcher = pattern.matcher(search + ",");
-            while (matcher.find()) {
-                params.add(new SearchCriteria(matcher.group(1),
-                        matcher.group(2), matcher.group(3)));
-            }
-            System.out.println("PArams: "+search);
-            for (SearchCriteria criteria: params) {
-                System.out.println("Key: "+criteria.getKey());
-                System.out.println("Operation: "+criteria.getOperation());
-                System.out.println("Value: "+criteria.getValue());
-            }
-        }
-
-        return ResponseEntity.status(OK).body(userService.searchUser(params));
+    @PostMapping("/search-user")
+    public ResponseEntity<ResponseObject> searchUser(@RequestBody SearchCriteria params
+            , @RequestParam(defaultValue = "0") Integer page) {
+        return ResponseEntity.status(OK).body(userService.searchUser
+                (params,page, PaginationEnum.userPageSize.getNumberOfRows() ));
     }
 }

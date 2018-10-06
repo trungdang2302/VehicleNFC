@@ -11,6 +11,17 @@
         <div class="panel-heading">
             <button class="btn btn-success" id="newBtn" onclick="loadCreateModal()" name="New" value="New">New</button>
         </div>
+        <div class="panel-heading">
+
+            <form action="search-user" id="search-box" method="post">
+                <select id="search-filter" style="float: left;">
+                    <option value="lastName" selected="selected">Search By LastName</option>
+                    <option value="licensePlateId">Search By License Plate</option>
+                </select>
+                <input type="text" class="form-control" id="searchValue" name="searchValue" value="" style="width: 50%; float: left;"/>
+                <button class="btn btn-primary" id="searchBtn" name="Search" value="Search">Search</button>
+            </form>
+        </div>
         <div class="panel-body">
             <table class="table table-hover" id="user-table">
                 <thead>
@@ -40,7 +51,7 @@
 </ul>
 
 <div class="myForm">
-    <form action="save-user" id="save-user-form" method="post">
+    <form action="save-user" id="save-user-form" method="GET">
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
              aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">

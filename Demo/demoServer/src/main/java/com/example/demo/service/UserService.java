@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.Config.ResponseObject;
 import com.example.demo.Config.SearchCriteria;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
@@ -52,9 +53,9 @@ public class UserService {
     }
 
     public Page<User> getAllUser(Integer page, Integer numOfRows) {
-        List<SearchCriteria> params = new ArrayList<>();
-        params.add(new SearchCriteria("lastName", ":", "mai"));
-        searchUser(params);
+//        List<SearchCriteria> params = new ArrayList<>();
+//        params.add(new SearchCriteria("lastName", ":", "mai"));
+//        searchUser(params);
         return userRepository.findAll(new PageRequest(page, numOfRows));
     }
 
@@ -73,37 +74,43 @@ public class UserService {
     @Autowired
     private EntityManager entityManager;
 
-    public List<User> searchUser(List<SearchCriteria> params) {
+    public ResponseObject searchUser(SearchCriteria param, int pagNumber, int pageSize) {
+        ResponseObject responseObject = new ResponseObject();
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<User> query = builder.createQuery(User.class);
         Root r = query.from(User.class);
 
         Predicate predicate = builder.conjunction();
 
-        for (SearchCriteria param : params) {
-            if (param.getOperation().equalsIgnoreCase(">")) {
+        if (param.getOperation().equalsIgnoreCase(">")) {
+            predicate = builder.and(predicate,
+                    builder.greaterThanOrEqualTo(r.get(param.getKey()),
+                            param.getValue().toString()));
+        } else if (param.getOperation().equalsIgnoreCase("<")) {
+            predicate = builder.and(predicate,
+                    builder.lessThanOrEqualTo(r.get(param.getKey()),
+                            param.getValue().toString()));
+        } else if (param.getOperation().equalsIgnoreCase(":")) {
+            if (r.get(param.getKey()).getJavaType() == String.class) {
                 predicate = builder.and(predicate,
-                        builder.greaterThanOrEqualTo(r.get(param.getKey()),
-                                param.getValue().toString()));
-            } else if (param.getOperation().equalsIgnoreCase("<")) {
+                        builder.like(r.get(param.getKey()),
+                                "%" + param.getValue() + "%"));
+            } else {
                 predicate = builder.and(predicate,
-                        builder.lessThanOrEqualTo(r.get(param.getKey()),
-                                param.getValue().toString()));
-            } else if (param.getOperation().equalsIgnoreCase(":")) {
-                if (r.get(param.getKey()).getJavaType() == String.class) {
-                    predicate = builder.and(predicate,
-                            builder.like(r.get(param.getKey()),
-                                    "%" + param.getValue() + "%"));
-                } else {
-                    predicate = builder.and(predicate,
-                            builder.equal(r.get(param.getKey()), param.getValue()));
-                }
+                        builder.equal(r.get(param.getKey()), param.getValue()));
             }
         }
         query.where(predicate);
-
-        List<User> result = entityManager.createQuery(query).getResultList();
-        return result;
+        TypedQuery<User> typedQuery = entityManager.createQuery(query);
+        List<User> result = typedQuery.getResultList();
+        int totalPages = result.size()/pageSize;
+        typedQuery.setFirstResult(pagNumber * pageSize);
+        typedQuery.setMaxResults(pageSize);
+        List<User> userList = typedQuery.getResultList();
+        responseObject.setData(userList);
+        responseObject.setTotalPages(totalPages +1);
+        responseObject.setPageNumber(pagNumber);
+        return responseObject;
     }
 
     public List<User> getUsers(int pagNumber, int pageSize) {

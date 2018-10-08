@@ -33,21 +33,30 @@ public class OrderService {
     }
 
     public Optional<Order> createOrder(User checkInUser, Location location) {
+        //TODO kiểm tra thằng lồn đó có order nào open không để check out
+        //Code here
+        String userToken = checkInUser.getDeviceToken();
+
         OrderStatus orderStatus  = orderStatusRepository.findByName(OrderStatusEnum.Open.getName()).get();
         Order order = new Order();
         order.setOrderStatusId(orderStatus);
-        order.setUserId(userRepository.findById(checkInUser.getId()).get());
+
+        checkInUser = userRepository.findById(checkInUser.getId()).get();
+
+        order.setUserId(checkInUser);
         order.setLocationId(locationRepository.findById(location.getId()).get());
 
+        //TODO kiểm tra thời điểm hiện tại để chọn policy
         Policy policy = order.getLocationId().getPolicyList().get(0);
+
         order.setAllowedParkingFrom(policy.getAllowedParkingFrom());
         order.setAllowedParkingTo(policy.getAllowedParkingTo());
 
-        List<Pricing> pricings = policyHasVehicleTypeRepository.findByPolicyId(policy).get(0).getPricings();
 
 
-//        List<OrderPricing> orderPricings = OrderPricing.convertListPricingToOrderPricing(pricings);
-//        order.setOrderPricings(orderPricings);
+        List<Pricing> pricings =
+                policyHasVehicleTypeRepository.findByPolicyIdAndVehicleTypeId(policy,checkInUser.getVehicleTypeId())
+                .get().getPricings();
 
         orderRepository.save(order);
 
@@ -58,6 +67,10 @@ public class OrderService {
         orderPricingRepository.save(orderPricing);
         }
 
+        //TODO kiểm tra thằng lồn đó xài gì để gửi SMS hay Noti
+        //Code here
+        PushNotificationService pushNotificationService = new PushNotificationService();
+        pushNotificationService.sendNotification(userToken);
 
         return Optional.of(order);
     }

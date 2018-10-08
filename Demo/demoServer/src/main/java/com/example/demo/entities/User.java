@@ -49,6 +49,9 @@ public class User implements Serializable {
     @ManyToOne(optional = false)
     private VehicleType vehicleTypeId;
 
+    @Transient
+    private String deviceToken;
+
     public User() {
     }
 
@@ -122,5 +125,13 @@ public class User implements Serializable {
 
     public void setVehicleTypeId(VehicleType vehicleTypeId) {
         this.vehicleTypeId = vehicleTypeId;
+    }
+
+    public String getDeviceToken() {
+        return deviceToken;
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
     }
 }

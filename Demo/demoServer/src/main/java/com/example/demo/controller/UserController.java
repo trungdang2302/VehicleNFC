@@ -6,6 +6,8 @@ import com.example.demo.model.VehicleType;
 import com.example.demo.service.UserService;
 import com.example.demo.service.VehicleTypeService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -73,5 +75,14 @@ public class UserController {
     public ModelAndView home(ModelAndView mav) {
         mav.setViewName("index");
         return mav;
+    }
+
+    @PostMapping(value = "/login")
+    public ResponseEntity<Optional<User>> create(@Param("phone") String phone, @Param("password") String password) {
+        Optional<User> result = userService.login(phone, password);
+        if (result != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 }

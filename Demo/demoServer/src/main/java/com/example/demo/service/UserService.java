@@ -103,4 +103,7 @@ public class UserService {
         return result;
     }
 
+    public Optional<User> login(String phone, String password) {
+        return userRepository.findByPhoneNumberAndPassword(phone, password);
+    }
 }

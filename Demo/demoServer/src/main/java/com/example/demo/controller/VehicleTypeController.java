@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.VehicleType;
+import com.example.demo.entities.VehicleType;
 import com.example.demo.service.VehicleTypeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,4 +31,5 @@ public class VehicleTypeController {
     public ResponseEntity<List<VehicleType>> getAllVehicleTypes() {
         return ResponseEntity.status(HttpStatus.OK).body(vehicleTypeService.getAllVehicleTypes());
     }
+
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Optional;
 
@@ -26,4 +27,10 @@ public class MeterController {
         System.out.println("Getting meter info...");
         return ResponseEntity.status(HttpStatus.OK).body(meterService.getMeterById(id));
     }
+
+//    @GetMapping("/get-meters")
+//    public ModelAndView getAllMeters(ModelAndView mav) {
+//        mav.setViewName("meter-management");
+//        return mav;
+//    }
 }

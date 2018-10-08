@@ -11,6 +11,9 @@ public class SearchCriteria {
         this.value = value;
     }
 
+    public SearchCriteria() {
+    }
+
     public String getKey() {
         return key;
     }

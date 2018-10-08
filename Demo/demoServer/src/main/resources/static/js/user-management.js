@@ -45,7 +45,7 @@ function submitDeleteUserForm() {
         e.preventDefault();
         $.ajax({
             type: deleteFrm.attr('method'),
-            url: deleteFrm.attr('action')+'/'+id,
+            // url: deleteFrm.attr('action')+'/'+id,
             url: 'http://localhost:8080/user/delete-user/'+id,
             data: deleteFrm.serialize(),
             success: function (data) {
@@ -151,9 +151,9 @@ function emptyPaginationLi() {
     $('#pagination').empty();
 }
 
-function loadData(data) {
+function loadData(res) {
     var content = "";
-    content = data.content;
+    content = res.data;
     var row = "";
     for (i = 0; i < content.length; i++) {
         row = '<tr>';
@@ -172,21 +172,21 @@ function loadData(data) {
         $('#user-table tbody').append(row);
     }
 
-    var pageNumber = data.pageable.pageNumber;
+    var pageNumber = res.pageNumber;
     console.log("page: " + pageNumber);
-    console.log("Total Page: " + data.totalPages);
+    console.log("Total Page: " + res.totalPages);
     var currentPage;
     var li = "";
-    for (currentPage = 0; currentPage <= data.totalPages - 1; currentPage++) {
+    for (currentPage = 0; currentPage <= res.totalPages - 1; currentPage++) {
         if (currentPage === pageNumber) {
             li = '<li class="nav-item active">\n' +
-                '<a href="#" class="nav-link" onclick="getUserByPageNumber(' + currentPage + ')">' + currentPage + '</a>\n' +
+                '<a href="#" class="nav-link" onclick="searchUser(' + currentPage + ')">' + currentPage + '</a>\n' +
                 '</li>';
             $('#pagination').append(li);
         } else {
 
             li = '<li class="nav-item">\n' +
-                '<a href="#" class="nav-link" onclick="getUserByPageNumber(' + currentPage + ')">\n' +
+                '<a href="#" class="nav-link" onclick="searchUser(' + currentPage + ')">\n' +
                 +currentPage + '</a>\n' +
                 '</li>';
             $('#pagination').append(li);
@@ -228,3 +228,44 @@ $(document).ready(function (e){
     // end sort table headers
 });
 
+$(document).ready(function (e) {
+
+    $('#searchBtn').on('click', function (e) {
+        e.preventDefault();
+        searchUser(0);
+    });
+});
+function searchUser(pageNumber) {
+    var url = "http://localhost:8080/user/search-user";
+    if (pageNumber != null) {
+        url = url+"?page="+pageNumber;
+    }
+        var vehicleType = $('#search-filter option:selected').val();
+        var searchValue =  $('#searchValue').val();
+        console.log("Search By: "+vehicleType);
+        console.log("SearchValue: "+searchValue);
+
+        var filterObject = createSearchObject(vehicleType, ":", searchValue);
+        $.ajax({
+            type:'POST',
+            url: url,
+            dataType:"json",
+            contentType: 'application/json',
+            data: JSON.stringify(filterObject),
+            success:function(response){
+                emptyTable();
+                emptyPaginationLi();
+                loadData(response);
+                console.log(response);
+            }
+        });
+}
+
+function createSearchObject(key, operation, value) {
+    var obj = {
+        key: key,
+        operation: operation,
+        value: value
+    };
+    return obj;
+}

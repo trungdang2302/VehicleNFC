@@ -36,4 +36,6 @@ public class PolicyHasVehicleTypeController {
     public ResponseEntity<List<PolicyHasTblVehicleType>> getByListPolicy(@RequestBody List<Policy> policyList) {
         return ResponseEntity.status(HttpStatus.OK).body(policyHasVehicleTypeService.findByPolicyList(policyList));
     }
+
+
 }

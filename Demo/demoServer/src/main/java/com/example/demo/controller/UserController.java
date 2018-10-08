@@ -99,7 +99,7 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
-    
+
     @PostMapping("/search-user")
     public ResponseEntity<ResponseObject> searchUser(@RequestBody SearchCriteria params
             , @RequestParam(defaultValue = "0") Integer page) {

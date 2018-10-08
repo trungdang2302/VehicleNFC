@@ -1,5 +1,7 @@
 package com.example.demo.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -21,22 +23,28 @@ public class Order implements Serializable {
     @Column(name = "check_in_date")
     private long checkInDate;
     @Column(name = "check_out_date")
-    private BigInteger checkOutDate;
+    private Long checkOutDate;
     @Column(name = "duration")
-    private BigInteger duration;
+    private Long duration;
     @Column(name = "allowed_parking_from")
-    private BigInteger allowedParkingFrom;
+    private Long allowedParkingFrom;
     @Column(name = "allowed_parking_to")
-    private BigInteger allowedParkingTo;
+    private Long allowedParkingTo;
+
     @JoinColumn(name = "tbl_location_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Location locationId;
+
     @JoinColumn(name = "tbl_order_status_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private OrderStatus orderStatusId;
+
     @JoinColumn(name = "tbl_user_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private User userId;
+
+    @Transient
+    private List<OrderPricing> orderPricings;
 
     public Order() {
     }
@@ -65,35 +73,35 @@ public class Order implements Serializable {
         this.checkInDate = checkInDate;
     }
 
-    public BigInteger getCheckOutDate() {
+    public Long getCheckOutDate() {
         return checkOutDate;
     }
 
-    public void setCheckOutDate(BigInteger checkOutDate) {
+    public void setCheckOutDate(Long checkOutDate) {
         this.checkOutDate = checkOutDate;
     }
 
-    public BigInteger getDuration() {
+    public Long getDuration() {
         return duration;
     }
 
-    public void setDuration(BigInteger duration) {
+    public void setDuration(Long duration) {
         this.duration = duration;
     }
 
-    public BigInteger getAllowedParkingFrom() {
+    public Long getAllowedParkingFrom() {
         return allowedParkingFrom;
     }
 
-    public void setAllowedParkingFrom(BigInteger allowedParkingFrom) {
+    public void setAllowedParkingFrom(Long allowedParkingFrom) {
         this.allowedParkingFrom = allowedParkingFrom;
     }
 
-    public BigInteger getAllowedParkingTo() {
+    public Long getAllowedParkingTo() {
         return allowedParkingTo;
     }
 
-    public void setAllowedParkingTo(BigInteger allowedParkingTo) {
+    public void setAllowedParkingTo(Long allowedParkingTo) {
         this.allowedParkingTo = allowedParkingTo;
     }
 
@@ -121,4 +129,12 @@ public class Order implements Serializable {
         this.userId = userId;
     }
 
+
+    public List<OrderPricing> getOrderPricings() {
+        return orderPricings;
+    }
+
+    public void setOrderPricings(List<OrderPricing> orderPricings) {
+        this.orderPricings = orderPricings;
+    }
 }

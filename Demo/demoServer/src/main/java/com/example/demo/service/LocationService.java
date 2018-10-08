@@ -2,9 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.Config.ResponseObject;
 import com.example.demo.entities.Location;
-import com.example.demo.entities.Policy;
-import com.example.demo.entities.PolicyHasTblVehicleType;
-import com.example.demo.model.User;
+
 import com.example.demo.repository.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

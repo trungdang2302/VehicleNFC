@@ -3,6 +3,7 @@ package com.example.demo.entities;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "tbl_policy_has_tbl_vehicle_type")
@@ -18,6 +19,9 @@ public class PolicyHasTblVehicleType implements Serializable {
     @JoinColumn(name = "tbl_vehicle_type_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private VehicleType vehicleTypeId;
+
+    @OneToMany(mappedBy = "policyHasTblVehicleTypeId", cascade = CascadeType.ALL)
+    private List<Pricing> pricings;
 
     public PolicyHasTblVehicleType() {
     }
@@ -44,5 +48,13 @@ public class PolicyHasTblVehicleType implements Serializable {
 
     public void setVehicleTypeId(VehicleType vehicleTypeId) {
         this.vehicleTypeId = vehicleTypeId;
+    }
+
+    public List<Pricing> getPricings() {
+        return pricings;
+    }
+
+    public void setPricings(List<Pricing> pricings) {
+        this.pricings = pricings;
     }
 }

@@ -3,6 +3,8 @@ package com.example.demo.entities;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "tbl_order_pricing")
@@ -24,9 +26,11 @@ public class OrderPricing implements Serializable {
     private double pricePerHour;
     @Column(name = "late_fee_per_hour")
     private Integer lateFeePerHour;
-    @JoinColumn(name = "tbl_order_id", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false)
-    private Order OrderId;
+
+    @NotNull
+    @Column(name = "tbl_order_id", nullable = false)
+    private Integer OrderId;
+
     public OrderPricing() {
     }
 
@@ -70,11 +74,31 @@ public class OrderPricing implements Serializable {
         this.lateFeePerHour = lateFeePerHour;
     }
 
-    public Order getOrderId() {
+    public static List<OrderPricing> convertListPricingToOrderPricing(List<Pricing> pricings) {
+        List<OrderPricing> orderPricings = new ArrayList<>();
+        for (Pricing pricing : pricings
+                ) {
+            orderPricings.add(convertListPricingToOrderPricing(pricing));
+        }
+        return orderPricings;
+    }
+
+    public static OrderPricing convertListPricingToOrderPricing(Pricing pricing) {
+        OrderPricing orderPricing = new OrderPricing();
+
+        orderPricing.setFromHour(pricing.getFromHour());
+        orderPricing.setToHour(pricing.getToHour());
+        orderPricing.setLateFeePerHour(pricing.getLateFeePerHour());
+        orderPricing.setPricePerHour(pricing.getPricePerHour());
+
+        return orderPricing;
+    }
+
+    public Integer getOrderId() {
         return OrderId;
     }
 
-    public void setOrderId(Order orderId) {
+    public void setOrderId(Integer orderId) {
         OrderId = orderId;
     }
 }

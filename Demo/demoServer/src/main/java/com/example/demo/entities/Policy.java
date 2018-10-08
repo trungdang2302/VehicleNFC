@@ -21,8 +21,8 @@ public class Policy implements Serializable {
     @NotNull
     @Column(name = "allowed_parking_to")
     private long allowedParkingTo;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tblPolicyId")
-    private List<PolicyHasTblVehicleType> policyHasTblVehicleTypeList;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "policyId")
+//    private List<PolicyHasTblVehicleType> policyHasTblVehicleTypeList;
 
     public Policy() {
     }
@@ -51,11 +51,11 @@ public class Policy implements Serializable {
         this.allowedParkingTo = allowedParkingTo;
     }
 
-    public List<PolicyHasTblVehicleType> getPolicyHasTblVehicleTypeList() {
-        return policyHasTblVehicleTypeList;
-    }
-
-    public void setPolicyHasTblVehicleTypeList(List<PolicyHasTblVehicleType> policyHasTblVehicleTypeList) {
-        this.policyHasTblVehicleTypeList = policyHasTblVehicleTypeList;
-    }
+//    public List<PolicyHasTblVehicleType> getPolicyHasTblVehicleTypeList() {
+//        return policyHasTblVehicleTypeList;
+//    }
+//
+//    public void setPolicyHasTblVehicleTypeList(List<PolicyHasTblVehicleType> policyHasTblVehicleTypeList) {
+//        this.policyHasTblVehicleTypeList = policyHasTblVehicleTypeList;
+//    }
 }

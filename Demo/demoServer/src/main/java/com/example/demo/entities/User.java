@@ -1,6 +1,5 @@
 package com.example.demo.entities;
 
-import com.example.demo.model.VehicleType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

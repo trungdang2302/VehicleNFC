@@ -45,7 +45,7 @@ function submitDeleteUserForm() {
         e.preventDefault();
         $.ajax({
             type: deleteFrm.attr('method'),
-            url: deleteFrm.attr('action')+'/'+id,
+            // url: deleteFrm.attr('action')+'/'+id,
             url: 'http://localhost:8080/user/delete-user/'+id,
             data: deleteFrm.serialize(),
             success: function (data) {

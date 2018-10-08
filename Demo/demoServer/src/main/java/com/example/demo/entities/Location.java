@@ -25,7 +25,7 @@ public class Location implements Serializable {
             @JoinColumn(name = "tbl_location_id", referencedColumnName = "id")}, inverseJoinColumns = {
             @JoinColumn(name = "tbl_policy_id", referencedColumnName = "id")})
     @ManyToMany
-    private List<Policy> tblPolicyList;
+    private List<Policy> policyList;
 
     public Location() {
     }
@@ -62,11 +62,11 @@ public class Location implements Serializable {
         isActivated = activated;
     }
 
-    public List<Policy> getTblPolicyList() {
-        return tblPolicyList;
+    public List<Policy> getPolicyList() {
+        return policyList;
     }
 
-    public void setTblPolicyList(List<Policy> tblPolicyList) {
-        this.tblPolicyList = tblPolicyList;
+    public void setPolicyList(List<Policy> policyList) {
+        this.policyList = policyList;
     }
 }

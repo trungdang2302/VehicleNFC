@@ -27,4 +27,52 @@ public class Pricing implements Serializable {
     @JoinColumn(name = "tbl_policy_has_tbl_vehicle_type_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private PolicyHasTblVehicleType policyHasTblVehicleTypeId;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public int getFromHour() {
+        return fromHour;
+    }
+
+    public void setFromHour(int fromHour) {
+        this.fromHour = fromHour;
+    }
+
+    public Integer getToHour() {
+        return toHour;
+    }
+
+    public void setToHour(Integer toHour) {
+        this.toHour = toHour;
+    }
+
+    public double getPricePerHour() {
+        return pricePerHour;
+    }
+
+    public void setPricePerHour(double pricePerHour) {
+        this.pricePerHour = pricePerHour;
+    }
+
+    public Integer getLateFeePerHour() {
+        return lateFeePerHour;
+    }
+
+    public void setLateFeePerHour(Integer lateFeePerHour) {
+        this.lateFeePerHour = lateFeePerHour;
+    }
+
+    public PolicyHasTblVehicleType getPolicyHasTblVehicleTypeId() {
+        return policyHasTblVehicleTypeId;
+    }
+
+    public void setPolicyHasTblVehicleTypeId(PolicyHasTblVehicleType policyHasTblVehicleTypeId) {
+        this.policyHasTblVehicleTypeId = policyHasTblVehicleTypeId;
+    }
 }

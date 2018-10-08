@@ -21,7 +21,7 @@ public class Meter implements Serializable {
     @Column(name = "location")
     private String location;
     @Column(name = "price")
-    private Integer price;
+    private Double price;
     @JoinTable(name = "tbl_meter_has_tbl_vehicle_type", joinColumns = {
             @JoinColumn(name = "tbl_meter_id", referencedColumnName = "id")}, inverseJoinColumns = {
             @JoinColumn(name = "tbl_vehicle_type_id", referencedColumnName = "id")})
@@ -50,11 +50,11 @@ public class Meter implements Serializable {
         this.location = location;
     }
 
-    public Integer getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 

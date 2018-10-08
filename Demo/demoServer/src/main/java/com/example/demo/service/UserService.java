@@ -2,7 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.Config.ResponseObject;
 import com.example.demo.Config.SearchCriteria;
-import com.example.demo.model.User;
+import com.example.demo.entities.User;
 import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -103,12 +103,12 @@ public class UserService {
         query.where(predicate);
         TypedQuery<User> typedQuery = entityManager.createQuery(query);
         List<User> result = typedQuery.getResultList();
-        int totalPages = result.size()/pageSize;
+        int totalPages = result.size() / pageSize;
         typedQuery.setFirstResult(pagNumber * pageSize);
         typedQuery.setMaxResults(pageSize);
         List<User> userList = typedQuery.getResultList();
         responseObject.setData(userList);
-        responseObject.setTotalPages(totalPages +1);
+        responseObject.setTotalPages(totalPages + 1);
         responseObject.setPageNumber(pagNumber);
         return responseObject;
     }
@@ -117,15 +117,10 @@ public class UserService {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
         Root<User> from = criteriaQuery.from(User.class);
-
         CriteriaQuery<User> select = criteriaQuery.select(from);
         TypedQuery<User> typedQuery = entityManager.createQuery(select);
-//        Long count = getTotalUsers();
-//        while(pagNumber < count.intValue()) {
-            typedQuery.setFirstResult(pagNumber * pageSize);
-            typedQuery.setMaxResults(pageSize);
-//            pagNumber += pageSize;
-//        }
+        typedQuery.setFirstResult(pagNumber * pageSize);
+        typedQuery.setMaxResults(pageSize);
         List<User> listUsers = typedQuery.getResultList();
         return listUsers;
     }
@@ -138,7 +133,7 @@ public class UserService {
                 countQuery.from(User.class)));
         Long count = entityManager.createQuery(countQuery)
                 .getSingleResult();
-        return (long) (count/pageSize)+1;
+        return (long) (count / pageSize) + 1;
     }
 
 }

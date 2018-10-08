@@ -3,12 +3,13 @@ package com.example.demo.controller;
 import com.example.demo.Config.PaginationEnum;
 import com.example.demo.Config.ResponseObject;
 import com.example.demo.Config.SearchCriteria;
-import com.example.demo.model.User;
-import com.example.demo.model.VehicleType;
+import com.example.demo.entities.User;
+import com.example.demo.entities.VehicleType;
 import com.example.demo.service.UserService;
 import com.example.demo.service.VehicleTypeService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -93,5 +94,11 @@ public class UserController {
             , @RequestParam(defaultValue = "0") Integer page) {
         return ResponseEntity.status(OK).body(userService.searchUser
                 (params,page, PaginationEnum.userPageSize.getNumberOfRows() ));
+    }
+
+    @GetMapping("/admin")
+    public ModelAndView adminPage(ModelAndView mav) {
+        mav.setViewName("admin");
+        return mav;
     }
 }

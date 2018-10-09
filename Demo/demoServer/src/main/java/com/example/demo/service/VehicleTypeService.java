@@ -1,9 +1,10 @@
 package com.example.demo.service;
 
-import com.example.demo.model.VehicleType;
+import com.example.demo.entities.VehicleType;
 import com.example.demo.repository.VehicleTypeRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,5 +17,9 @@ public class VehicleTypeService {
 
     public Optional<VehicleType> getVehicleTypeById(Integer id){
         return vehicleTypeRepository.findById(id);
+    }
+
+    public List<VehicleType> getAllVehicleTypes() {
+        return vehicleTypeRepository.findAll();
     }
 }

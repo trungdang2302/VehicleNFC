@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical"
+    tools:context=".PopMenuActivity">
+
+    <TextView
+        android:id="@+id/popup_lbl_fullname"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:textSize="25dp"
+        android:textColor="#fff"
+        android:text="User name here" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_normal"
+        android:textColor="#fff"
+        android:text="Thông tin cá nhân" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_normal"
+        android:textColor="#fff"
+        android:text="Lịch sử đỗ xe" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_normal"
+        android:textColor="#fff"
+        android:text="Cài đặt" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_normal"
+        android:textColor="#fff"
+        android:text="Đăng xuát" />
+
+    <Button
+        android:id="@+id/btnRent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="payShit"
+        android:text="Go" />
+</LinearLayout>

@@ -16,8 +16,7 @@ public class Pricing implements Serializable {
     @NotNull
     @Column(name = "from_hour", nullable = false)
     private int fromHour;
-    @Column(name = "to_hour")
-    private Integer toHour;
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "price_per_hour", nullable = false)
@@ -42,14 +41,6 @@ public class Pricing implements Serializable {
 
     public void setFromHour(int fromHour) {
         this.fromHour = fromHour;
-    }
-
-    public Integer getToHour() {
-        return toHour;
-    }
-
-    public void setToHour(Integer toHour) {
-        this.toHour = toHour;
     }
 
     public double getPricePerHour() {

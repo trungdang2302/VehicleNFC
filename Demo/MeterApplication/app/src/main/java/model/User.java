@@ -14,63 +14,23 @@ public class User {
     @Expose
     private String id;
 
-    @SerializedName("phone")
+    @SerializedName("deviceToken")
     @Expose
-    private String phone;
-
-    @SerializedName("money")
-    @Expose
-    private String money;
-
-    @SerializedName("firstName")
-    @Expose
-    private String firstName;
-
-    @SerializedName("lastName")
-    @Expose
-    private String lastName;
-
-    @SerializedName("vehicleNumber")
-    @Expose
-    private String vehicleNumber;
-
-    @SerializedName("licensePlateId")
-    @Expose
-    private String licensePlateId;
-
-    @SerializedName("vehicleTypeId")
-    @Expose
-    private VehicleType vehicleType;
+    private String deviceToken;
 
     public String getId() {
         return id;
     }
 
-    public String getPhone() {
-        return phone;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getVehicleNumber() {
-        return vehicleNumber;
+    public String getDeviceToken() {
+        return deviceToken;
     }
 
-    public String getMoney() {
-        return money;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getLicensePlateId() {
-        return licensePlateId;
-    }
-
-    public VehicleType getVehicleType() {
-        return vehicleType;
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
     }
 }

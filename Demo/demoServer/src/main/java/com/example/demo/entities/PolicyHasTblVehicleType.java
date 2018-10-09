@@ -20,7 +20,8 @@ public class PolicyHasTblVehicleType implements Serializable {
     @ManyToOne(optional = false)
     private VehicleType vehicleTypeId;
 
-    @OneToMany(mappedBy = "policyHasTblVehicleTypeId", cascade = CascadeType.ALL)
+//    @OneToMany(mappedBy = "policyHasTblVehicleTypeId", cascade = CascadeType.ALL)
+    @Transient
     private List<Pricing> pricings;
 
     public PolicyHasTblVehicleType() {

@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Đỗ xe với NFC</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="signin_bold"><b>Đăng nhập</b></string>
+    <string name="signun_bold"><b>Tạo tài khoản mới</b></string>
+    <string name="forgetyourpass"><u><i>Quên mật khẩu ?</i></u></string>
+    <string name="parkingwithnfc"><b>Đỗ xe với NFC</b></string>
+    <string name="readycheckin"><b>Sẵn sàng quét NFC</b></string>
+    <string name="verifyphone"><b>Xác minh số điện thoại</b></string>
+    <string name="profile"><b>Thông tin</b></string>
+    <string name="changpass"><u><i>Đổi mật khẩu</i></u></string>
+    <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
+</resources>

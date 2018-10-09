@@ -18,8 +18,7 @@ public class OrderPricing implements Serializable {
     @NotNull
     @Column(name = "from_hour", nullable = false)
     private int fromHour;
-    @Column(name = "to_hour")
-    private Integer toHour;
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "price_per_hour", nullable = false)
@@ -50,14 +49,6 @@ public class OrderPricing implements Serializable {
         this.fromHour = fromHour;
     }
 
-    public Integer getToHour() {
-        return toHour;
-    }
-
-    public void setToHour(Integer toHour) {
-        this.toHour = toHour;
-    }
-
     public double getPricePerHour() {
         return pricePerHour;
     }
@@ -75,10 +66,13 @@ public class OrderPricing implements Serializable {
     }
 
     public static List<OrderPricing> convertListPricingToOrderPricing(List<Pricing> pricings) {
-        List<OrderPricing> orderPricings = new ArrayList<>();
-        for (Pricing pricing : pricings
-                ) {
-            orderPricings.add(convertListPricingToOrderPricing(pricing));
+        List<OrderPricing> orderPricings = null;
+        if (pricings!=null) {
+            orderPricings = new ArrayList<>();
+            for (Pricing pricing : pricings
+                    ) {
+                orderPricings.add(convertListPricingToOrderPricing(pricing));
+            }
         }
         return orderPricings;
     }
@@ -87,7 +81,6 @@ public class OrderPricing implements Serializable {
         OrderPricing orderPricing = new OrderPricing();
 
         orderPricing.setFromHour(pricing.getFromHour());
-        orderPricing.setToHour(pricing.getToHour());
         orderPricing.setLateFeePerHour(pricing.getLateFeePerHour());
         orderPricing.setPricePerHour(pricing.getPricePerHour());
 

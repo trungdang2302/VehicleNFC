@@ -14,7 +14,21 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.UnsupportedEncodingException;
+import java.sql.Timestamp;
+
+import Util.RmaAPIUtils;
+import model.Location;
+import model.Order;
+import model.Transaction;
+import model.User;
+import remote.RmaAPIService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DeviceScanActivity extends AppCompatActivity {
     NfcAdapter nfcAdapter;
@@ -51,7 +65,7 @@ public class DeviceScanActivity extends AppCompatActivity {
                     msgs[i] = (NdefMessage) rawMsgs[i];
                 }
                 buildTagViews(msgs);
-            }else{
+            } else {
                 Toast.makeText(context, "Thiết bị không hợp lệ", Toast.LENGTH_LONG).show();
             }
         }
@@ -67,16 +81,59 @@ public class DeviceScanActivity extends AppCompatActivity {
 
         try {
             // Get the Text
-            text = new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEncoding);
+            text = new String(payload, 0, payload.length, textEncoding);
         } catch (UnsupportedEncodingException e) {
             Log.e("UnsupportedEncoding", e.toString());
+        } catch (StringIndexOutOfBoundsException e) {
+            text = new String(payload);
         }
-        Intent intent = new Intent(this, PaymentActivity.class);
-        intent.putExtra("userId",text);
-        startActivity(intent);
-        finish();
+        Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+//        Intent intent = new Intent(this, PaymentActivity.class);
+//        intent.putExtra("userId",text);
+//        startActivity(intent);
+//        finish();
+        try {
+            JSONObject jsonObj = new JSONObject(text);
+            confirmPayment(jsonObj.getString("userId"),jsonObj.getString("token"));
+
+        }catch (JSONException e){
+            //TODO change
+            Toast.makeText(context, "ha ha good luck", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
+    public void confirmPayment(String userId, String token) {
+        Order order = new Order();
+
+        User user = new User();
+        user.setId(userId);
+        user.setDeviceToken(token);
+
+        Location location = new Location();
+        location.setId("1");
+
+        order.setUser(user);
+
+        order.setLocation(location);
+
+        RmaAPIService mService = RmaAPIUtils.getAPIService();
+        mService.sendTransactionToServer(order).enqueue(new Callback<Order>() {
+            @Override
+            public void onResponse(Call<Order> call, Response<Order> response) {
+                if (response.isSuccessful()) {
+//                    Transaction result = response.body();
+//                    Toast.makeText(context, result.getTransactionStatus().getName(), Toast.LENGTH_LONG).show();
+//                    changeToCompletePaymentView(result);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Order> call, Throwable t) {
+             Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     @Override
     protected void onNewIntent(Intent intent) {

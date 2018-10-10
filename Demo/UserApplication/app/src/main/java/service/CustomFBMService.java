@@ -1,10 +1,19 @@
 package service;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.swomfire.vehicleNFCUser.NFCActivity;
+import com.swomfire.vehicleNFCUser.R;
+
+import model.NotificationSerial;
 
 /**
  * Created by elpsychris on 16/03/2018.
@@ -12,7 +21,6 @@ import com.google.firebase.messaging.RemoteMessage;
 
 public class CustomFBMService extends FirebaseMessagingService {
     private static final String TAG = "MyFirebaseMsgService";
-
 
     @Override
     public void onNewToken(String token) {
@@ -27,9 +35,26 @@ public class CustomFBMService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        System.err.println(remoteMessage.getNotification().getBody());
-    }
+//        Intent intent = new Intent(getApplicationContext(), NFCActivity.class);
+//        intent.putExtra("Notification", NotificationSerial.convertNotiToSerial(remoteMessage.getNotification()));
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        startActivity(intent);
 
+//        String click_action = remoteMessage.getNotification().getClickAction();
+        Intent intent = new Intent(getApplicationContext(), NFCActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_ONE_SHOT);
+        NotificationCompat.Builder builder= new NotificationCompat.Builder(this);
+        builder.setContentTitle("avb");
+        builder.setContentText("cc");
+        builder.setSmallIcon(R.drawable.ic_launcher);
+        builder.setAutoCancel(true);
+        builder.setContentIntent(pendingIntent);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(0,builder.build());
+
+    }
 
 
     private void sendRegistrationToServer(String token) {

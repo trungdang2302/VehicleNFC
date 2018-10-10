@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/welcome"
     tools:context=".WelcomeActivity">
 
 
@@ -26,8 +25,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="350dp"
+                    android:layout_height="270dp"
+                    android:src="@drawable/logo" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -60,9 +64,9 @@
                 android:layout_marginRight="20dp"
                 android:layout_weight="1"
                 android:background="@drawable/btn_normal"
+                android:onClick="toSignIn"
                 android:text="@string/signin_bold"
                 android:textColor="#FFFFFF"
-                android:onClick="toSignIn"
                 android:textSize="18dp" />
         </TableRow>
 
@@ -84,9 +88,9 @@
                 android:layout_marginRight="20dp"
                 android:layout_weight="1"
                 android:background="@drawable/btn_normal"
+                android:onClick="toSignUp"
                 android:text="@string/signun_bold"
                 android:textColor="#FFFFFF"
-                android:onClick="toSignUp"
                 android:textSize="18dp" />
         </TableRow>
 

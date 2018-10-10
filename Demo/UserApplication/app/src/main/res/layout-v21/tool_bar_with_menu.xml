@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/toolbar_min_height"
     android:layout_weight="1"
     android:background="#006699"
     android:padding="10dp"
-    android:orientation="horizontal"
     android:minHeight="50dp">
     <TextView
         android:id="@+id/lbl_toolbar"
@@ -23,4 +22,4 @@
     android:drawableLeft="@android:drawable/ic_menu_sort_by_size"
     android:onClick="popUpMenu"
     />
-</LinearLayout>
+</Toolbar>

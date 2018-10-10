@@ -1,0 +1,14 @@
+.search-button{
+    /*display: inline-block;*/
+    padding: 8px 15px;
+    width: 100px;
+    /*margin-top: 20px;*/
+    float: left;
+    background: #FF5733;
+    text-align: center;
+    color: #fff;
+    border-radius: 2px;
+}
+.search-button:hover{
+    background: #DF4C2D;
+}

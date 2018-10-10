@@ -2,7 +2,6 @@ package com.example.demo.Config;
 
 public enum PaginationEnum {
     userPageSize(1,5);
-
     private int id;
     private int numberOfRows;
 

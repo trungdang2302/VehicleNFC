@@ -21,12 +21,11 @@ public class PolicyController {
         this.policyService = policyService;
     }
     @GetMapping(value = {"/get/{id}"})
-    public ResponseEntity<Optional<Policy>> getPolicyById(@PathVariable("id") Integer id){
-        return ResponseEntity.status(HttpStatus.OK).body(policyService.getPolicyById(id));
+    public ResponseEntity<?> getPolicyById(@PathVariable("id") Integer id){
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(policyService.getPolicyById(id));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not Found Policy");
+        }
     }
-
-//    @GetMapping("/getPolicy-by-Location/{id}")
-//    public ResponseEntity<List<Policy>> getPoliciesByLocationId(@PathVariable("id") Integer locationID) {
-//        return
-//    }
 }

@@ -37,8 +37,20 @@ function loadData(res) {
         }
         row += '<td>' + content[i].userId.lastName + '</td>';
         row += '<td>' + content[i].userId.phoneNumber + '</td>';
-        row += '<td>' + content[i].duration + '</td>';
-        row += '<td>' + content[i].total + '</td>';
+        var duration = "";
+        if (content[i].duration === null) {
+            duration = 0;
+        } else {
+            duration = content[i].duration;
+        }
+        row += '<td>' + msToTime(duration) + '</td>';
+        var total = "";
+        if (content[i].total === null) {
+            total = 0;
+        } else {
+            total = content[i].total;
+        }
+        row += '<td>' + total + '</td>';
         // var orderObject = JSON.stringify(content[i]);
         // row += '<td><a href="#" onclick="viewPricingDetail(' + orderObject + ')" class="btn btn-primary viewBtn">View Detail</a></td>';
         row += '<td><a href="#" onclick="viewPricingDetail(' + content[i].id + ')" class="btn btn-primary viewBtn">View Detail</a></td>'
@@ -137,8 +149,20 @@ function viewPricingDetail(orderId) {
                 row += '</tr>';
                 $('#orderPricings tbody').append(row);
             }
-            $('.myForm #duration').text(msToTime(order.duration));
-            $('.myForm #total').text(order.total);
+            var duration = "";
+            if (order.duration === null) {
+                duration = 0;
+            } else {
+                duration = order.duration;
+            }
+            $('.myForm #duration').text(msToTime(duration));
+            var total = "";
+            if (order.total === null) {
+                total = 0;
+            } else {
+                total = order.total;
+            }
+            $('.myForm #total').text(total);
             $('.myForm #vehicleTypeId').text(order.userId.vehicleTypeId.name);
         }, error: function () {
             console.log("Could not load data");
@@ -191,8 +215,9 @@ function msToTime (ms) {
 }
 
 function convertDate(dateTypeLong) {
-    if (dateTypeLong == 0){
-        return "";
+    console.log(dateTypeLong);
+    if (dateTypeLong === null){
+        return "Empty";
     }
     var dateStr = new Date(dateTypeLong),
         dformat = [dateStr.getMonth()+1,

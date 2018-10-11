@@ -164,6 +164,7 @@ public class OrderService {
             CriteriaQuery<Order> criteriaQuery = builder.createQuery(Order.class);
             Root<Order> from = criteriaQuery.from(Order.class);
             CriteriaQuery<Order> select = criteriaQuery.select(from);
+            select.orderBy(builder.desc(from.get("checkInDate")), builder.desc(from.get("checkOutDate")));
             TypedQuery<Order> typedQuery = entityManager.createQuery(select);
 
             typedQuery.setFirstResult(pagNumber * pageSize);
@@ -213,6 +214,7 @@ public class OrderService {
             }
         }
         query.where(predicate);
+        query.orderBy(builder.desc(r.get("checkInDate")), builder.desc(r.get("checkOutDate")));
         TypedQuery<Order> typedQuery = entityManager.createQuery(query);
         List<Order> orders = typedQuery.getResultList();
         int totalPages = orders.size() / pageSize;

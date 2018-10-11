@@ -174,10 +174,21 @@ public class OrderService {
 
             responseObject.setData(orders);
             responseObject.setPageNumber(pagNumber);
-            responseObject.setTotalPages((orders.size()/pageSize)+1);
+            int totalPages = getTotalOrders(pageSize).intValue();
+            responseObject.setTotalPages(totalPages);
             return responseObject;
         }
 
+    public Long getTotalOrders(int pageSize) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> countQuery = criteriaBuilder
+                .createQuery(Long.class);
+        countQuery.select(criteriaBuilder.count(
+                countQuery.from(Order.class)));
+        Long count = entityManager.createQuery(countQuery)
+                .getSingleResult();
+        return (long) (count / pageSize) + 1;
+    }
     public ResponseObject  filterOrders(SearchCriteria param, int pagNumber, int pageSize) {
         ResponseObject responseObject = new ResponseObject();
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();

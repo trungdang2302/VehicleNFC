@@ -215,7 +215,6 @@ function msToTime (ms) {
 }
 
 function convertDate(dateTypeLong) {
-    console.log(dateTypeLong);
     if (dateTypeLong === null){
         return "Empty";
     }

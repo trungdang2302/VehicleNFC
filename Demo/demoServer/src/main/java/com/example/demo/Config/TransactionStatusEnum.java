@@ -2,7 +2,6 @@ package com.example.demo.Config;
 
 public enum  TransactionStatusEnum{
     Open(1,"Open");
-
     private int id;
     private String name;
 

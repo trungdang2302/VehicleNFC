@@ -22,9 +22,12 @@ public class PricingController {
     }
 
     @GetMapping(value = "/get-by-policyAndVehicleType/{id}")
-    public ResponseObject getPricingByPolicyAndVehicleType(@PathVariable("id") Integer id) {
-        ResponseObject responseObject = new ResponseObject();
-        responseObject.setData(pricingService.findByPolicyHasVehicleTypeId(id));
-        return responseObject;
+    public ResponseEntity<?> getPricingByPolicyAndVehicleType(@PathVariable("id") Integer id) {
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(pricingService.findByPolicyHasVehicleTypeId(id));
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found price");
+        }
     }
+
 }

@@ -46,8 +46,8 @@ function submitDeleteUserForm() {
         $.ajax({
             type: deleteFrm.attr('method'),
             // url: deleteFrm.attr('action')+'/'+id,
-            url: 'http://localhost:8080/user/delete-user/'+id,
-            data: deleteFrm.serialize(),
+            url: 'http://localhost:8080/gundam/delete-gundam/'+id,
+            // data: deleteFrm.serialize(),
             success: function (data) {
                 console.log(data);
                 console.log("Delete user successfully!");
@@ -192,22 +192,6 @@ function loadData(res) {
             $('#pagination').append(li);
         }
     }
-}
-
-function getUserByPageNumber(pageNumber) {
-    $.ajax({
-        type: "GET",
-        dataType: "json",
-        url: 'http://localhost:8080/user/get-users-json?page=' + pageNumber,
-        success: function (data) {
-            console.log(data);
-            emptyTable();
-            emptyPaginationLi();
-            loadData(data);
-        }, error: function () {
-            alert("Can't load data")
-        }
-    });
 }
 $(document).ready(function (e){
     // Sort table headers

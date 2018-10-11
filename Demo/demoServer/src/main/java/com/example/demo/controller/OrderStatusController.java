@@ -22,7 +22,11 @@ public class OrderStatusController {
     }
 
     @GetMapping(value = {"/{id}"})
-    public ResponseEntity<Optional<OrderStatus>> getTransactionStatusById(@PathVariable("id") Integer id) {
-        return ResponseEntity.status(HttpStatus.OK).body(orderStatusService.getOrderStatusById(id));
+    public ResponseEntity<?> getTransactionStatusById(@PathVariable("id") Integer id) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(orderStatusService.getOrderStatusById(id));
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not Found Transaction Status");
+        }
     }
 }

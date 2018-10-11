@@ -11,9 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.List;
-import java.util.Optional;
-
 @RestController
 @RequestMapping(value = "/location")
 public class LocationController {
@@ -24,9 +21,14 @@ public class LocationController {
     }
 
     @GetMapping(value = {"get/{id}"})
-    public ResponseEntity<Optional<Location>> getLocationBy(@PathVariable("id") Integer id) {
-        System.out.println("Getting location info...");
-        return ResponseEntity.status(HttpStatus.OK).body(locationService.getMeterById(id));
+    public ResponseEntity<?> getLocationBy(@PathVariable("id") Integer id) {
+        try{
+            System.out.println("Getting location info...");
+            return ResponseEntity.status(HttpStatus.OK).body(locationService.getMeterById(id));
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not Found Location");
+        }
+
     }
 
     @GetMapping("/page")
@@ -39,5 +41,4 @@ public class LocationController {
         ResponseObject response = locationService.getAllLocations();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-
 }

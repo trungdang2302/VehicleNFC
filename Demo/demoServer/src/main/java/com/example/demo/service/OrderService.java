@@ -2,10 +2,18 @@ package com.example.demo.service;
 
 import com.example.demo.Config.NotificationEnum;
 import com.example.demo.Config.OrderStatusEnum;
+import com.example.demo.Config.ResponseObject;
+import com.example.demo.Config.SearchCriteria;
 import com.example.demo.entities.*;
+import com.example.demo.entities.Order;
 import com.example.demo.repository.*;
+import org.aspectj.weaver.ast.Or;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
 import java.util.*;
 
 @Service
@@ -147,7 +155,81 @@ public class OrderService {
 
         return Optional.of(order);
     }
+
+    @Autowired
+    private EntityManager entityManager;
+
+    public ResponseObject getOrders(int pagNumber, int pageSize) {
+            ResponseObject responseObject = new ResponseObject();
+            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Order> criteriaQuery = builder.createQuery(Order.class);
+            Root<Order> from = criteriaQuery.from(Order.class);
+            CriteriaQuery<Order> select = criteriaQuery.select(from);
+            select.orderBy(builder.desc(from.get("checkInDate")), builder.desc(from.get("checkOutDate")));
+            TypedQuery<Order> typedQuery = entityManager.createQuery(select);
+
+            typedQuery.setFirstResult(pagNumber * pageSize);
+            typedQuery.setMaxResults(pageSize);
+
+            List<Order> orders = typedQuery.getResultList();
+
+            responseObject.setData(orders);
+            responseObject.setPageNumber(pagNumber);
+            responseObject.setTotalPages((orders.size()/pageSize)+1);
+            return responseObject;
+        }
+
+    public ResponseObject  filterOrders(SearchCriteria param, int pagNumber, int pageSize) {
+        ResponseObject responseObject = new ResponseObject();
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Order> query = builder.createQuery(Order.class);
+        Root r = query.from(Order.class);
+
+        Predicate predicate = builder.conjunction();
+
+        if (param.getOperation().equalsIgnoreCase(">")) {
+            predicate = builder.and(predicate,
+                    builder.greaterThanOrEqualTo(r.get(param.getKey()),
+                            param.getValue().toString()));
+        } else if (param.getOperation().equalsIgnoreCase("<")) {
+            predicate = builder.and(predicate,
+                    builder.lessThanOrEqualTo(r.get(param.getKey()),
+                            param.getValue().toString()));
+        } else if (param.getOperation().equalsIgnoreCase(":")) {
+            Object type = r.get(param.getKey()).getJavaType();
+            if (type == String.class) {
+                predicate = builder.and(predicate,
+                        builder.like(r.get(param.getKey()),
+                                "%" + param.getValue() + "%"));
+            } else if (type == Location.class) {
+                Join<Order, Location> join = r.join("locationId");
+                Predicate locationNamePredicate = builder.like(join.get("location"), "%" + param.getValue() + "%");
+                predicate = builder.and(predicate,locationNamePredicate);
+            } else if (type == OrderStatus.class){
+                Join<Order, Location> join = r.join("orderStatusId");
+                Predicate locationNamePredicate = builder.like(join.get("name"), param.getValue() + "%");
+                predicate = builder.and(predicate,locationNamePredicate);
+            } else {
+                predicate = builder.and(predicate,
+                        builder.equal(r.get(param.getKey()), param.getValue()));
+            }
+        }
+        query.where(predicate);
+        query.orderBy(builder.desc(r.get("checkInDate")), builder.desc(r.get("checkOutDate")));
+        TypedQuery<Order> typedQuery = entityManager.createQuery(query);
+        List<Order> orders = typedQuery.getResultList();
+        int totalPages = orders.size() / pageSize;
+        typedQuery.setFirstResult(pagNumber * pageSize);
+        typedQuery.setMaxResults(pageSize);
+        List<Order> orderList = typedQuery.getResultList();
+        responseObject.setData(orderList);
+        responseObject.setTotalPages(totalPages + 1);
+        responseObject.setPageNumber(pagNumber);
+        return  responseObject;
+    }
+
 }
+
 
 class HourHasPrice {
     int hour;

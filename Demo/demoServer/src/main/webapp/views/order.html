@@ -113,17 +113,19 @@
         <div class="main-content">
             <div class="container-fluid">
                 <div class="panel panel-headline">
-                    <div class="" style="background: #blue; height: auto; width: 100%; float: left;">
-                        <form action="search-user" id="search-box" method="post" style="height:100%; width: 100%;">
-                            <select id="search-filter" style="float: left; height: 100%">
-                                <option value="locationId" selected="selected">Search By Location</option>
-                                <option value="orderStatusId">Search By Status</option>
-                            </select><br/>
-                            <input type="text" class="form-control" id="searchValue" name="searchValue" value=""
-                                   style="width: 50%; float: left;"/><br/>
+                    <div class="searchBox">
+                        <div class="form-container">
+                            <form action="search-user" id="search-box" method="post">
+                                <select id="search-filter" class="form-control">
+                                    <option value="locationId" selected="selected">Search By Location</option>
+                                    <option value="orderStatusId">Search By Status</option>
+                                </select>
+                                <input type="text" class="form-control" id="searchValue" name="searchValue" value=""/>
+                                <button class="search-button" id="searchBtn" name="Search" value="Go">Go</button>
+                            </form>
+                        </div>
 
-                        </form>
-                        <button class="search-button" id="searchBtn" name="Search" value="Go">Go</button>
+
                     </div>
                     <div class="panel-body">
                         <div class="row">
@@ -146,7 +148,7 @@
 
                                 </tbody>
                             </table>
-                            <div class="row">
+                            <div class="row paging">
                                 <ul class="nav nav-pills" id="pagination"></ul>
                             </div>
                         </div>

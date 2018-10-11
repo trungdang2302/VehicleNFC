@@ -59,4 +59,8 @@ class TimeDuration{
         this.second = second;
     }
 
+    public long toMilisecond(){
+        return this.hour * 3600000 + this.minute * 60000;
+    }
+
 }

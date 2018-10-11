@@ -47,6 +47,6 @@ public class OrderController {
 //        Optional<Order> transaction1 = orderService.createOrder(order.getUserId(),order.getLocationId());
 //        return ResponseEntity.status(HttpStatus.CREATED).body(transaction1);
         PushNotificationService pushNotificationService = new PushNotificationService();
-        pushNotificationService.sendNotification("ejYnxbGWX0M:APA91bEdp1CYUzUO4FpZdrgtOd9Dt9Tv7gOLpuFI7F9yQAHFInc7enlBRIeFZC0i-1u_rHUagtGu5Y5NIPO3iv9z0a4zE_DRQyJBOi84d6aE1NjxoOujWuQd_djSj8Es6oCyXXRM11Hq", NotificationEnum.CHECK_IN);
+        pushNotificationService.sendNotification("dSkDRMJFVLE:APA91bH3-UwERNYB6zI4rS-eBRs6PJEvgNKrg0vf6ztUOGeVEkea6doodFbCVs_fJ79t5OVvr_cyeaF-TPCryUP2GtxqNZLjjpcsrYQ0EeALxYJdB47s-lAKwSYB-_5qvspoFbtdGEvS", NotificationEnum.CHECK_IN,17);
     }
 }

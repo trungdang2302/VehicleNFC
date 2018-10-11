@@ -88,7 +88,7 @@ public class OrderService {
         //TODO kiểm tra thằng lồn đó xài gì để gửi SMS hay Noti
         //Code here
         PushNotificationService pushNotificationService = new PushNotificationService();
-        pushNotificationService.sendNotification(userToken, NotificationEnum.CHECK_IN);
+        pushNotificationService.sendNotification(userToken, NotificationEnum.CHECK_IN, order.getId());
 
         return Optional.of(order);
     }
@@ -117,7 +117,7 @@ public class OrderService {
         double lastPrice = 0;
         for (OrderPricing orderPricing : orderPricings
                 ) {
-            if (orderPricing.getPricePerHour() > lastPrice){
+            if (orderPricing.getPricePerHour() > lastPrice) {
                 lastPrice = orderPricing.getPricePerHour();
             }
             for (HourHasPrice hourHasPrice : hourHasPrices) {
@@ -135,6 +135,7 @@ public class OrderService {
 
         totalPrice += lastPrice * (totalMinute / 60);
 
+        order.setDuration(duration.toMilisecond());
         order.setTotal(totalPrice);
         OrderStatus orderStatus = orderStatusRepository.findByName(OrderStatusEnum.Close.getName()).get();
         order.setOrderStatusId(orderStatus);
@@ -142,7 +143,7 @@ public class OrderService {
         orderRepository.save(order);
 
         PushNotificationService pushNotificationService = new PushNotificationService();
-        pushNotificationService.sendNotification(userToken, NotificationEnum.CHECK_OUT);
+        pushNotificationService.sendNotification(userToken, NotificationEnum.CHECK_OUT, order.getId());
 
         return Optional.of(order);
     }

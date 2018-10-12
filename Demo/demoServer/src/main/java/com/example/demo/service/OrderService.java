@@ -82,7 +82,7 @@ public class OrderService {
         PolicyHasTblVehicleType policyHasTblVehicleType = policyHasVehicleTypeRepository
                 .findByPolicyIdAndVehicleTypeId(policy, checkInUser.getVehicleTypeId()).get();
 
-        List<Pricing> pricings = pricingRepository.findAllByPolicyHasTblVehicleTypeId(policyHasTblVehicleType);
+        List<Pricing> pricings = pricingRepository.findAllByPolicyHasTblVehicleTypeId(policyHasTblVehicleType.getId());
 
         orderRepository.save(order);
 
@@ -238,6 +238,9 @@ public class OrderService {
         return  responseObject;
     }
 
+    public List<Order> findOrdersByUserId(Integer userId) {
+        return orderRepository.findByUserId(userRepository.findById(userId).get());
+    }
 }
 
 

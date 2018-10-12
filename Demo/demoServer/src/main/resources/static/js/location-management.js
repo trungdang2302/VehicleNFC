@@ -112,14 +112,24 @@ function loadPolicyTable(data) {
 
 function loadPolicy(data) {
     var row = "";
-    row = '<tr>';
-    row += '<td>' + data[0].policyId.allowedParkingFrom + '</td>';
-    row += '<td>' + data[0].policyId.allowedParkingTo + '</td>';
-    row += '<td><ul>';
+var pricings = "";
     for (i = 0; i < data.length; i++) {
-        row += '<li>' + data[i].vehicleTypeId.name + '</li>';
+        pricings = data[i].pricings;
+        for ( j = 0; j < pricings.length; j++) {
+            row = '<tr>';
+            row += '<td>' + data[i].vehicleTypeId.name + '</td>';
+            row += '<td>' + data[i].policyId.allowedParkingFrom + '</td>';
+            row += '<td>' + data[i].policyId.allowedParkingTo + '</td>';
+            row += '<td>' + pricings[j].fromHour + '</td>';
+            row += '<td>' + pricings[j].pricePerHour + '</td>';
+            row += '<td>' + pricings[j].lateFeePerHour + '</td>';
+            row += '<td> <button class="btn btn-primary" onclick="viewPricing('+ pricings[j].id +')">View Pricing</button>'
+            row += '</tr>';
+            $('#policy-table tbody').append(row);
+        }
     }
-    row += '</ul></td></tr>';
-    $('#policy-table tbody').append(row);
+}
 
+function viewPricing(pricingId) {
+    alert(pricingId);
 }

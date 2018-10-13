@@ -28,7 +28,7 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @GetMapping(value = {"get-order/{id}"})
+    @GetMapping(value = {"/get-order/{id}"})
     public ResponseEntity<Optional<Order>> getTransactionById(@PathVariable("id") Integer id){
         return ResponseEntity.status(HttpStatus.OK).body(orderService.getOrderById(id));
     }
@@ -76,7 +76,16 @@ public class OrderController {
             return  ResponseEntity.status(HttpStatus.OK).body(orderService.filterOrders(params,page,AppConstant.ORDER_PAGESIZE));
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No data");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @GetMapping(value = "/orders")
+    public ResponseEntity getOrdersByUserId(@RequestParam(value = "userId") Integer userId) {
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(orderService.findOrdersByUserId(userId));
+        } catch (NullPointerException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 }

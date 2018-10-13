@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface PricingRepository extends JpaRepository<Pricing, Integer> {
     Pricing findByPolicyHasTblVehicleTypeId(PolicyHasTblVehicleType policyHasTblVehicleType);
 
-    List<Pricing> findAllByPolicyHasTblVehicleTypeId(PolicyHasTblVehicleType policyHasTblVehicleType);
+    List<Pricing> findAllByPolicyHasTblVehicleTypeId(Integer policyHasTblVehicleTypeId);
 }

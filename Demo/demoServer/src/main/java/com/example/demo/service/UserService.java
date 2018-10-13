@@ -139,4 +139,13 @@ public class UserService {
     public Optional<User> login(String phone, String password) {
         return userRepository.findByPhoneNumberAndPassword(phone, password);
     }
+
+    public void updateUserSmsNoti(User user) {
+        User userDB = userRepository.findByPhoneNumber(user.getPhoneNumber()).get();
+        if (userDB!=null) {
+            userDB.setSmsNoti(user.getSmsNoti());
+            userRepository.save(userDB);
+        }
+    }
+
 }

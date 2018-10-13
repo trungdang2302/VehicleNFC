@@ -35,7 +35,8 @@ function loadData(res) {
         } else {
             row += '<td style="color: #339933;">' + content[i].orderStatusId.name + '</td>';
         }
-        row += '<td>' + content[i].userId.lastName + '</td>';
+
+        row += '<td>' + content[i].userId.firstName+' '+ content[i].userId.lastName + '</td>';
         row += '<td>' + content[i].userId.phoneNumber + '</td>';
         var duration = "";
         if (content[i].duration === null) {
@@ -66,14 +67,14 @@ function loadData(res) {
     for (currentPage = 0; currentPage <= res.totalPages - 1; currentPage++) {
         if (currentPage === pageNumber) {
             li = '<li class="nav-item active">\n' +
-                '<a href="#" class="nav-link" onclick="filterOrder(' + currentPage + ')">' + currentPage + '</a>\n' +
+                '<a href="#" class="nav-link" onclick="filterOrder(' + currentPage + ')">' + (currentPage+ 1) + '</a>\n' +
                 '</li>';
             $('#pagination').append(li);
         } else {
 
             li = '<li class="nav-item">\n' +
                 '<a href="#" class="nav-link" onclick="filterOrder(' + currentPage + ')">\n' +
-                +currentPage + '</a>\n' +
+                +(currentPage+1) + '</a>\n' +
                 '</li>';
             $('#pagination').append(li);
         }
@@ -131,7 +132,7 @@ function viewPricingDetail(orderId) {
         dataType: "json",
         url: 'http://localhost:8080/order-pricing/get/' + orderId,
         success: function (res) {
-            $('.myForm #lastName').text(order.userId.lastName);
+            $('.myForm #lastName').text(order.userId.firstName+' '+ order.userId.lastName);
             $('.myForm #phoneNumber').text(order.userId.phoneNumber);
             $('.myForm #location').text(order.locationId.location);
             $('.myForm #allowedParkingFrom').text(order.allowedParkingFrom);

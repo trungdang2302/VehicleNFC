@@ -49,6 +49,10 @@ public class User implements Serializable {
     @ManyToOne(optional = false)
     private VehicleType vehicleTypeId;
 
+    @Basic(optional = false)
+    @Column(name = "sms_noti")
+    private Boolean smsNoti;
+
     @Transient
     private String deviceToken;
 
@@ -133,5 +137,13 @@ public class User implements Serializable {
 
     public void setDeviceToken(String deviceToken) {
         this.deviceToken = deviceToken;
+    }
+
+    public Boolean getSmsNoti() {
+        return smsNoti;
+    }
+
+    public void setSmsNoti(Boolean smsNoti) {
+        this.smsNoti = smsNoti;
     }
 }

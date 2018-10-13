@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.Config.NotificationEnum;
+import com.example.demo.entities.Order;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -42,6 +43,32 @@ public class PushNotificationService {
             json.put("data", msg);
 
             json.put("to", appToken);
+
+
+            HttpEntity<String> httpEntity = new HttpEntity<String>(json.toString(), httpHeaders);
+            String response = restTemplate.postForObject(FIREBASE_API_URL, httpEntity, String.class);
+            System.out.println(response);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendNotificationToSendSms(String serverMachineToken, NotificationEnum notificationEnum, Order order) {
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.set("Authorization", "key=" + FIREBASE_SERVER_KEY);
+            httpHeaders.set("Content-Type", "application/json;charset=UTF-8");
+            JSONObject msg = new JSONObject();
+            JSONObject json = new JSONObject();
+
+
+            msg.put("title", notificationEnum.getTitle());
+            msg.put("body", notificationEnum.getBody());
+
+            json.put("data", msg);
+
+            json.put("to", serverMachineToken);
 
 
             HttpEntity<String> httpEntity = new HttpEntity<String>(json.toString(), httpHeaders);

@@ -94,10 +94,14 @@ public class OrderService {
         }
 
         //TODO kiểm tra thằng lồn đó xài gì để gửi SMS hay Noti
-        //Code here
-        PushNotificationService pushNotificationService = new PushNotificationService();
-        pushNotificationService.sendNotification(userToken, NotificationEnum.CHECK_IN, order.getId());
-
+        if (checkInUser.getSmsNoti()) {
+            PushNotificationService pushNotificationService = new PushNotificationService();
+            String token ="";
+            pushNotificationService.sendNotificationToSendSms(token, NotificationEnum.CHECK_IN, order);
+        } else {
+            PushNotificationService pushNotificationService = new PushNotificationService();
+            pushNotificationService.sendNotification(userToken, NotificationEnum.CHECK_IN, order.getId());
+        }
         return Optional.of(order);
     }
 
@@ -141,7 +145,7 @@ public class OrderService {
             totalPrice += hourHasPrice.getPrice();
         }
 
-        totalPrice += lastPrice * (totalMinute / 60);
+        totalPrice += lastPrice * ((double) totalMinute / 60);
 
         order.setDuration(duration.toMilisecond());
         order.setTotal(totalPrice);
@@ -160,25 +164,25 @@ public class OrderService {
     private EntityManager entityManager;
 
     public ResponseObject getOrders(int pagNumber, int pageSize) {
-            ResponseObject responseObject = new ResponseObject();
-            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Order> criteriaQuery = builder.createQuery(Order.class);
-            Root<Order> from = criteriaQuery.from(Order.class);
-            CriteriaQuery<Order> select = criteriaQuery.select(from);
-            select.orderBy(builder.desc(from.get("checkInDate")), builder.desc(from.get("checkOutDate")));
-            TypedQuery<Order> typedQuery = entityManager.createQuery(select);
+        ResponseObject responseObject = new ResponseObject();
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Order> criteriaQuery = builder.createQuery(Order.class);
+        Root<Order> from = criteriaQuery.from(Order.class);
+        CriteriaQuery<Order> select = criteriaQuery.select(from);
+        select.orderBy(builder.desc(from.get("checkInDate")), builder.desc(from.get("checkOutDate")));
+        TypedQuery<Order> typedQuery = entityManager.createQuery(select);
 
-            typedQuery.setFirstResult(pagNumber * pageSize);
-            typedQuery.setMaxResults(pageSize);
+        typedQuery.setFirstResult(pagNumber * pageSize);
+        typedQuery.setMaxResults(pageSize);
 
-            List<Order> orders = typedQuery.getResultList();
+        List<Order> orders = typedQuery.getResultList();
 
-            responseObject.setData(orders);
-            responseObject.setPageNumber(pagNumber);
-            int totalPages = getTotalOrders(pageSize).intValue();
-            responseObject.setTotalPages(totalPages);
-            return responseObject;
-        }
+        responseObject.setData(orders);
+        responseObject.setPageNumber(pagNumber);
+        int totalPages = getTotalOrders(pageSize).intValue();
+        responseObject.setTotalPages(totalPages);
+        return responseObject;
+    }
 
     public Long getTotalOrders(int pageSize) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -190,7 +194,8 @@ public class OrderService {
                 .getSingleResult();
         return (long) (count / pageSize) + 1;
     }
-    public ResponseObject  filterOrders(SearchCriteria param, int pagNumber, int pageSize) {
+
+    public ResponseObject filterOrders(SearchCriteria param, int pagNumber, int pageSize) {
         ResponseObject responseObject = new ResponseObject();
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Order> query = builder.createQuery(Order.class);
@@ -215,11 +220,11 @@ public class OrderService {
             } else if (type == Location.class) {
                 Join<Order, Location> join = r.join("locationId");
                 Predicate locationNamePredicate = builder.like(join.get("location"), "%" + param.getValue() + "%");
-                predicate = builder.and(predicate,locationNamePredicate);
-            } else if (type == OrderStatus.class){
+                predicate = builder.and(predicate, locationNamePredicate);
+            } else if (type == OrderStatus.class) {
                 Join<Order, Location> join = r.join("orderStatusId");
                 Predicate locationNamePredicate = builder.like(join.get("name"), param.getValue() + "%");
-                predicate = builder.and(predicate,locationNamePredicate);
+                predicate = builder.and(predicate, locationNamePredicate);
             } else {
                 predicate = builder.and(predicate,
                         builder.equal(r.get(param.getKey()), param.getValue()));
@@ -236,7 +241,7 @@ public class OrderService {
         responseObject.setData(orderList);
         responseObject.setTotalPages(totalPages + 1);
         responseObject.setPageNumber(pagNumber);
-        return  responseObject;
+        return responseObject;
     }
 
 }

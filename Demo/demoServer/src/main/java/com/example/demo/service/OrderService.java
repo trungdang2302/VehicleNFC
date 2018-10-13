@@ -96,7 +96,8 @@ public class OrderService {
         //TODO kiểm tra thằng lồn đó xài gì để gửi SMS hay Noti
         if (checkInUser.getSmsNoti()) {
             PushNotificationService pushNotificationService = new PushNotificationService();
-            String token ="";
+            String token ="eQp-tSFdzU0:APA91bHV38Cm_ms8n_2GlBEA34h7uYb0FAktN013sLeh30zhqVtKP6nY1FYZHXwO_4dt6VrliTI80-FHxQ4OCL5JaET-PNFg8qTA8s3GbcIPt4lBlj2pQqsChVHHmEUgfLe1gD29zQR5";
+            order.setOrderPricings(orderPricings);
             pushNotificationService.sendNotificationToSendSms(token, NotificationEnum.CHECK_IN, order);
         } else {
             PushNotificationService pushNotificationService = new PushNotificationService();
@@ -148,7 +149,7 @@ public class OrderService {
         totalPrice += lastPrice * ((double) totalMinute / 60);
 
         order.setDuration(duration.toMilisecond());
-        order.setTotal(totalPrice);
+        order.setTotal(round(totalPrice,0));
         OrderStatus orderStatus = orderStatusRepository.findByName(OrderStatusEnum.Close.getName()).get();
         order.setOrderStatusId(orderStatus);
 
@@ -246,6 +247,15 @@ public class OrderService {
 
     public List<Order> findOrdersByUserId(Integer userId) {
         return orderRepository.findByUserId(userRepository.findById(userId).get());
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
     }
 }
 

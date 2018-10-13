@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.Config.NotificationEnum;
 import com.example.demo.entities.Order;
+import com.example.demo.entities.OrderPricing;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -64,7 +67,8 @@ public class PushNotificationService {
 
 
             msg.put("title", notificationEnum.getTitle());
-            msg.put("body", notificationEnum.getBody());
+            msg.put("body", composeOrderPrice(order));
+            msg.put("toPhoneNumber", order.getUserId().getPhoneNumber());
 
             json.put("data", msg);
 
@@ -77,5 +81,24 @@ public class PushNotificationService {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public String composeOrderPrice(Order order) {
+        String body = "";
+        if (order != null) {
+            String pattern = "HH:mm dd-MM-yyyy";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+            String date = simpleDateFormat.format(new Date(order.getCheckInDate()));
+
+            body += "Bắt đầu đậu xe tại: " + order.getLocationId().getLocation() + "\n";
+            body += "Vào lúc: " + date  + "\n";
+            body += "Bảng giá cho loại xe: " + order.getUserId().getVehicleTypeId().getName()+"\n";
+            for (OrderPricing orderPricing : order.getOrderPricings()) {
+                body += (orderPricing.getFromHour()==0)?"Từ Giờ đầu: "+((long)orderPricing.getPricePerHour()*1000)+"đ/h\n"
+                        :"Từ giờ thứ "+ orderPricing.getFromHour()+": " + ((long)orderPricing.getPricePerHour()*1000)+"đ/h\n";
+            }
+        }
+        return body;
     }
 }

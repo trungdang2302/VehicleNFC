@@ -245,7 +245,7 @@ public class OrderService {
     }
 
     public List<Order> findOrdersByUserId(Integer userId) {
-        return orderRepository.findByUserId(userRepository.findById(userId).get());
+        return orderRepository.findByUserIdOrderById(userRepository.findById(userId).get());
     }
 }
 

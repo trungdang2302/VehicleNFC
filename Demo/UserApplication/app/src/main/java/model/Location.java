@@ -28,7 +28,7 @@ public class Location {
     private boolean isActivated;
 
 
-    @SerializedName("isActivated")
+    @SerializedName("policyList")
     @Expose
     private List<Policy> policies;
 
@@ -37,8 +37,9 @@ public class Location {
     }
 
     public String getLocation() {
-        String[] properties = location.split("_");
-        return properties[0]+", "+properties[1];
+//        String[] properties = location.split("_");
+//        return properties[0]+", "+properties[1];
+        return this.location;
     }
 
     public void setLocation(String location) {

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:orientation="horizontal"
+    android:weightSum="1">
+
+    <TextView
+        android:id="@+id/txtFrom"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/label_nor_height"
+        android:layout_weight=".5"
+        android:gravity="center"
+        android:text="Từ 0h"
+        android:textColor="#000000"
+        android:textSize="16dp" />
+
+    <TextView
+        android:id="@+id/txtPrice"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight=".5"
+        android:gravity="center"
+        android:text="100.000đ"
+        android:textColor="#000000"
+        android:textSize="16dp" />
+</LinearLayout>

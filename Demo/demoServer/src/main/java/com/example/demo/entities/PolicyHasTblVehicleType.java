@@ -1,5 +1,8 @@
 package com.example.demo.entities;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -19,8 +22,7 @@ public class PolicyHasTblVehicleType implements Serializable {
     @JoinColumn(name = "tbl_vehicle_type_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private VehicleType vehicleTypeId;
-
-//    @OneToMany(mappedBy = "policyHasTblVehicleTypeId", cascade = CascadeType.ALL)
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tblPolicyHasTblVehicleTypeId")
     @Transient
     private List<Pricing> pricings;
 

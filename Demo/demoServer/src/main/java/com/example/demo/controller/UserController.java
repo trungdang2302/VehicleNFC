@@ -36,7 +36,7 @@ public class UserController {
         this.vehicleTypeService = vehicleTypeService;
     }
 
-    @GetMapping(value = {"/getUser/{id}"})
+    @GetMapping(value = {"/get-user/{id}"})
     public ResponseEntity<Optional<User>> getUserById(@PathVariable("id") Integer id) {
         System.out.println("getting user info...");
         return status(OK).body(userService.getUserById(id));
@@ -65,6 +65,12 @@ public class UserController {
     @PostMapping("/save-user")
     public String updateUser(User user) {
         userService.updateUser(user);
+        return "Success";
+    }
+
+    @PostMapping("/update-user-sms")
+    public String updateUserSms(@RequestBody User user) {
+        userService.updateUserSmsNoti(user);
         return "Success";
     }
 

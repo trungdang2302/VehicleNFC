@@ -33,4 +33,7 @@ public interface RmaAPIService {
     @POST("/user/login")
     @FormUrlEncoded
     Call<User> login(@Field("phone") String phone, @Field("password") String password);
+
+    @GET("/order/get-order/{id}")
+    Call<Order> getOrderById(@Path("id") Integer orderId);
 }

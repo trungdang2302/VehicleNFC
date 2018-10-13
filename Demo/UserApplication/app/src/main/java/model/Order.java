@@ -3,15 +3,25 @@ package model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * Created by Swomfire on 24-Sep-18.
  */
 
 public class Order {
-
-    @SerializedName("dataCheckIn")
+    @SerializedName("id")
     @Expose
-    private long dateCheckIn;
+    private int id;
+
+
+    @SerializedName("checkInDate")
+    @Expose
+    private long checkInDate;
+
+    @SerializedName("checkOutDate")
+    @Expose
+    private long checkOutDate;
 
     @SerializedName("dateEnded")
     @Expose
@@ -23,7 +33,7 @@ public class Order {
 
     @SerializedName("locationId")
     @Expose
-    private Location meter;
+    private Location location;
 
     @SerializedName("userId")
     @Expose
@@ -33,12 +43,24 @@ public class Order {
     @Expose
     private OrderStatus orderStatus;
 
-    public long getDateCheckIn() {
-        return dateCheckIn;
+    @SerializedName("orderPricings")
+    @Expose
+    private List<OrderPricing> orderPricings;
+
+    public long getCheckInDate() {
+        return checkInDate;
     }
 
-    public void setDateCheckIn(long dateCheckIn) {
-        this.dateCheckIn = dateCheckIn;
+    public void setCheckInDate(long checkInDate) {
+        this.checkInDate = checkInDate;
+    }
+
+    public long getCheckOutDate() {
+        return checkOutDate;
+    }
+
+    public void setCheckOutDate(long checkOutDate) {
+        this.checkOutDate = checkOutDate;
     }
 
     public long getDateEnded() {
@@ -57,12 +79,12 @@ public class Order {
         this.price = price;
     }
 
-    public Location getMeter() {
-        return meter;
+    public Location getLocation() {
+        return location;
     }
 
-    public void setMeter(Location meter) {
-        this.meter = meter;
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     public OrderStatus getOrderStatus() {
@@ -81,5 +103,19 @@ public class Order {
         this.user = user;
     }
 
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public List<OrderPricing> getOrderPricings() {
+        return orderPricings;
+    }
+
+    public void setOrderPricings(List<OrderPricing> orderPricings) {
+        this.orderPricings = orderPricings;
+    }
 }

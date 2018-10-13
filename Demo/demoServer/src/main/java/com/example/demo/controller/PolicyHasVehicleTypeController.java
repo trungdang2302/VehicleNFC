@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/policy-vehicleType")
@@ -20,21 +19,32 @@ public class PolicyHasVehicleTypeController {
     }
 
     @GetMapping("/get-by-policy-vehicleType")
-    public ResponseEntity<Optional<PolicyHasTblVehicleType>> getByPolicyAndVehicleType
+    public ResponseEntity<?> getByPolicyAndVehicleType
             (@RequestParam(value = "policyId") Integer policyID
             ,@RequestParam(value = "vehicleTypeId") Integer vehicleTypeId) {
-
-        return ResponseEntity.status(HttpStatus.OK).body(policyHasVehicleTypeService.findByPolicyAndVehicleType(policyID,vehicleTypeId));
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(policyHasVehicleTypeService.findByPolicyAndVehicleType(policyID,vehicleTypeId));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not Found PolicyHasVehicleType");
+        }
     }
 
     @GetMapping("/get-vehicleTypes/{id}")
-    public ResponseEntity<List<PolicyHasTblVehicleType>> getByPolicyID(@PathVariable("id") Integer id) {
-        return ResponseEntity.status(HttpStatus.OK).body(policyHasVehicleTypeService.findByPolicyId(id));
+    public ResponseEntity<?> getByPolicyID(@PathVariable("id") Integer id) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(policyHasVehicleTypeService.findByPolicyId(id));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not Found PolicyHasVehicleType");
+        }
     }
-
     @PostMapping("/get-vehicleTypes-byPolicies")
-    public ResponseEntity<List<PolicyHasTblVehicleType>> getByListPolicy(@RequestBody List<Policy> policyList) {
-        return ResponseEntity.status(HttpStatus.OK).body(policyHasVehicleTypeService.findByPolicyList(policyList));
+    public ResponseEntity<?> getByListPolicy(@RequestBody List<Policy> policyList) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(policyHasVehicleTypeService.findByPolicyList(policyList));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not load PolicyHasVehicleType");
+        }
     }
 
 

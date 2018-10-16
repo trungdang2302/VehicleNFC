@@ -1,8 +1,8 @@
 package com.example.demo.controller;
 
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.ResponseEntity.status;
@@ -10,8 +10,14 @@ import static org.springframework.http.ResponseEntity.status;
 public class ServerController {
 
     @GetMapping(value = {"/test"})
-    public ResponseEntity<String> serverResponseTest(){
+    public String serverResponseTest(){
         System.out.println("Something calling me");
-        return status(OK).body("\"server here\"");
+        return "Server here message:";
+    }
+
+    @PostMapping(value = {"/test"})
+    public String serverResponsePostTest(@RequestBody String json){
+        System.out.println("Something calling me");
+        return "Server here message:";
     }
 }

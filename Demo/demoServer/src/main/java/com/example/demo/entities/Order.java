@@ -30,6 +30,9 @@ public class Order implements Serializable {
     private Long allowedParkingFrom;
     @Column(name = "allowed_parking_to")
     private Long allowedParkingTo;
+    @Basic(optional = false)
+    @Column(name = "min_hour")
+    private Integer minHour;
 
     @JoinColumn(name = "tbl_location_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
@@ -42,6 +45,10 @@ public class Order implements Serializable {
     @JoinColumn(name = "tbl_user_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private User userId;
+
+    @JoinColumn(name = "tbl_vehicle_type_id", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false)
+    private VehicleType vehicleType;
 
     @Transient
     private List<OrderPricing> orderPricings;
@@ -136,5 +143,21 @@ public class Order implements Serializable {
 
     public void setOrderPricings(List<OrderPricing> orderPricings) {
         this.orderPricings = orderPricings;
+    }
+
+    public Integer getMinHour() {
+        return minHour;
+    }
+
+    public void setMinHour(Integer minHour) {
+        this.minHour = minHour;
+    }
+
+    public VehicleType getVehicleType() {
+        return vehicleType;
+    }
+
+    public void setVehicleType(VehicleType vehicleType) {
+        this.vehicleType = vehicleType;
     }
 }

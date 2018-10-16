@@ -33,6 +33,13 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK).body(orderService.getOrderById(id));
     }
 
+    @GetMapping(value = {"/open-order/{userId}"})
+    public ResponseEntity<Optional<Order>> getOpenOrderByUserId(@PathVariable("userId") Integer id){
+        Optional<Order> order =orderService.getOpenOrderByUserId(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(order);
+    }
+
     @PostMapping(value = "/create")
     public ResponseEntity<Optional<Order>> create(@RequestBody Order order) {
         Optional<Order> transaction1 = orderService.createOrder(order.getUserId(),order.getLocationId());

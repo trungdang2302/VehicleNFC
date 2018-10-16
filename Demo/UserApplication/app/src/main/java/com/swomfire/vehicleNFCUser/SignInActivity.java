@@ -57,4 +57,9 @@ public class SignInActivity extends Activity {
         startActivity(intent);
 
     }
+
+    public void toSignUp(View view) {
+        Intent intent = new Intent(this, SignUpActivity.class);
+        startActivity(intent);
+    }
 }

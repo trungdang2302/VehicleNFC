@@ -11,6 +11,9 @@ $(document).ready(function (e) {
         }
 
     });
+    // $('.edtBtn').hide();
+    // $(".saveBtn").attr("href", "https://www.w3schools.com/jquery/");
+
 });
 
 function emptyTable() {
@@ -117,19 +120,45 @@ var pricings = "";
         pricings = data[i].pricings;
         for ( j = 0; j < pricings.length; j++) {
             row = '<tr>';
-            row += '<td>' + data[i].vehicleTypeId.name + '</td>';
-            row += '<td>' + data[i].policyId.allowedParkingFrom + '</td>';
-            row += '<td>' + data[i].policyId.allowedParkingTo + '</td>';
-            row += '<td>' + pricings[j].fromHour + '</td>';
-            row += '<td>' + pricings[j].pricePerHour + '</td>';
-            row += '<td>' + pricings[j].lateFeePerHour + '</td>';
-            row += '<td> <button class="btn btn-primary" onclick="viewPricing('+ pricings[j].id +')">View Pricing</button>'
+            row += '<td><input type="text" class="input index-'+ i +'-'+ j +'" name="vehicleType" disabled onkeypress="this.style.width = ((this.value.length + 1) * 8) + \'px\';"  value="'+data[i].vehicleTypeId.name+'"></td>';
+            row += '<td><input type="text" class="input index-'+ i +'-'+ j +'" name="vehicleType" disabled onkeypress="this.style.width = ((this.value.length + 1) * 8) + \'px\';"  value="' + data[i].policyId.allowedParkingFrom + '"></td>';
+            row += '<td><input type="text" class="input index-'+ i +'-'+ j +'" name="vehicleType" disabled onkeypress="this.style.width = ((this.value.length + 1) * 8) + \'px\';"  value="' + data[i].policyId.allowedParkingTo + '"></td>';
+            row += '<td><input type="text" class="input index-'+ i +'-'+ j +'" name="vehicleType" disabled onkeypress="this.style.width = ((this.value.length + 1) * 8) + \'px\';"  value="' + pricings[j].fromHour + '"></td>';
+            row += '<td><input type="text" class="input index-'+ i +'-'+ j +'" name="vehicleType" disabled onkeypress="this.style.width = ((this.value.length + 1) * 8) + \'px\';"  value="' + pricings[j].pricePerHour + '"></td>';
+            row += '<td><input type="text" class="input index-'+ i +'-'+ j +'" name="vehicleType" disabled onkeypress="this.style.width = ((this.value.length + 1) * 8) + \'px\';"  value="' + pricings[j].lateFeePerHour + '"></td>';
+            row += '<td> <button class="editBtn" onclick="Edit('+ pricings[j].id +', ' + i + ', '+ j +')">Edit</button>';
+            row += '<td> <button class="saveBtn" onclick="Save('+ pricings[j].id +', ' + i + ', '+ j +')">Save</button>';
             row += '</tr>';
             $('#policy-table tbody').append(row);
         }
     }
+    var length = $('.input').val().length;
+    $('.input').css('width',(length * 8) + 'px');
+    $('.saveBtn').hide();
 }
 
-function viewPricing(pricingId) {
-    alert(pricingId);
+function Edit(pricingId, policyIndex, pricingIndex ) {
+
+    $('.index-'+policyIndex+'-'+pricingIndex).prop('disabled', false);
+    $('.saveBtn').show();
+    $('.editBtn').hide();
+
+}
+function Save(id, policyIndex, pricingIndex  ) {
+    // $('.edtBtn').show();
+    $('.editBtn').show();
+    $('.saveBtn').hide();
+    $('.index-'+policyIndex+'-'+pricingIndex).prop('disabled', true);
+
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: 'http://localhost:8080/location/get/' + id,
+        success: function (data) {
+            console.log(data);
+
+        }, error: function () {
+            alert("Can't load data")
+        }
+    });
 }

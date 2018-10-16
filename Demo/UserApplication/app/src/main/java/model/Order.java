@@ -27,6 +27,22 @@ public class Order {
     @Expose
     private long dateEnded;
 
+    @SerializedName("duration")
+    @Expose
+    private long duration;
+
+    @SerializedName("allowedParkingFrom")
+    @Expose
+    private long allowedParkingFrom;
+
+    @SerializedName("allowedParkingTo")
+    @Expose
+    private long allowedParkingTo;
+
+    @SerializedName("total")
+    @Expose
+    private double total;
+
     @SerializedName("price")
     @Expose
     private int price;
@@ -117,5 +133,37 @@ public class Order {
 
     public void setOrderPricings(List<OrderPricing> orderPricings) {
         this.orderPricings = orderPricings;
+    }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+
+    public long getAllowedParkingFrom() {
+        return allowedParkingFrom;
+    }
+
+    public void setAllowedParkingFrom(long allowedParkingFrom) {
+        this.allowedParkingFrom = allowedParkingFrom;
+    }
+
+    public long getAllowedParkingTo() {
+        return allowedParkingTo;
+    }
+
+    public void setAllowedParkingTo(long allowedParkingTo) {
+        this.allowedParkingTo = allowedParkingTo;
     }
 }

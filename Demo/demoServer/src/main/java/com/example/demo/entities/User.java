@@ -27,7 +27,7 @@ public class User implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "money")
-    private int money;
+    private double money;
     @Size(max = 45)
     @Column(name = "first_name")
     private String firstName;
@@ -53,8 +53,15 @@ public class User implements Serializable {
     @Column(name = "sms_noti")
     private Boolean smsNoti;
 
+    @Basic(optional = false)
+    @Column(name = "is_activated")
+    private Boolean isActivated;
+
     @Transient
     private String deviceToken;
+
+    @Transient
+    private String confirmCode;
 
     public User() {
     }
@@ -83,11 +90,11 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public int getMoney() {
+    public double getMoney() {
         return money;
     }
 
-    public void setMoney(int money) {
+    public void setMoney(double money) {
         this.money = money;
     }
 
@@ -145,5 +152,21 @@ public class User implements Serializable {
 
     public void setSmsNoti(Boolean smsNoti) {
         this.smsNoti = smsNoti;
+    }
+
+    public String getConfirmCode() {
+        return confirmCode;
+    }
+
+    public void setConfirmCode(String confirmCode) {
+        this.confirmCode = confirmCode;
+    }
+
+    public Boolean getActivated() {
+        return isActivated;
+    }
+
+    public void setActivated(Boolean activated) {
+        isActivated = activated;
     }
 }

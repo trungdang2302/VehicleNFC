@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,5 +28,11 @@ public class PolicyController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not Found Policy");
         }
+    }
+
+    @GetMapping("/edit")
+    public ModelAndView index(ModelAndView mav) {
+        mav.setViewName("policy-edit");
+        return mav;
     }
 }

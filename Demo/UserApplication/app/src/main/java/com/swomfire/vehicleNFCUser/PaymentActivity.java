@@ -15,11 +15,19 @@ import com.paypal.android.sdk.payments.PaymentConfirmation;
 
 import org.json.JSONException;
 
+import Util.RmaAPIUtils;
 import model.ProductObj;
+import model.User;
+import remote.RmaAPIService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PaymentActivity extends Activity {
 
-    ProductObj item = new ProductObj("starter pack", 25, "USD");
+    private double amount = 25000;
+
+    ProductObj item = new ProductObj("starter pack", amount, "USD");
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,13 +53,13 @@ public class PaymentActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode == Activity.RESULT_OK) {
+        if (requestCode == 0) {
             PaymentConfirmation confirm = data.getParcelableExtra(com.paypal.android.sdk.payments.PaymentActivity.EXTRA_RESULT_CONFIRMATION);
             if (confirm != null) {
                 try {
 
                     Log.i("Payment Example", confirm.toJSONObject().toString(4));
-
+                    topUpAccount("1",amount);
                     Toast.makeText(this, "Payment successfull!", Toast.LENGTH_SHORT).show();
 
                 } catch (JSONException e) {
@@ -63,6 +71,28 @@ public class PaymentActivity extends Activity {
         } else if (resultCode == com.paypal.android.sdk.payments.PaymentActivity.RESULT_EXTRAS_INVALID) {
             Log.i("paymentExample", "Valid payment");
         }
+    }
 
+    public void topUpAccount(String userId, double amount){
+
+        RmaAPIService mService = RmaAPIUtils.getAPIService();
+        mService.topUp(userId,amount).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+//                    Order result = response.body();
+//                    if (result != null) {
+//                        setUpChrono(result);
+//                        setUpOrderInfo(result);
+//                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Toast toast = Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
     }
 }

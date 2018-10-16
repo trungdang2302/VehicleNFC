@@ -8,39 +8,50 @@
     android:orientation="vertical"
     tools:context=".PopMenuActivity">
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00ffffff"
+        android:onClick="closePopup"
+        android:drawableLeft="@android:drawable/ic_menu_close_clear_cancel" />
+
     <TextView
         android:id="@+id/popup_lbl_fullname"
         android:layout_width="match_parent"
-        android:gravity="center"
         android:layout_height="wrap_content"
-        android:textSize="25dp"
+        android:gravity="center"
+        android:text="User name here"
         android:textColor="#fff"
-        android:text="User name here" />
+        android:textSize="25dp" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/btn_normal"
-        android:textColor="#fff"
-        android:text="Thông tin cá nhân" />
+        android:text="Thông tin cá nhân"
+        android:textColor="#fff" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/btn_normal"
+        android:text="Lịch sử đỗ xe"
+        android:onClick="viewHistory"
+        android:textColor="#fff" />
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/btn_normal"
-        android:textColor="#fff"
-        android:text="Lịch sử đỗ xe" />
+        android:text="Cài đặt"
+        android:textColor="#fff" />
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/btn_normal"
-        android:textColor="#fff"
-        android:text="Cài đặt" />
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/btn_normal"
-        android:textColor="#fff"
-        android:text="Đăng xuát" />
+        android:text="Đăng xuát"
+        android:textColor="#fff" />
 
     <Button
         android:id="@+id/btnRent"

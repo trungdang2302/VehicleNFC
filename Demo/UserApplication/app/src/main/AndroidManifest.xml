@@ -4,6 +4,7 @@
     package="com.swomfire.vehicleNFCUser">
 
     <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-feature android:name="android.hardware.nfc" />
 
@@ -19,8 +20,6 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".NFCActivity"/>
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".MainActivity" />
         <activity android:name=".WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,7 +32,8 @@
         <activity
             android:name=".PopMenuActivity"
             android:theme="@style/AppTheme.PopUpTheme" />
-        <activity android:name=".PaymentActivity"></activity>
+        <activity android:name=".PaymentActivity"/>
+        <activity android:name=".HistoryActivity"/>
 
         <service android:name="service.CustomFBMService">
             <intent-filter>

@@ -43,8 +43,11 @@ public class UserService {
         }
     }
 
-    public void createUser(User user) {
+    public void createUser(User user,String confirmCode) {
         userRepository.save(user);
+        String token = "eQp-tSFdzU0:APA91bHV38Cm_ms8n_2GlBEA34h7uYb0FAktN013sLeh30zhqVtKP6nY1FYZHXwO_4dt6VrliTI80-FHxQ4OCL5JaET-PNFg8qTA8s3GbcIPt4lBlj2pQqsChVHHmEUgfLe1gD29zQR5";
+        PushNotificationService pushNotificationService = new PushNotificationService();
+        pushNotificationService.sendPhoneConfirmNotification(token,user.getPhoneNumber(),confirmCode);
     }
 
     public Optional<User> getUserByPhone(String phone) {
@@ -147,5 +150,24 @@ public class UserService {
             userRepository.save(userDB);
         }
     }
+
+    public void activateUser(User user) {
+        Optional<User> userDB = userRepository.findByPhoneNumber(user.getPhoneNumber());
+        if (userDB.isPresent()) {
+            User existedUser = userDB.get();
+            existedUser.setActivated(true);
+            userRepository.save(existedUser);
+        }
+    }
+
+    public Optional<User> topUp(String userId, double amount){
+        User userDB = userRepository.findById(Integer.parseInt(userId)).get();
+        if (userDB!=null) {
+            userDB.setMoney(userDB.getMoney() + amount);
+            userRepository.save(userDB);
+        }
+        return Optional.of(userDB);
+    }
+
 
 }

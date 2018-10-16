@@ -13,7 +13,7 @@ public class ProductObj implements Serializable {
     private BigDecimal Price;
     private String Currency;
 
-    public ProductObj(String name, int price, String currency) {
+    public ProductObj(String name, double price, String currency) {
         Name = name;
         Price = new BigDecimal(price);
         Currency = currency;

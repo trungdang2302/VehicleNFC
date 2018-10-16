@@ -26,6 +26,10 @@ public class PolicyHasTblVehicleType implements Serializable {
     @Transient
     private List<Pricing> pricings;
 
+    @NotNull
+    @Column(name = "min_hour")
+    private Integer minHour;
+
     public PolicyHasTblVehicleType() {
     }
 
@@ -59,5 +63,13 @@ public class PolicyHasTblVehicleType implements Serializable {
 
     public void setPricings(List<Pricing> pricings) {
         this.pricings = pricings;
+    }
+
+    public Integer getMinHour() {
+        return minHour;
+    }
+
+    public void setMinHour(Integer minHour) {
+        this.minHour = minHour;
     }
 }

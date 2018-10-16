@@ -27,4 +27,13 @@ public class PopMenuActivity extends Activity {
         Intent intent = new Intent(this,PaymentActivity.class);
         startActivity(intent);
     }
+
+    public void closePopup(View view) {
+        finish();
+    }
+
+    public void viewHistory(View view) {
+        Intent intent = new Intent(this,HistoryActivity.class);
+        startActivity(intent);
+    }
 }

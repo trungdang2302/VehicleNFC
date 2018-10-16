@@ -3,7 +3,7 @@ $(document).ready(function (e) {
     $.ajax({
         type: "GET",
         dataType: "json",
-        url: 'http://localhost:8080/user/get-users-json',
+        url: 'get-users-json',
         success: function (data) {
             console.log(data);
             loadData(data);

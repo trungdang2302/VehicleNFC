@@ -14,7 +14,7 @@ public class User {
     @Expose
     private String id;
 
-    @SerializedName("phone")
+    @SerializedName("phoneNumber")
     @Expose
     private String phone;
 
@@ -76,5 +76,29 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public void setMoney(String money) {
+        this.money = money;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setVehicleNumber(String vehicleNumber) {
+        this.vehicleNumber = vehicleNumber;
+    }
+
+    public void setLicensePlateId(String licensePlateId) {
+        this.licensePlateId = licensePlateId;
+    }
+
+    public void setVehicleType(VehicleType vehicleType) {
+        this.vehicleType = vehicleType;
     }
 }

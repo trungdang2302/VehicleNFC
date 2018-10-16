@@ -1,5 +1,7 @@
 package remote;
 
+import java.util.List;
+
 import model.Order;
 import model.User;
 import retrofit2.Call;
@@ -10,6 +12,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by elpsychris on 03/12/2018.
@@ -36,4 +39,16 @@ public interface RmaAPIService {
 
     @GET("/order/get-order/{id}")
     Call<Order> getOrderById(@Path("id") Integer orderId);
+
+    @GET("/order/open-order/{userId}")
+    Call<Order> getOpenOrderByUserId(@Path("userId") Integer userId);
+
+
+    @POST("/user/top-up")
+    @FormUrlEncoded
+    Call<User> topUp(@Field("userId") String userId, @Field("amount") double amount);
+
+    @GET("/order/orders")
+    Call<List<Order>> getOrderByUserId(@Query("userId") Integer userId);
+
 }

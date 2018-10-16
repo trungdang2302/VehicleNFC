@@ -6,11 +6,13 @@ import com.example.demo.Config.ResponseObject;
 import com.example.demo.Config.SearchCriteria;
 import com.example.demo.entities.*;
 import com.example.demo.entities.Order;
+import com.example.demo.model.HourHasPrice;
 import com.example.demo.repository.*;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.management.Notification;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
@@ -42,48 +44,47 @@ public class OrderService {
         return Optional.of(order);
     }
 
+    public Optional<Order> getOpenOrderByUserId(Integer id) {
+        Order order = orderRepository.findFirstByUserIdAndOrderStatusId(userRepository.findById(id).get()
+                , orderStatusRepository.findByName(OrderStatusEnum.Open.getName()).get()).get();
+        order.setOrderPricings(orderPricingRepository.findByOrderId(order.getId()));
+        return Optional.of(order);
+    }
+
     public Optional<Order> createOrder(User checkInUser, Location location) {
         String userToken = checkInUser.getDeviceToken();
         checkInUser = userRepository.findById(checkInUser.getId()).get();
         location = locationRepository.findById(location.getId()).get();
         OrderStatus orderStatus = orderStatusRepository.findByName(OrderStatusEnum.Open.getName()).get();
-        //TODO kiểm tra thằng lồn đó có order nào open không để check out
+
         Order order = null;
         try {
             order = orderRepository.findByUserIdAndLocationIdAndOrderStatusId(checkInUser,
                     location, orderStatus).get();
         } catch (NoSuchElementException e) {
-
         }
 
         if (order != null) {
-            checkOutOrder(order, userToken);
+            checkOutOrder(order, userToken, checkInUser);
+
             return Optional.of(order);
         }
-
-        //Code here
 
         order = new Order();
         order.setOrderStatusId(orderStatus);
 
-
+        order.setVehicleType(checkInUser.getVehicleTypeId());
         order.setUserId(checkInUser);
         order.setLocationId(locationRepository.findById(location.getId()).get());
 
         order.setCheckInDate(new Date().getTime());
 
         //TODO kiểm tra thời điểm hiện tại để chọn policy
-        Policy policy = order.getLocationId().getPolicyList().get(0);
-
-        order.setAllowedParkingFrom(policy.getAllowedParkingFrom());
-        order.setAllowedParkingTo(policy.getAllowedParkingTo());
-
-
-        PolicyHasTblVehicleType policyHasTblVehicleType = policyHasVehicleTypeRepository
-                .findByPolicyIdAndVehicleTypeId(policy, checkInUser.getVehicleTypeId()).get();
-
-        List<Pricing> pricings = pricingRepository.findAllByPolicyHasTblVehicleTypeId(policyHasTblVehicleType.getId());
-
+//        Policy policy = order.getLocationId().getPolicyList().get(0);
+        List<Pricing> pricings = getPricingList(order, checkInUser);
+        if (pricings == null) {
+            return null;
+        }
         orderRepository.save(order);
 
         List<OrderPricing> orderPricings = OrderPricing.convertListPricingToOrderPricing(pricings);
@@ -93,34 +94,59 @@ public class OrderService {
             orderPricingRepository.save(orderPricing);
         }
 
-        //TODO kiểm tra thằng lồn đó xài gì để gửi SMS hay Noti
-        if (checkInUser.getSmsNoti()) {
-            PushNotificationService pushNotificationService = new PushNotificationService();
-            String token ="eQp-tSFdzU0:APA91bHV38Cm_ms8n_2GlBEA34h7uYb0FAktN013sLeh30zhqVtKP6nY1FYZHXwO_4dt6VrliTI80-FHxQ4OCL5JaET-PNFg8qTA8s3GbcIPt4lBlj2pQqsChVHHmEUgfLe1gD29zQR5";
-            order.setOrderPricings(orderPricings);
-            pushNotificationService.sendNotificationToSendSms(token, NotificationEnum.CHECK_IN, order);
-        } else {
-            PushNotificationService pushNotificationService = new PushNotificationService();
-            pushNotificationService.sendNotification(userToken, NotificationEnum.CHECK_IN, order.getId());
-        }
+        //TODO kiểm tra user đó xài gì để gửi SMS hay Noti
+        sendNotification(checkInUser, order, userToken, orderPricings, NotificationEnum.CHECK_IN);
+
         return Optional.of(order);
     }
 
-    public Optional<Order> checkOutOrder(Order order, String userToken) {
+    public List<Pricing> getPricingList(Order order, User user) {
+        List<Policy> policies = order.getLocationId().getPolicyList();
+        List<Policy> matchPolicies = new ArrayList<>();
+        for (Policy policy : policies) {
+            if (policy.getAllowedParkingFrom() < order.getCheckInDate()
+                    && policy.getAllowedParkingTo() > order.getCheckInDate()) {
+                matchPolicies.add(policy);
+            }
+        }
+        Policy choosedPolicy = null;
+        PolicyHasTblVehicleType policyHasTblVehicleType = null;
+        for (Policy policy : matchPolicies) {
+            while (choosedPolicy == null) {
+                policyHasTblVehicleType = policyHasVehicleTypeRepository
+                        .findByPolicyIdAndVehicleTypeId(policy, user.getVehicleTypeId()).get();
+                if (policyHasTblVehicleType != null) {
+                    choosedPolicy = policy;
+                    break;
+                }
+            }
+        }
+        if (policyHasTblVehicleType != null) {
+            order.setAllowedParkingFrom(choosedPolicy.getAllowedParkingFrom());
+            order.setAllowedParkingTo(choosedPolicy.getAllowedParkingTo());
+            order.setMinHour(policyHasTblVehicleType.getMinHour());
+            List<Pricing> pricings = pricingRepository.findAllByPolicyHasTblVehicleTypeId(policyHasTblVehicleType.getId());
+            return pricings;
+        }
+        return null;
+    }
+
+    public Optional<Order> checkOutOrder(Order order, String userToken, User user) {
         order.setCheckOutDate(new Date().getTime());
         TimeDuration duration = TimeService.compareTwoDates(order.getCheckInDate(), order.getCheckOutDate());
         //TODO kiểm tra có bị lố giờ để phạt tiền thêm
         //code here
 
-
-//
-//        hourHasPrices = HourHasPrice.sort(hourHasPrices);
-
         double totalPrice = 0;
         int totalHour = duration.getHour();
         int totalMinute = duration.getMinute();
-
         List<HourHasPrice> hourHasPrices = new ArrayList<>();
+
+        if (totalHour < order.getMinHour()) {
+            totalHour = order.getMinHour();
+            totalMinute = 0;
+        }
+
         while (totalHour > 0) {
             hourHasPrices.add(new HourHasPrice(totalHour, null));
             totalHour--;
@@ -128,8 +154,7 @@ public class OrderService {
 
         List<OrderPricing> orderPricings = orderPricingRepository.findByOrderId(order.getId());
         double lastPrice = 0;
-        for (OrderPricing orderPricing : orderPricings
-                ) {
+        for (OrderPricing orderPricing : orderPricings) {
             if (orderPricing.getPricePerHour() > lastPrice) {
                 lastPrice = orderPricing.getPricePerHour();
             }
@@ -140,25 +165,31 @@ public class OrderService {
             }
         }
 
-        for (
-                HourHasPrice hourHasPrice : hourHasPrices
-                ) {
+        for (HourHasPrice hourHasPrice : hourHasPrices) {
             totalPrice += hourHasPrice.getPrice();
         }
-
         totalPrice += lastPrice * ((double) totalMinute / 60);
 
         order.setDuration(duration.toMilisecond());
-        order.setTotal(round(totalPrice,0));
+        order.setTotal(round(totalPrice, 0));
         OrderStatus orderStatus = orderStatusRepository.findByName(OrderStatusEnum.Close.getName()).get();
         order.setOrderStatusId(orderStatus);
-
         orderRepository.save(order);
-
-        PushNotificationService pushNotificationService = new PushNotificationService();
-        pushNotificationService.sendNotification(userToken, NotificationEnum.CHECK_OUT, order.getId());
+        sendNotification(user, order, userToken, orderPricings, NotificationEnum.CHECK_OUT);
 
         return Optional.of(order);
+    }
+
+    public void sendNotification(User user, Order order, String userToken, List<OrderPricing> orderPricings, NotificationEnum notification) {
+        if (user.getSmsNoti()) {
+            PushNotificationService pushNotificationService = new PushNotificationService();
+            String token = "drbf3vtnqWw:APA91bEboO1XTOMAZeTzXw0SExWbUMFaIyzRuMSHzyqoUbufd-k1ELLvxT4MbCdkFaX8MuBoO8hm-ApvcG6cIT9tbJW42IYiFUL7SwqRXpBYkl8FKH3bAg2w6awwXE9KsF6WqgTvrvFv";
+            order.setOrderPricings(orderPricings);
+            pushNotificationService.sendNotificationToSendSms(token, notification, order);
+        } else {
+            PushNotificationService pushNotificationService = new PushNotificationService();
+            pushNotificationService.sendNotification(userToken, notification, order.getId());
+        }
     }
 
     @Autowired
@@ -246,7 +277,7 @@ public class OrderService {
     }
 
     public List<Order> findOrdersByUserId(Integer userId) {
-        return orderRepository.findByUserId(userRepository.findById(userId).get());
+        return orderRepository.findByUserIdOrderById(userRepository.findById(userId).get());
     }
 
     public static double round(double value, int places) {
@@ -256,43 +287,5 @@ public class OrderService {
         value = value * factor;
         long tmp = Math.round(value);
         return (double) tmp / factor;
-    }
-}
-
-
-class HourHasPrice {
-    int hour;
-    Double price;
-
-    public HourHasPrice(int hour, Double price) {
-        this.hour = hour;
-        this.price = price;
-    }
-
-    public int getHour() {
-        return hour;
-    }
-
-    public void setHour(int hour) {
-        this.hour = hour;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public int compare(HourHasPrice hourHasPrice) {
-        return (this.getHour() < hourHasPrice.getHour()) ? -1 : 1;
-    }
-
-    public static List<HourHasPrice> sort(List<HourHasPrice> hourHasPrices) {
-
-        hourHasPrices.sort((o1, o2) -> o1.compare(o2));
-
-        return hourHasPrices;
     }
 }

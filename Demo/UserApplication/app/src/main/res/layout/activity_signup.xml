@@ -8,32 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1">
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="#006699"
-                android:minHeight="@dimen/toolbar_min_height">
-
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:text="@string/signun_bold"
-                    android:textColor="#FFFFFF"
-                    android:textSize="24dp" />
-
-            </Toolbar>
-
-        </TableRow>
+        <include layout="@layout/tool_bar" />
 
         <TableRow
             android:layout_width="match_parent"
@@ -102,6 +77,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/txt_nor_height"
                 android:layout_marginLeft="30dp"
+                android:fontFamily="sans-serif"
                 android:layout_marginRight="30dp"
                 android:layout_weight="3"
                 android:background="#F0F0F0"
@@ -173,22 +149,22 @@
                 android:textSize="18dp" />
         </TableRow>
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="15dp"
-            android:gravity="center">
+        <!--<TableRow-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_marginBottom="15dp"-->
+            <!--android:gravity="center">-->
 
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="@dimen/btn_nor_width"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="By pressing Sign Up you agree with the Terms of Services and Privacy Policy"
-                android:textAlignment="center"
-                android:textColor="#999999"
-                android:textSize="13dp" />
-        </TableRow>
+            <!--<TextView-->
+                <!--android:id="@+id/textView2"-->
+                <!--android:layout_width="@dimen/btn_nor_width"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:text="By pressing Sign Up you agree with the Terms of Services and Privacy Policy"-->
+                <!--android:textAlignment="center"-->
+                <!--android:textColor="#999999"-->
+                <!--android:textSize="13dp" />-->
+        <!--</TableRow>-->
 
 
         <TableRow
@@ -205,7 +181,7 @@
                 android:layout_marginRight="30dp"
                 android:layout_weight="1"
                 android:background="@drawable/btn_reverse"
-                android:text="Already have an account?"
+                android:text="Đã có tài khoản ?"
                 android:textColor="#006699"
                 android:textSize="18dp" />
         </TableRow>

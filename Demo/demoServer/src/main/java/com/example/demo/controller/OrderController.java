@@ -53,14 +53,6 @@ public class OrderController {
 //        return null;
 //    }
 
-    @GetMapping(value = "/abc")
-    public void create() {
-//        Optional<Order> transaction1 = orderService.createOrder(order.getUserId(),order.getLocationId());
-//        return ResponseEntity.status(HttpStatus.CREATED).body(transaction1);
-        PushNotificationService pushNotificationService = new PushNotificationService();
-        pushNotificationService.sendNotification("dSkDRMJFVLE:APA91bH3-UwERNYB6zI4rS-eBRs6PJEvgNKrg0vf6ztUOGeVEkea6doodFbCVs_fJ79t5OVvr_cyeaF-TPCryUP2GtxqNZLjjpcsrYQ0EeALxYJdB47s-lAKwSYB-_5qvspoFbtdGEvS", NotificationEnum.CHECK_IN,17);
-    }
-
     @GetMapping(value = "/get-orders")
     public ResponseEntity<?> getAllOrders(@RequestParam(defaultValue = "0") Integer page) {
         try {

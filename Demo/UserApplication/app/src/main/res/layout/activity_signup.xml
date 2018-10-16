@@ -18,7 +18,7 @@
             android:layout_weight="2">
 
             <EditText
-                android:id="@+id/editText"
+                android:id="@+id/txtFirstname"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/txt_nor_height"
                 android:layout_marginLeft="30dp"
@@ -31,7 +31,7 @@
                 android:textColor="#999999"
                 android:textSize="20dp" />
             <EditText
-                android:id="@+id/editText4"
+                android:id="@+id/txtLastname"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/txt_nor_height"
                 android:layout_marginRight="30dp"
@@ -52,7 +52,7 @@
             android:layout_weight="3">
 
             <EditText
-                android:id="@+id/editText5"
+                android:id="@+id/txtPhone"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/txt_nor_height"
                 android:layout_marginLeft="30dp"
@@ -73,7 +73,7 @@
             android:layout_weight="3">
 
             <EditText
-                android:id="@+id/editText6"
+                android:id="@+id/txtPassword"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/txt_nor_height"
                 android:layout_marginLeft="30dp"
@@ -95,7 +95,7 @@
             android:layout_weight="3">
 
             <EditText
-                android:id="@+id/editText7"
+                android:id="@+id/txtVehicalID"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/txt_nor_height"
                 android:layout_marginLeft="30dp"
@@ -116,7 +116,7 @@
             android:layout_weight="3">
 
             <EditText
-                android:id="@+id/editText8"
+                android:id="@+id/txtVehicalLicenceId"
                 android:layout_width="@dimen/txt_nor_width"
                 android:layout_height="@dimen/txt_nor_height"
                 android:layout_marginLeft="30dp"
@@ -137,7 +137,6 @@
             android:layout_weight="1">
 
             <Button
-                android:id="@+id/button4"
                 android:layout_width="@dimen/btn_nor_width"
                 android:layout_height="@dimen/btn_nor_height"
                 android:layout_marginLeft="30dp"
@@ -146,6 +145,7 @@
                 android:background="@drawable/btn_normal"
                 android:text="Đăng ký"
                 android:textColor="#FFFFFF"
+                android:onClick="signUpUser"
                 android:textSize="18dp" />
         </TableRow>
 

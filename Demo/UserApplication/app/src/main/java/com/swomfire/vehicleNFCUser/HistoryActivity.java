@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -13,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Util.RmaAPIUtils;
+import adapter.HistoryAdapter;
 import model.Order;
 import remote.RmaAPIService;
 import retrofit2.Call;
@@ -35,7 +39,7 @@ public class HistoryActivity extends Activity {
         loadOrderByUserId();
     }
 
-    public void loadOrderByUserId(){
+    public void loadOrderByUserId() {
         RmaAPIService mService = RmaAPIUtils.getAPIService();
         mService.getOrderByUserId(Integer.parseInt("1")).enqueue(new Callback<List<Order>>() {
             @Override
@@ -45,11 +49,19 @@ public class HistoryActivity extends Activity {
                     if (resultList != null) {
                         DBHelper db = new DBHelper(context);
                         db.deleteAllContact();
-                        for(Order order : resultList) {
+                        for (Order order : resultList) {
                             db.insertOrder(order);
                         }
 
-                        List<History> histories = db.getAllOrder();
+                        historyList = db.getAllOrder();
+                        if (historyList != null) {
+                            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.historyList);
+                            HistoryAdapter historyAdapter = new HistoryAdapter(historyList);
+                            GridLayoutManager gLayoutManager = new GridLayoutManager(context, 1);
+                            recyclerView.setLayoutManager(gLayoutManager);
+                            recyclerView.setItemAnimator(new DefaultItemAnimator());
+                            recyclerView.setAdapter(historyAdapter);
+                        }
                     }
                 }
             }
@@ -64,14 +76,10 @@ public class HistoryActivity extends Activity {
 
 
     public void onClickCard(View view) {
+        txtPos = findViewById(R.id.txtPos);
+        int i = Integer.parseInt((String) txtPos.getText());
 
-        //Intent i = new Intent(context, HistoryDetail.class);
-        //startActivity(i);
-
-//        txtPos = findViewById(R.id.txtPos);
-        int i = Integer.parseInt((String)txtPos.getText());
-
-        Intent newActivity1 = new Intent(context, HistoryDetail.class);
+        Intent newActivity1 = new Intent(context, com.swomfire.vehicleNFCUser.HistoryDetailActivity.class);
         newActivity1.putExtra("hisItem", historyList.get(i));
         startActivity(newActivity1);
 

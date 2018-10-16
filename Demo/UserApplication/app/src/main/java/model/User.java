@@ -18,6 +18,10 @@ public class User {
     @Expose
     private String phone;
 
+    @SerializedName("password")
+    @Expose
+    private String password;
+
     @SerializedName("money")
     @Expose
     private String money;
@@ -100,5 +104,17 @@ public class User {
 
     public void setVehicleType(VehicleType vehicleType) {
         this.vehicleType = vehicleType;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

@@ -48,26 +48,26 @@ public class UserController {
     public String createUser(@RequestBody User user, HttpServletRequest httpRequest) {
         String hashedID = "";
         // Cần đoạn lấy thông tin xe
-        Optional<VehicleType> vehicleTypeOptional = vehicleTypeService.getVehicleTypeById(1);
+//        Optional<VehicleType> vehicleTypeOptional = vehicleTypeService.getVehicleTypeById(user.getVehicleTypeId().getId());
 
-        if (vehicleTypeOptional.isPresent()) {
-            VehicleType vehicleType = vehicleTypeOptional.get();
-            user.setVehicleTypeId(vehicleType);
-            String confirmCode = encodeGenerator();
-            userService.createUser(user, confirmCode);
-            HttpSession session = httpRequest.getSession();
-            Map<String, String> confirmSMSList = (Map<String, String>) session.getAttribute("confirmSMSList");
-            if (confirmSMSList == null) {
-                confirmSMSList = new HashMap<>();
-            }
-            confirmSMSList.put(user.getPhoneNumber(), confirmCode);
-            session.setAttribute("confirmSMSList", confirmSMSList);
+//        if (vehicleTypeOptional.isPresent()) {
+//            VehicleType vehicleType = vehicleTypeOptional.get();
+//            user.setVehicleTypeId(vehicleType);
+        String confirmCode = encodeGenerator();
+        userService.createUser(user, confirmCode);
+        HttpSession session = httpRequest.getSession();
+        Map<String, String> confirmSMSList = (Map<String, String>) session.getAttribute("confirmSMSList");
+        if (confirmSMSList == null) {
+            confirmSMSList = new HashMap<>();
         }
+        confirmSMSList.put(user.getPhoneNumber(), confirmCode);
+        session.setAttribute("confirmSMSList", confirmSMSList);
+//        }
         Optional<User> userOptional = userService.getUserByPhone(user.getPhoneNumber());
         if (userOptional.isPresent()) {
             User userDB = userOptional.get();
             int userId = userDB.getId();
-            hashedID = userId +"";
+            hashedID = userId + "";
 //            hashedID = userService.hashID(userId);
         }
         return hashedID;
@@ -158,7 +158,7 @@ public class UserController {
 
     @PostMapping(value = "/top-up")
     public ResponseEntity<Optional<User>> topUp(@Param("userId") String userId, @Param("amount") double amount) {
-        return  ResponseEntity.status(OK).body(userService.topUp(userId,amount));
+        return ResponseEntity.status(OK).body(userService.topUp(userId, amount));
     }
 
 }

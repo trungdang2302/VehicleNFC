@@ -77,7 +77,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_ALLOWED_PARKING_FROM, order.getAllowedParkingFrom());
         contentValues.put(COLUMN_ALLOWED_PARKING_TO, order.getAllowedParkingTo());
         contentValues.put(COLUMN_TBL_ORDER_STATUS_ID, order.getOrderStatus().getName());
-        contentValues.put(COLUMN_TBL_USER_ID, order.getUser().getId());
+        contentValues.put(COLUMN_TBL_USER_ID, order.getUser().getLastName() + order.getUser().getFirstName());
         contentValues.put(COLUMN_TBL_VEHICAL_NAME, order.getUser().getVehicleType().getName());
         contentValues.put(COLUMN_TBL_VEHICAL_ID, order.getUser().getVehicleNumber());
         contentValues.put(COLUMN_TBL_LOCATION_ID, order.getLocation().getLocation());

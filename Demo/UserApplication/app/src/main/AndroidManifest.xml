@@ -19,7 +19,7 @@
         android:label="VehicleNFC User 0.1"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".NFCActivity"/>
+        <activity android:name=".NFCActivity" />
         <activity android:name=".WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,8 +32,9 @@
         <activity
             android:name=".PopMenuActivity"
             android:theme="@style/AppTheme.PopUpTheme" />
-        <activity android:name=".PaymentActivity"/>
-        <activity android:name=".HistoryActivity"/>
+        <activity android:name=".PaymentActivity" />
+        <activity android:name=".HistoryActivity" />
+        <activity android:name=".HistoryDetailActivity" />
 
         <service android:name="service.CustomFBMService">
             <intent-filter>
@@ -47,7 +48,8 @@
         <meta-data
             android:name="firebase_analytics_collection_enabled"
             android:value="false" />
-    </application>
 
+        <activity android:name=".VerifyActivity"></activity>
+    </application>
 
 </manifest>

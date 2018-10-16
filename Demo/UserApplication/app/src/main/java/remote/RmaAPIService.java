@@ -51,4 +51,8 @@ public interface RmaAPIService {
     @GET("/order/orders")
     Call<List<Order>> getOrderByUserId(@Query("userId") Integer userId);
 
+    @POST("/user/create-user")
+    @Headers({"Content-Type: application/json"})
+    Call<User> sendUserToServer(@Body User user);
+
 }

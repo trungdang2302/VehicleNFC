@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.Config.NFCServerProperties;
 import com.example.demo.Config.ResponseObject;
 import com.example.demo.Config.SearchCriteria;
 import com.example.demo.entities.User;
@@ -45,9 +46,8 @@ public class UserService {
 
     public void createUser(User user,String confirmCode) {
         userRepository.save(user);
-        String token = "eQp-tSFdzU0:APA91bHV38Cm_ms8n_2GlBEA34h7uYb0FAktN013sLeh30zhqVtKP6nY1FYZHXwO_4dt6VrliTI80-FHxQ4OCL5JaET-PNFg8qTA8s3GbcIPt4lBlj2pQqsChVHHmEUgfLe1gD29zQR5";
         PushNotificationService pushNotificationService = new PushNotificationService();
-        pushNotificationService.sendPhoneConfirmNotification(token,user.getPhoneNumber(),confirmCode);
+        pushNotificationService.sendPhoneConfirmNotification(NFCServerProperties.getSmsHostToken(),user.getPhoneNumber(),confirmCode);
     }
 
     public Optional<User> getUserByPhone(String phone) {

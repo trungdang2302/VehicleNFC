@@ -16,9 +16,11 @@ public class PolicyHasTblVehicleType implements Serializable {
     @NotNull
     @Column(name = "id")
     private Integer id;
-    @JoinColumn(name = "tbl_policy_id", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false)
-    private Policy policyId;
+
+    @NotNull
+    @Column(name = "tbl_policy_id")
+    private Integer policyId;
+
     @JoinColumn(name = "tbl_vehicle_type_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private VehicleType vehicleTypeId;
@@ -41,12 +43,12 @@ public class PolicyHasTblVehicleType implements Serializable {
         this.id = id;
     }
 
-    public Policy getPolicyId() {
-        return policyId;
+    public void setPolicyId(Integer policyId) {
+        this.policyId = policyId;
     }
 
-    public void setPolicyId(Policy policyId) {
-        this.policyId = policyId;
+    public Integer getPolicyId() {
+        return policyId;
     }
 
     public VehicleType getVehicleTypeId() {

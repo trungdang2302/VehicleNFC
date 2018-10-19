@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.Config.NotificationEnum;
 import com.example.demo.entities.Order;
 import com.example.demo.entities.OrderPricing;
+import javassist.tools.web.BadHttpRequest;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -14,8 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.EOFException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.CompletableFuture;
@@ -74,10 +77,12 @@ public class PushNotificationService {
 
             json.put("to", serverMachineToken);
 
-
-            HttpEntity<String> httpEntity = new HttpEntity<String>(json.toString(), httpHeaders);
-            String response = restTemplate.postForObject(FIREBASE_API_URL, httpEntity, String.class);
-            System.out.println(response);
+            try {
+                HttpEntity<String> httpEntity = new HttpEntity<String>(json.toString(), httpHeaders);
+                String response = restTemplate.postForObject(FIREBASE_API_URL, httpEntity, String.class);
+            } catch (Exception e) {
+                System.err.println("Can not send notification");
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

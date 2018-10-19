@@ -1,9 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.Config.NotificationEnum;
-import com.example.demo.Config.OrderStatusEnum;
-import com.example.demo.Config.ResponseObject;
-import com.example.demo.Config.SearchCriteria;
+import com.example.demo.Config.*;
 import com.example.demo.entities.*;
 import com.example.demo.entities.Order;
 import com.example.demo.model.HourHasPrice;
@@ -45,10 +42,12 @@ public class OrderService {
     }
 
     public Optional<Order> getOpenOrderByUserId(Integer id) {
-        Order order = orderRepository.findFirstByUserIdAndOrderStatusId(userRepository.findById(id).get()
-                , orderStatusRepository.findByName(OrderStatusEnum.Open.getName()).get()).get();
-        order.setOrderPricings(orderPricingRepository.findByOrderId(order.getId()));
-        return Optional.of(order);
+        Optional<Order> order = orderRepository.findFirstByUserIdAndOrderStatusId(userRepository.findById(id).get()
+                , orderStatusRepository.findByName(OrderStatusEnum.Open.getName()).get());
+        if (order.isPresent()) {
+            order.get().setOrderPricings(orderPricingRepository.findByOrderId(order.get().getId()));
+        }
+        return order;
     }
 
     public Optional<Order> createOrder(User checkInUser, Location location) {
@@ -114,7 +113,7 @@ public class OrderService {
         for (Policy policy : matchPolicies) {
             while (choosedPolicy == null) {
                 policyHasTblVehicleType = policyHasVehicleTypeRepository
-                        .findByPolicyIdAndVehicleTypeId(policy, user.getVehicleTypeId()).get();
+                        .findByPolicyIdAndVehicleTypeId(policy.getId(), user.getVehicleTypeId()).get();
                 if (policyHasTblVehicleType != null) {
                     choosedPolicy = policy;
                     break;
@@ -170,7 +169,7 @@ public class OrderService {
         }
         totalPrice += lastPrice * ((double) totalMinute / 60);
 
-        order.setDuration(duration.toMilisecond());
+        order.setDuration(duration.toMilisecond()/1000);
         order.setTotal(round(totalPrice, 0));
         OrderStatus orderStatus = orderStatusRepository.findByName(OrderStatusEnum.Close.getName()).get();
         order.setOrderStatusId(orderStatus);
@@ -183,9 +182,8 @@ public class OrderService {
     public void sendNotification(User user, Order order, String userToken, List<OrderPricing> orderPricings, NotificationEnum notification) {
         if (user.getSmsNoti()) {
             PushNotificationService pushNotificationService = new PushNotificationService();
-            String token = "drbf3vtnqWw:APA91bEboO1XTOMAZeTzXw0SExWbUMFaIyzRuMSHzyqoUbufd-k1ELLvxT4MbCdkFaX8MuBoO8hm-ApvcG6cIT9tbJW42IYiFUL7SwqRXpBYkl8FKH3bAg2w6awwXE9KsF6WqgTvrvFv";
             order.setOrderPricings(orderPricings);
-            pushNotificationService.sendNotificationToSendSms(token, notification, order);
+            pushNotificationService.sendNotificationToSendSms(NFCServerProperties.getSmsHostToken(), notification, order);
         } else {
             PushNotificationService pushNotificationService = new PushNotificationService();
             pushNotificationService.sendNotification(userToken, notification, order.getId());

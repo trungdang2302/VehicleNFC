@@ -29,7 +29,7 @@ public class PolicyHasVehicleTypeService {
 
     public List<PolicyHasTblVehicleType> findByPolicyId(Integer policyId) {
         Policy policy = policyRepository.findById(policyId).get();
-        List<PolicyHasTblVehicleType> policyHasTblVehicleTypes = policyHasVehicleTypeRepository.findByPolicyId(policy);
+        List<PolicyHasTblVehicleType> policyHasTblVehicleTypes = policyHasVehicleTypeRepository.findByPolicyId(policy.getId());
 //        for (PolicyHasTblVehicleType policyHasTblVehicleType : policyHasTblVehicleTypes) {
 //            policyHasTblVehicleType.setPricings(pricingRepository.findAllByPolicyHasTblVehicleTypeId(policyHasTblVehicleType));
 //        }
@@ -45,7 +45,7 @@ public class PolicyHasVehicleTypeService {
         Policy policy = policyRepository.findById(policyId).get();
         VehicleType vehicleType = vehicleTypeRepository.findById(vehicleTypeId).get();
 
-        PolicyHasTblVehicleType policyHasTblVehicleType=  policyHasVehicleTypeRepository.findByPolicyIdAndVehicleTypeId(policy, vehicleType).get();
+        PolicyHasTblVehicleType policyHasTblVehicleType=  policyHasVehicleTypeRepository.findByPolicyIdAndVehicleTypeId(policy.getId(), vehicleType).get();
         List<Pricing> pricing = pricingRepository.findAllByPolicyHasTblVehicleTypeId(policyHasTblVehicleType.getId());
         policyHasTblVehicleType.setPricings(pricing);
         return Optional.of(policyHasTblVehicleType);

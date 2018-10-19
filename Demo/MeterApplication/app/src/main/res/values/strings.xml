@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">MeterApplication</string>
+    <string name="app_name">Đỗ xe với NFC</string>
     <string name="title_activity_device_scan">DeviceScanActivity</string>
 </resources>

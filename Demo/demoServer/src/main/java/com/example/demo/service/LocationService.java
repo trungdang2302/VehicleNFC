@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.Config.ResponseObject;
 import com.example.demo.entities.Location;
 
+import com.example.demo.entities.Policy;
 import com.example.demo.repository.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,13 @@ public class LocationService {
     }
 
     public Optional<Location> getMeterById(Integer id) {
-        return locationRepository.findById(id);
+        Optional<Location> location = locationRepository.findById(id);
+        if (location.isPresent()){
+            for(Policy policy : location.get().getPolicyList()) {
+                policy.setPolicyHasTblVehicleTypeList(policyHasVehicleTypeService.findByPolicyId(policy.getId()));
+            }
+        }
+        return location;
     }
 
     public ResponseObject getAllLocations() {

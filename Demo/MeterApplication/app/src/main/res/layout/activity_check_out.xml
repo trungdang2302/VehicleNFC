@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".CheckOutActivity">
+
+    <include layout="@layout/tool_bar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:layout_weight=".8"
+        android:orientation="vertical"
+        android:padding="15dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Thanh toán đỗ xe"
+            android:textColor="#000"
+            android:textSize="24dp"
+            android:layout_marginBottom="10dp"
+            android:textStyle="italic|bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <TextView
+                android:id="@+id/txtVehicleNumber"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:gravity="center"
+                android:text="85A-41245"
+                android:textColor="#000"
+                android:textSize="24dp" />
+
+            <TextView
+                android:id="@+id/txtVehicleType"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:gravity="center"
+                android:text="4 Chỗ"
+                android:textColor="#000"
+                android:textSize="24dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".3"
+                android:gravity="right"
+                android:text="Số dư:"
+                android:textColor="#000"
+                android:textSize="24dp"
+                android:textStyle="italic|bold" />
+
+            <TextView
+                android:id="@+id/txtWallet"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".7"
+                android:gravity="center"
+                android:text="1.500.200 vnđ"
+                android:textColor="#000"
+                android:textSize="24dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#2d2d2d" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:text="Thời gian đỗ xe"
+            android:textColor="#000"
+            android:textSize="24dp"
+            android:textStyle="italic|bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <TextView
+                android:id="@+id/txtParkingFrom"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".4"
+                android:gravity="center"
+                android:text="9:30"
+                android:textColor="#000"
+                android:textSize="24dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".2"
+                android:gravity="center"
+                android:text="Đến"
+                android:textColor="#000"
+                android:textSize="24dp"
+                android:textStyle="italic|bold" />
+
+            <TextView
+                android:id="@+id/txtParkingTo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".4"
+                android:gravity="center"
+                android:text="9:30"
+                android:textColor="#000"
+                android:textSize="24dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".3"
+                android:gravity="right"
+                android:text="Tổng giờ:"
+                android:textColor="#000"
+                android:textSize="20dp"
+                android:textStyle="italic|bold" />
+
+            <TextView
+                android:id="@+id/txtDuration"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".7"
+                android:gravity="center"
+                android:text="16 giờ 14 phút"
+                android:textColor="#000"
+                android:textSize="24dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".3"
+                android:gravity="right"
+                android:text="Tổng cộng:"
+                android:textColor="#000"
+                android:textSize="20dp"
+                android:textStyle="italic|bold" />
+
+            <TextView
+                android:id="@+id/txtTotal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".7"
+                android:gravity="center"
+                android:text="1.000.000 vnđ"
+                android:textColor="#000"
+                android:textSize="24dp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".3"
+                android:gravity="right"
+                android:text="Còn lại:"
+                android:textColor="#000"
+                android:textSize="20dp"
+                android:textStyle="italic|bold" />
+
+            <TextView
+                android:id="@+id/txtLeft"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".7"
+                android:gravity="center"
+                android:text="1.000.000 vnđ"
+                android:textColor="#000"
+                android:textSize="24dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/btn_nor_height"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="15dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_reverse"
+                android:onClick="cancel"
+                android:text="Hủy"
+                android:textColor="#006699"
+                android:textSize="18dp" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/btn_nor_height"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="30dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_default"
+                android:onClick="confirmCheckOut"
+                android:text="Thanh Toán"
+                android:textColor="#FFFFFF"
+                android:textSize="18dp" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

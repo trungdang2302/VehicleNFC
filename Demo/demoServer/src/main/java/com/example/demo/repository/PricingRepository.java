@@ -11,4 +11,6 @@ public interface PricingRepository extends JpaRepository<Pricing, Integer> {
     Pricing findByPolicyHasTblVehicleTypeId(PolicyHasTblVehicleType policyHasTblVehicleType);
 
     List<Pricing> findAllByPolicyHasTblVehicleTypeId(Integer policyHasTblVehicleTypeId);
+
+    void deleteByPolicyHasTblVehicleTypeId(Integer policyHasTblVehicleTypeId);
 }

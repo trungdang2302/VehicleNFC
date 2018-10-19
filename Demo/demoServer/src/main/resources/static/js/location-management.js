@@ -11,9 +11,24 @@ $(document).ready(function (e) {
         }
 
     });
-    // $('.edtBtn').hide();
-    // $(".saveBtn").attr("href", "https://www.w3schools.com/jquery/");
-
+    $('.clockpickerFrom').clockpicker({
+        placement: 'bottom',
+        align: 'left',
+        donetext: 'Done',
+        afterDone: function () {
+            console.log("after done");
+            parseTimeToLong("clockpickerFrom","ParkingFrom");
+        }
+    });
+    $('.clockpickerTo').clockpicker({
+        placement: 'bottom',
+        align: 'left',
+        donetext: 'Done',
+        afterDone: function () {
+            console.log("after done");
+            parseTimeToLong("clockpickerTo","ParkingTo");
+        }
+    });
 });
 
 function emptyTable() {
@@ -41,6 +56,7 @@ function loadData(res) {
         row += '<td>' + content[i].description + '</td>';
         row += '<td>' + status + '</td>';
         row += '<td><a href="#" onclick="viewPolicy(' + content[i].id + ')" class="btn btn-primary viewBtn">View</a></td>';
+        row += '<td><a href="#" onclick="createPolicy(' + content[i].id + ')" class="btn btn-primary viewBtn">Create Policy</a></td>';
         row += '</tr>';
         $('#location-table tbody').append(row);
     }
@@ -65,6 +81,31 @@ function loadData(res) {
             $('#pagination').append(li);
         }
     }
+}
+
+
+function createPolicy(locationId) {
+    var url = "http://localhost:8080/policy/create?locationId="+locationId;
+    window.location.href = url;
+
+    // $.ajax({
+    //     type: "GET",
+    //     dataType:"json",
+    //     url: 'http://localhost:8080/vehicleType/get-all',
+    //     success: function (data) {
+    //         console.log("VehicleTypes: "+data);
+    //         for ( i = 0; i < data.length; i++) {
+    //             var chk = '<input type="checkbox" name="chk[]" id="vehicleType-' + i + '" value="'+ data[i].id +'">'+data[i].name+'';
+    //             $('#vehicleTypeArr').append(chk);
+    //         }
+    //     }, error: function (data) {
+    //         console.log("Could not load vehicle types")
+    //     }
+    // });
+    //
+    // $('#createPolicy').modal();
+
+
 }
 
 function viewPolicy(id) {
@@ -120,45 +161,46 @@ var pricings = "";
         pricings = data[i].pricings;
         for ( j = 0; j < pricings.length; j++) {
             row = '<tr>';
-            row += '<td><input type="text" class="input index-'+ i +'-'+ j +'" name="vehicleType" disabled onkeypress="this.style.width = ((this.value.length + 1) * 8) + \'px\';"  value="'+data[i].vehicleTypeId.name+'"></td>';
-            row += '<td><input type="text" class="input index-'+ i +'-'+ j +'" name="vehicleType" disabled onkeypress="this.style.width = ((this.value.length + 1) * 8) + \'px\';"  value="' + data[i].policyId.allowedParkingFrom + '"></td>';
-            row += '<td><input type="text" class="input index-'+ i +'-'+ j +'" name="vehicleType" disabled onkeypress="this.style.width = ((this.value.length + 1) * 8) + \'px\';"  value="' + data[i].policyId.allowedParkingTo + '"></td>';
-            row += '<td><input type="text" class="input index-'+ i +'-'+ j +'" name="vehicleType" disabled onkeypress="this.style.width = ((this.value.length + 1) * 8) + \'px\';"  value="' + pricings[j].fromHour + '"></td>';
-            row += '<td><input type="text" class="input index-'+ i +'-'+ j +'" name="vehicleType" disabled onkeypress="this.style.width = ((this.value.length + 1) * 8) + \'px\';"  value="' + pricings[j].pricePerHour + '"></td>';
-            row += '<td><input type="text" class="input index-'+ i +'-'+ j +'" name="vehicleType" disabled onkeypress="this.style.width = ((this.value.length + 1) * 8) + \'px\';"  value="' + pricings[j].lateFeePerHour + '"></td>';
-            row += '<td> <button class="editBtn" onclick="Edit('+ pricings[j].id +', ' + i + ', '+ j +')">Edit</button>';
+            // row += '<td><input type="text" class="input index-'+ i +'-'+ j +'" name="vehicleType" disabled onkeypress="this.style.width = ((this.value.length + 1) * 8) + \'px\';"  value="' + data[i].policyId.allowedParkingFrom + '"></td>';
+            row += '<td>'+data[i].vehicleTypeId.name+'</td>';
+            row += '<td>' + data[i].policyId.allowedParkingFrom + '</td>';
+            row += '<td>' + data[i].policyId.allowedParkingTo + '</td>';
+            row += '<td>' + pricings[j].fromHour + '</td>';
+            row += '<td>' + pricings[j].pricePerHour + '</td>';
+            row += '<td>' + pricings[j].lateFeePerHour + '</td>';
+            row += '<td> <button class="editBtn" onclick="Edit('+ data[i].policyId.id +', ' + data[i].vehicleTypeId.id + ', '+ j +')">Edit</button>';
             row += '<td> <button class="saveBtn" onclick="Save('+ pricings[j].id +', ' + i + ', '+ j +')">Save</button>';
             row += '</tr>';
             $('#policy-table tbody').append(row);
         }
     }
-    var length = $('.input').val().length;
-    $('.input').css('width',(length * 8) + 'px');
-    $('.saveBtn').hide();
+    // var length = $('.input').val().length;
+    // $('.input').css('width',(length * 8) + 'px');
+    // $('.saveBtn').hide();
 }
 
-function Edit(pricingId, policyIndex, pricingIndex ) {
+function Edit(policyId, vehicleTypeId, pricingIndex ) {
 
-    $('.index-'+policyIndex+'-'+pricingIndex).prop('disabled', false);
+    // $('.index-'+policyIndex+'-'+pricingIndex).prop('disabled', false);
     $('.saveBtn').show();
     $('.editBtn').hide();
+    var url = "http://localhost:8080/policy/edit?policyId="+policyId+"&vehicleTypeId="+vehicleTypeId;
+    window.location.href = url;
 
 }
-function Save(id, policyIndex, pricingIndex  ) {
-    // $('.edtBtn').show();
-    $('.editBtn').show();
-    $('.saveBtn').hide();
-    $('.index-'+policyIndex+'-'+pricingIndex).prop('disabled', true);
-
-    $.ajax({
-        type: "POST",
-        dataType: "json",
-        url: 'http://localhost:8080/location/get/' + id,
-        success: function (data) {
-            console.log(data);
-
-        }, error: function () {
-            alert("Can't load data")
-        }
-    });
+function parseTimeToLong(clockPicker, type) {
+    console.log(type);
+    console.log("log: "+$('.clockpickerFrom #ParkingFrom').val());
+    var time = $('.'+clockPicker+' #'+type).val();
+    console.log("Time: "+time);
+    var temp = time.split(":")
+    var hour = temp[0];
+    console.log("hour: " + hour);
+    var minute = temp[1];
+    console.log("Minute: "+minute);
+    console.log("hour ms: "+parseInt(hour * 3600000));
+    console.log("minute ms: "+parseInt(minute * 60000));
+    var ms = parseInt(hour * 3600000) + parseInt(minute * 60000);
+    console.log(ms);
+    $('#allowed'+type).val(ms);
 }

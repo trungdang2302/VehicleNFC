@@ -15,4 +15,5 @@ public interface PolicyHasVehicleTypeRepository extends JpaRepository<PolicyHasT
 
     List<PolicyHasTblVehicleType> findByPolicyIdIn(List<Policy> policyList);
 
+
 }

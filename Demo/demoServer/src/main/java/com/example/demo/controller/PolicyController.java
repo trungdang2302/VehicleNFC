@@ -1,13 +1,13 @@
 package com.example.demo.controller;
 
 import com.example.demo.entities.Policy;
+import com.example.demo.entities.VehicleType;
 import com.example.demo.service.PolicyService;
+import com.example.demo.view.PolicyView;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -31,8 +31,32 @@ public class PolicyController {
     }
 
     @GetMapping("/edit")
-    public ModelAndView index(ModelAndView mav) {
+    public ModelAndView index(ModelAndView mav
+                            , @RequestParam("policyId") Integer policyId
+                            , @RequestParam("vehicleTypeId") Integer vehicleTypeId) {
         mav.setViewName("policy-edit");
         return mav;
+    }
+
+    @GetMapping("/create")
+    public ModelAndView createPage(ModelAndView mav
+                                 , @RequestParam("locationId") Integer locationId) {
+        mav.setViewName("policy-create");
+        return mav;
+    }
+
+    @PostMapping(value = "/create")
+    public ResponseEntity createPolicy(@RequestBody PolicyView policyView) {
+        try {
+            Integer locationId = policyView.getLocationId();
+            Policy policy = policyView.getPolicy();
+            List<VehicleType> vehicleTypeList = policyView.getVehicleTypes();
+
+            return ResponseEntity.status(HttpStatus.OK).body(policyService.savePolicy(policy, vehicleTypeList, locationId));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
     }
 }

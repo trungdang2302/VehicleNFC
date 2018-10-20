@@ -56,9 +56,6 @@ public class UserService {
     }
 
     public Page<User> getAllUser(Integer page, Integer numOfRows) {
-//        List<SearchCriteria> params = new ArrayList<>();
-//        params.add(new SearchCriteria("lastName", ":", "mai"));
-//        searchUser(params);
         return userRepository.findAll(new PageRequest(page, numOfRows));
     }
 

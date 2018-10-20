@@ -6,6 +6,7 @@ import com.example.demo.service.PolicyHasVehicleTypeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sun.misc.Request;
 
 import java.util.List;
 
@@ -47,5 +48,25 @@ public class PolicyHasVehicleTypeController {
         }
     }
 
+    @PostMapping("/save")
+    public String save(@RequestBody PolicyHasTblVehicleType policyHasTblVehicleType) {
+            policyHasVehicleTypeService.save(policyHasTblVehicleType);
+            return "Success";
+    }
+
+    @PostMapping("/delete")
+    public String delete(@RequestBody PolicyHasTblVehicleType policyHasTblVehicleType) {
+        policyHasVehicleTypeService.delete(policyHasTblVehicleType);
+        return "Success";
+    }
+
+    @GetMapping("/get-by-policy")
+    public ResponseEntity getByPolicy(@RequestParam("policyId") Integer policyId) {
+        List<PolicyHasTblVehicleType> policyHasTblVehicleTypes = policyHasVehicleTypeService.findListByPolicyId(policyId);
+        if (policyHasTblVehicleTypes.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(policyHasTblVehicleTypes);
+    }
 
 }

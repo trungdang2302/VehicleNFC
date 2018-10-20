@@ -10,6 +10,7 @@ import com.example.demo.repository.PricingRepository;
 import com.example.demo.repository.VehicleTypeRepository;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,5 +54,28 @@ public class PolicyHasVehicleTypeService {
 
     public List<PolicyHasTblVehicleType> findByPolicyList(List<Policy> policyList) {
         return policyHasVehicleTypeRepository.findByPolicyIdIn(policyList);
+    }
+
+    public void save(PolicyHasTblVehicleType policyHasTblVehicleType) {
+        Policy policy = policyRepository.getOne(policyHasTblVehicleType.getPolicyId());
+        VehicleType vehicleType = policyHasTblVehicleType.getVehicleTypeId();
+        policyRepository.save(policy);
+        vehicleTypeRepository.save(vehicleType);
+        policyHasVehicleTypeRepository.save(policyHasTblVehicleType);
+    }
+
+    @Transactional
+    public void delete(PolicyHasTblVehicleType policyHasTblVehicleType) {
+        Policy policy = policyRepository.getOne(policyHasTblVehicleType.getPolicyId());
+        VehicleType vehicleType = policyHasTblVehicleType.getVehicleTypeId();
+        pricingRepository.deleteByPolicyHasTblVehicleTypeId(policyHasTblVehicleType.getId());
+        policyHasVehicleTypeRepository.deleteById(policyHasTblVehicleType.getId());
+//        policyRepository.delete(policy);
+//        vehicleTypeRepository.delete(vehicleType);
+    }
+
+    public List<PolicyHasTblVehicleType> findListByPolicyId(Integer policyId) {
+        Policy policy = policyRepository.findById(policyId).get();
+        return policyHasVehicleTypeRepository.findByPolicyId(policy.getId());
     }
 }

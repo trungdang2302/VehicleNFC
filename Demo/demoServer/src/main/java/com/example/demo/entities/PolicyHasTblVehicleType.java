@@ -13,8 +13,9 @@ import java.util.List;
 public class PolicyHasTblVehicleType implements Serializable {
     @Id
     @Basic(optional = false)
-    @NotNull
+//    @NotNull
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @NotNull

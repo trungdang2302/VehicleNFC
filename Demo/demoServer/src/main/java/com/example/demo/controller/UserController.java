@@ -161,4 +161,11 @@ public class UserController {
         return ResponseEntity.status(OK).body(userService.topUp(userId, amount));
     }
 
+    @GetMapping(value = {"/get-user-by-phone"})
+    public ResponseEntity<Optional<User>> getUserByPhoneNumber(@Param("phoneNumber") String phoneNumber) {
+        System.out.println("getting user info...");
+        return status(OK).body(userService.getUserByPhone(phoneNumber));
+    }
+
+
 }

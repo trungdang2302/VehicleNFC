@@ -55,4 +55,8 @@ public interface RmaAPIService {
     @Headers({"Content-Type: application/json"})
     Call<User> sendUserToServer(@Body User user);
 
+
+    @GET("user/get-user-by-phone")
+    Call<User> getUserByPhone(@Query("phoneNumber") String phone);
+
 }

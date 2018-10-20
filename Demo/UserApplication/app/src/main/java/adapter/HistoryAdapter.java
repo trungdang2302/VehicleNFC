@@ -40,7 +40,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
-        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm DD/MM/YYYY ", Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm", Locale.US);
 
         History history = hislist.get(position);
 

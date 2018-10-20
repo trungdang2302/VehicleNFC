@@ -28,6 +28,7 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -43,6 +44,7 @@ import remote.RmaAPIService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import service.UserService;
 
 
 public class NFCActivity extends Activity implements NfcAdapter.CreateNdefMessageCallback {
@@ -139,7 +141,7 @@ public class NFCActivity extends Activity implements NfcAdapter.CreateNdefMessag
         }
 
         totalPrice += lastPrice * ((double) m / 60);
-        lblTotal.setText((long) (totalPrice * 1000) + " đ");
+        lblTotal.setText(UserService.convertMoney(totalPrice));
     }
 
     TextView lblTotal;
@@ -213,11 +215,18 @@ public class NFCActivity extends Activity implements NfcAdapter.CreateNdefMessag
     }
 
     public void setUpOrderInfo(Order order) {
-        TextView lblLocation, lblVehicleType, lblVehicleNumber;
+        TextView lblLocation, lblVehicleType, lblVehicleNumber, lblCheckInDate;
         lblLocation = findViewById(R.id.lblOrderLocation);
         lblVehicleNumber = findViewById(R.id.lblUserVehicleNumber);
         lblVehicleType = findViewById(R.id.lblUserVehicleType);
+        lblCheckInDate = findViewById(R.id.lblCheckin);
 
+        String pattern = "HH:mm dd-MM-yyyy";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+        String date = simpleDateFormat.format(new Date(order.getCheckInDate()));
+
+        lblCheckInDate.setText(date);
         lblLocation.setText(order.getLocation().getLocation());
 
         lblVehicleNumber.setText(order.getUser().getVehicleNumber());

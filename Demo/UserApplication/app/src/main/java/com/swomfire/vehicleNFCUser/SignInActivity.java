@@ -3,6 +3,7 @@ package com.swomfire.vehicleNFCUser;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -29,32 +30,38 @@ public class SignInActivity extends Activity {
     }
 
     public void signIn(View view) {
-//        RmaAPIService mService = RmaAPIUtils.getAPIService();
-//        String phone = txtPhone.getText().toString();
-//        String password = txtPassword.getText().toString();
-//        mService.login(phone,password).enqueue(new Callback<User>() {
-//            @Override
-//            public void onResponse(Call<User> call, Response<User> response) {
-//                if (response.isSuccessful()) {
-//                    User result = response.body();
-////                    Toast.makeText(context, result.getVehicleNumber(), Toast.LENGTH_LONG).show();
-////                    changeToCompletePaymentView(result);
-//                    if (result!=null) {
-//                        Intent intent = new Intent(context, NFCActivity.class);
-//                        startActivity(intent);
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<User> call, Throwable t) {
-//                Toast toast = Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT);
-//                toast.show();
-//            }
-//        });
-//
-        Intent intent = new Intent(this, NFCActivity.class);
-        startActivity(intent);
+        RmaAPIService mService = RmaAPIUtils.getAPIService();
+        String phone = txtPhone.getText().toString();
+        String password = txtPassword.getText().toString();
+        mService.login(phone,password).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    User result = response.body();
+                    if (result!=null) {
+
+                        SharedPreferences.Editor a = getSharedPreferences("localData", MODE_PRIVATE).edit();
+                        a.clear();
+
+                        SharedPreferences.Editor editor = getSharedPreferences("localData", MODE_PRIVATE).edit();
+                        editor.putString("phoneNumberSignIn", phone );
+                        editor.commit();
+
+                        Intent intent = new Intent(context, NFCActivity.class);
+                        startActivity(intent);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Toast toast = Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
+
+//        Intent intent = new Intent(this, NFCActivity.class);
+//        startActivity(intent);
 
     }
 

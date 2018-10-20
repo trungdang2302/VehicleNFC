@@ -165,7 +165,7 @@ function loadData(res) {
         row += '<td>' + content[i].lastName + '</td>';
         row += '<td>' + content[i].vehicleNumber + '</td>';
         row += '<td>' + content[i].licensePlateId + '</td>';
-        row += '<td>' + content[i].vehicleTypeId.name + '</td>';
+        // row += '<td>' + content[i].vehicleTypeId.name + '</td>';
         row += '<td><a href="#" onclick="loadUserModal(' + content[i].id + ')" class="btn btn-primary edtBtn">Edit</a></td>';
         row += '<td><a href="#" onclick="deleteModal(' + content[i].id + ')" class="btn btn-danger delBtn">Delete</a></td>'
         row += '</tr>';

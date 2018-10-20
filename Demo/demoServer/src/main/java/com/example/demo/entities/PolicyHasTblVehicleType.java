@@ -13,18 +13,25 @@ import java.util.List;
 public class PolicyHasTblVehicleType implements Serializable {
     @Id
     @Basic(optional = false)
-    @NotNull
+//    @NotNull
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @JoinColumn(name = "tbl_policy_id", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false)
-    private Policy policyId;
+
+    @NotNull
+    @Column(name = "tbl_policy_id")
+    private Integer policyId;
+
     @JoinColumn(name = "tbl_vehicle_type_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private VehicleType vehicleTypeId;
 //    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tblPolicyHasTblVehicleTypeId")
     @Transient
     private List<Pricing> pricings;
+
+    @NotNull
+    @Column(name = "min_hour")
+    private Integer minHour;
 
     public PolicyHasTblVehicleType() {
     }
@@ -37,12 +44,12 @@ public class PolicyHasTblVehicleType implements Serializable {
         this.id = id;
     }
 
-    public Policy getPolicyId() {
-        return policyId;
+    public void setPolicyId(Integer policyId) {
+        this.policyId = policyId;
     }
 
-    public void setPolicyId(Policy policyId) {
-        this.policyId = policyId;
+    public Integer getPolicyId() {
+        return policyId;
     }
 
     public VehicleType getVehicleTypeId() {
@@ -59,5 +66,13 @@ public class PolicyHasTblVehicleType implements Serializable {
 
     public void setPricings(List<Pricing> pricings) {
         this.pricings = pricings;
+    }
+
+    public Integer getMinHour() {
+        return minHour;
+    }
+
+    public void setMinHour(Integer minHour) {
+        this.minHour = minHour;
     }
 }

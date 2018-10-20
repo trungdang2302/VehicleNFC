@@ -3,7 +3,7 @@ $(document).ready(function (e) {
     $.ajax({
         type: "GET",
         dataType: "json",
-        url: 'http://localhost:8080/user/get-users-json',
+        url: 'get-users-json',
         success: function (data) {
             console.log(data);
             loadData(data);
@@ -165,7 +165,7 @@ function loadData(res) {
         row += '<td>' + content[i].lastName + '</td>';
         row += '<td>' + content[i].vehicleNumber + '</td>';
         row += '<td>' + content[i].licensePlateId + '</td>';
-        row += '<td>' + content[i].vehicleTypeId.name + '</td>';
+        // row += '<td>' + content[i].vehicleTypeId.name + '</td>';
         row += '<td><a href="#" onclick="loadUserModal(' + content[i].id + ')" class="btn btn-primary edtBtn">Edit</a></td>';
         row += '<td><a href="#" onclick="deleteModal(' + content[i].id + ')" class="btn btn-danger delBtn">Delete</a></td>'
         row += '</tr>';

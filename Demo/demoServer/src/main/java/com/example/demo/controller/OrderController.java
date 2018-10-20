@@ -33,6 +33,13 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK).body(orderService.getOrderById(id));
     }
 
+    @GetMapping(value = {"/open-order/{userId}"})
+    public ResponseEntity<Optional<Order>> getOpenOrderByUserId(@PathVariable("userId") Integer id){
+        Optional<Order> order =orderService.getOpenOrderByUserId(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(order);
+    }
+
     @PostMapping(value = "/create")
     public ResponseEntity<Optional<Order>> create(@RequestBody Order order) {
         Optional<Order> transaction1 = orderService.createOrder(order.getUserId(),order.getLocationId());
@@ -45,14 +52,6 @@ public class OrderController {
 ////        return ResponseEntity.status(HttpStatus.OK).body(orderService.getOrderById(id));
 //        return null;
 //    }
-
-    @GetMapping(value = "/abc")
-    public void create() {
-//        Optional<Order> transaction1 = orderService.createOrder(order.getUserId(),order.getLocationId());
-//        return ResponseEntity.status(HttpStatus.CREATED).body(transaction1);
-        PushNotificationService pushNotificationService = new PushNotificationService();
-        pushNotificationService.sendNotification("dSkDRMJFVLE:APA91bH3-UwERNYB6zI4rS-eBRs6PJEvgNKrg0vf6ztUOGeVEkea6doodFbCVs_fJ79t5OVvr_cyeaF-TPCryUP2GtxqNZLjjpcsrYQ0EeALxYJdB47s-lAKwSYB-_5qvspoFbtdGEvS", NotificationEnum.CHECK_IN,17);
-    }
 
     @GetMapping(value = "/get-orders")
     public ResponseEntity<?> getAllOrders(@RequestParam(defaultValue = "0") Integer page) {

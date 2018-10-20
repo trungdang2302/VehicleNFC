@@ -4,6 +4,7 @@
     package="com.swomfire.vehicleNFCUser">
 
     <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-feature android:name="android.hardware.nfc" />
 
@@ -14,13 +15,11 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/logo"
-        android:label="VehicleNFC User 0.1"
+        android:icon="@drawable/logo_reverse"
+        android:label="Đỗ xe với NFC"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".NFCActivity"/>
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".NFCActivity" />
         <activity android:name=".WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,7 +32,10 @@
         <activity
             android:name=".PopMenuActivity"
             android:theme="@style/AppTheme.PopUpTheme" />
-        <activity android:name=".PaymentActivity"></activity>
+        <activity android:name=".PaymentActivity" />
+        <activity android:name=".HistoryActivity" />
+        <activity android:name=".HistoryDetailActivity" />
+        <activity android:name=".ProfileActivity" />
 
         <service android:name="service.CustomFBMService">
             <intent-filter>
@@ -47,7 +49,8 @@
         <meta-data
             android:name="firebase_analytics_collection_enabled"
             android:value="false" />
-    </application>
 
+        <activity android:name=".VerifyActivity"></activity>
+    </application>
 
 </manifest>

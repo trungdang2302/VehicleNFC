@@ -5,7 +5,7 @@
     /*margin-top: 20px;*/
     float: right;
     background: #00AAFF;
-    border-color: #00a0f0
+    border-color: #00a0f0;
     text-align: center;
     color: #fff;
     border-radius: 2px;
@@ -54,4 +54,26 @@ form#search-box > *:not(:last-child) {
     width: 100%;
     float: right;
     margin-left: 10px;
+}
+
+/*start-here*/
+.navbar-default{
+    height: 70px;
+}
+
+.brand{
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 25px !important;
+}
+
+.brand img{
+     width: 50px;
+    height: 50px;
+}
+
+.brand p{
+    font-size: 20px;
+    margin: 10px;
 }

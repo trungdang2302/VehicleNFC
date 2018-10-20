@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1">
 
-        <include layout="@layout/tool_bar_with_menu"/>
+        <include layout="@layout/tool_bar"/>
 
         <TableRow
             android:layout_width="match_parent"
@@ -35,17 +35,17 @@
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="@dimen/txt_nor_height"
+            android:layout_height="match_parent"
             android:layout_marginBottom="15dp"
             android:layout_weight="3">
 
             <EditText
                 android:id="@+id/txtPassword"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/txt_nor_height"
                 android:layout_marginLeft="30dp"
+                android:fontFamily="sans-serif"
                 android:layout_marginRight="30dp"
-
                 android:layout_weight="3"
                 android:background="#F0F0F0"
                 android:hint="Mật khẩu"
@@ -69,7 +69,7 @@
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
                 android:layout_weight="1"
-                android:background="#006699"
+                android:background="@drawable/btn_normal"
                 android:text="Đăng nhập"
                 android:textColor="#FFFFFF"
                 android:textSize="18dp"
@@ -96,12 +96,6 @@
                 android:onClick="toSignUp"
                 android:textSize="18dp" />
         </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="60" />
-
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -117,6 +111,12 @@
                 android:textColor="#999999"
                 android:textSize="18dp" />
         </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="50" />
+
 
     </TableLayout>
 

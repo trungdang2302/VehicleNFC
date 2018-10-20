@@ -19,12 +19,26 @@ public class PopMenuActivity extends Activity {
         int width= displayMetrics.widthPixels;
         int height = displayMetrics.heightPixels;
 
-//        getWindow().setLayout((int)(width*.8),(int) (height*.6));
-        getWindow().setLayout(width, height);
+        getWindow().setLayout((int)(width*.9),(int) (height*.9));
+//        getWindow().setLayout(width, height);
     }
 
-    public void payShit(View view) {
+    public void topUp(View view) {
         Intent intent = new Intent(this,PaymentActivity.class);
+        startActivity(intent);
+    }
+
+    public void closePopup(View view) {
+        finish();
+    }
+
+    public void toUserProfile(View view){
+        Intent intent = new Intent(this,ProfileActivity.class);
+        startActivity(intent);
+    }
+
+    public void viewHistory(View view) {
+        Intent intent = new Intent(this,HistoryActivity.class);
         startActivity(intent);
     }
 }

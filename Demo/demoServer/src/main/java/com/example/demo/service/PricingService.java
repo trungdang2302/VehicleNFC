@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.entities.Policy;
 import com.example.demo.entities.PolicyHasTblVehicleType;
 import com.example.demo.entities.Pricing;
 import com.example.demo.repository.PolicyHasVehicleTypeRepository;
@@ -37,5 +38,21 @@ public class PricingService {
             return pricings;
         }
         return null;
+    }
+
+    public Pricing save(Pricing pricing) {
+        return pricingRepository.save(pricing);
+    }
+
+    public void deletePricing(Integer id) {
+        pricingRepository.deleteById(id);
+    }
+
+    public void deleteByPolicyHasTblVehicleTypeId(Integer policyHasVehicleTypeId) {
+        pricingRepository.deleteByPolicyHasTblVehicleTypeId(policyHasVehicleTypeId);
+    }
+
+    public Pricing findById(Integer pricingId) {
+        return pricingRepository.findById(pricingId).get();
     }
 }

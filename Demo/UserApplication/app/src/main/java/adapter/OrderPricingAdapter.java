@@ -12,6 +12,7 @@ import com.swomfire.vehicleNFCUser.R;
 import java.util.List;
 
 import model.OrderPricing;
+import service.UserService;
 
 public class OrderPricingAdapter extends RecyclerView.Adapter<OrderPricingAdapter.MyViewHolder> {
     private List<OrderPricing> orderPricings;
@@ -31,8 +32,8 @@ public class OrderPricingAdapter extends RecyclerView.Adapter<OrderPricingAdapte
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         OrderPricing orderPricing = orderPricings.get(position);
-        holder.txtFrom.setText("Từ " + orderPricing.getFromHour()+" giờ");
-        holder.txtPrice.setText((long)(orderPricing.getPricePerHour()*1000)+" đ");
+        holder.txtFrom.setText("Từ " + orderPricing.getFromHour() + " giờ");
+        holder.txtPrice.setText(UserService.convertMoney(orderPricing.getPricePerHour()));
     }
 
     @Override

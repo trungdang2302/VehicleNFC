@@ -17,16 +17,10 @@ import com.swomfire.vehicleNFCUser.R;
 
 import model.NotificationSerial;
 
-/**
- * Created by elpsychris on 16/03/2018.
- */
-
 public class CustomFBMService extends FirebaseMessagingService {
-    private static final String TAG = "MyFirebaseMsgService";
 
     @Override
     public void onNewToken(String token) {
-        Log.d(TAG, "Refreshed token: " + token);
 
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the

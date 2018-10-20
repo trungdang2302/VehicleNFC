@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.Config.NFCServerProperties;
 import com.example.demo.Config.ResponseObject;
 import com.example.demo.Config.SearchCriteria;
 import com.example.demo.entities.User;
@@ -43,8 +44,10 @@ public class UserService {
         }
     }
 
-    public void createUser(User user) {
+    public void createUser(User user,String confirmCode) {
         userRepository.save(user);
+        PushNotificationService pushNotificationService = new PushNotificationService();
+        pushNotificationService.sendPhoneConfirmNotification(NFCServerProperties.getSmsHostToken(),user.getPhoneNumber(),confirmCode);
     }
 
     public Optional<User> getUserByPhone(String phone) {
@@ -53,9 +56,6 @@ public class UserService {
     }
 
     public Page<User> getAllUser(Integer page, Integer numOfRows) {
-//        List<SearchCriteria> params = new ArrayList<>();
-//        params.add(new SearchCriteria("lastName", ":", "mai"));
-//        searchUser(params);
         return userRepository.findAll(new PageRequest(page, numOfRows));
     }
 
@@ -147,5 +147,24 @@ public class UserService {
             userRepository.save(userDB);
         }
     }
+
+    public void activateUser(User user) {
+        Optional<User> userDB = userRepository.findByPhoneNumber(user.getPhoneNumber());
+        if (userDB.isPresent()) {
+            User existedUser = userDB.get();
+            existedUser.setActivated(true);
+            userRepository.save(existedUser);
+        }
+    }
+
+    public Optional<User> topUp(String userId, double amount){
+        User userDB = userRepository.findById(Integer.parseInt(userId)).get();
+        if (userDB!=null) {
+            userDB.setMoney(userDB.getMoney() + amount);
+            userRepository.save(userDB);
+        }
+        return Optional.of(userDB);
+    }
+
 
 }

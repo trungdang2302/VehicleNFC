@@ -17,7 +17,7 @@ public class Policy {
 
     @SerializedName("allowedParkingTo")
     @Expose
-    private int allowedParkingTo;
+    private long allowedParkingTo;
 
     @SerializedName("")
     @Expose
@@ -40,11 +40,11 @@ public class Policy {
         this.allowedParkingFrom = allowedParkingFrom;
     }
 
-    public int getAllowedParkingTo() {
+    public long getAllowedParkingTo() {
         return allowedParkingTo;
     }
 
-    public void setAllowedParkingTo(int allowedParkingTo) {
+    public void setAllowedParkingTo(long allowedParkingTo) {
         this.allowedParkingTo = allowedParkingTo;
     }
 

@@ -1,8 +1,8 @@
 package remote;
 
+import model.Location;
 import model.Meter;
 import model.Order;
-import model.Transaction;
 import model.User;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -19,15 +19,22 @@ public interface RmaAPIService {
     @GET("/test")
     Call<String> getServer();
 
-    @GET("/user/{id}")
+    @GET("/user/get-user/{id}")
     Call<User> getUserById(@Path("id") Integer userId);
 
+    @GET("/order/open-order/{userId}")
+    Call<Order> getOpenOrderByUserId(@Path("userId") Integer userId);
 
-    @GET("/meter/{id}")
-    Call<Meter> getMeterById(@Path("id") Integer meterId);
+
+    @GET("/location/get/{id}")
+    Call<Location> getLocationById(@Path("id") Integer locationId);
 
     @POST("/order/create")
     @Headers({"Content-Type: application/json"})
     Call<Order> sendTransactionToServer(@Body Order order );
+
+    @POST("/user/update-user-sms")
+    @Headers({"Content-Type: application/json"})
+    Call<User> updateUserSmS(@Body User user);
 
 }

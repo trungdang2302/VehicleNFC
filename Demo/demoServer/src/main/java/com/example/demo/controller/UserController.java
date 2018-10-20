@@ -9,15 +9,16 @@ import com.example.demo.service.UserService;
 import com.example.demo.service.VehicleTypeService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,6 +26,7 @@ import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.ResponseEntity.status;
 
 @RestController
+@CrossOrigin
 @RequestMapping(value = "/user")
 public class UserController {
 
@@ -43,24 +45,49 @@ public class UserController {
     }
 
     @PostMapping(value = "/create-user")
-    public String createUser(User user) {
+    public String createUser(@RequestBody User user, HttpServletRequest httpRequest) {
         String hashedID = "";
         // Cần đoạn lấy thông tin xe
-        Optional<VehicleType> vehicleTypeOptional = vehicleTypeService.getVehicleTypeById(user.getVehicleTypeId().getId());
+//        Optional<VehicleType> vehicleTypeOptional = vehicleTypeService.getVehicleTypeById(user.getVehicleTypeId().getId());
 
-        if (vehicleTypeOptional.isPresent()) {
-            VehicleType vehicleType = vehicleTypeOptional.get();
-            user.setVehicleTypeId(vehicleType);
-            userService.createUser(user);
+//        if (vehicleTypeOptional.isPresent()) {
+//            VehicleType vehicleType = vehicleTypeOptional.get();
+//            user.setVehicleTypeId(vehicleType);
+        String confirmCode = encodeGenerator();
+        userService.createUser(user, confirmCode);
+        HttpSession session = httpRequest.getSession();
+        Map<String, String> confirmSMSList = (Map<String, String>) session.getAttribute("confirmSMSList");
+        if (confirmSMSList == null) {
+            confirmSMSList = new HashMap<>();
         }
+        confirmSMSList.put(user.getPhoneNumber(), confirmCode);
+        session.setAttribute("confirmSMSList", confirmSMSList);
+//        }
         Optional<User> userOptional = userService.getUserByPhone(user.getPhoneNumber());
         if (userOptional.isPresent()) {
             User userDB = userOptional.get();
             int userId = userDB.getId();
-            hashedID = userService.hashID(userId);
+            hashedID = userId + "";
+//            hashedID = userService.hashID(userId);
         }
         return hashedID;
     }
+
+    @PostMapping(value = "/confirm-user")
+    public String confirmUser(User user, HttpServletRequest httpRequest) {
+        // Cần đoạn lấy thông tin xe
+        HttpSession session = httpRequest.getSession();
+        Map<String, String> confirmSMSList = (Map<String, String>) session.getAttribute("confirmSMSList");
+//        String confirmCode = (String) session.getAttribute(user.getPhoneNumber());
+        if (confirmSMSList != null) {
+            String confirmCode = confirmSMSList.get(user.getPhoneNumber());
+            if (confirmCode != null && confirmCode.equals(user.getConfirmCode())) {
+                userService.activateUser(user);
+            }
+        }
+        return "success";
+    }
+
 
     @PostMapping("/save-user")
     public String updateUser(User user) {
@@ -79,6 +106,7 @@ public class UserController {
         userService.deleteUser(id);
         return "Success";
     }
+
     //    JsonPagination
     @GetMapping("/get-users-json")
     public ResponseEntity<ResponseObject> getUsers(@RequestParam(defaultValue = "0") Integer page) {
@@ -110,7 +138,7 @@ public class UserController {
     public ResponseEntity<ResponseObject> searchUser(@RequestBody SearchCriteria params
             , @RequestParam(defaultValue = "0") Integer page) {
         return ResponseEntity.status(OK).body(userService.searchUser
-                (params,page, PaginationEnum.userPageSize.getNumberOfRows() ));
+                (params, page, PaginationEnum.userPageSize.getNumberOfRows()));
     }
 
     @GetMapping("/admin")
@@ -118,4 +146,26 @@ public class UserController {
         mav.setViewName("admin");
         return mav;
     }
+
+    public String encodeGenerator() {
+        String result = "";
+        for (int i = 0; i < 6; i++) {
+            result += (int) (Math.random() * (9)) + "";
+        }
+        return result;
+    }
+
+
+    @PostMapping(value = "/top-up")
+    public ResponseEntity<Optional<User>> topUp(@Param("userId") String userId, @Param("amount") double amount) {
+        return ResponseEntity.status(OK).body(userService.topUp(userId, amount));
+    }
+
+    @GetMapping(value = {"/get-user-by-phone"})
+    public ResponseEntity<Optional<User>> getUserByPhoneNumber(@Param("phoneNumber") String phoneNumber) {
+        System.out.println("getting user info...");
+        return status(OK).body(userService.getUserByPhone(phoneNumber));
+    }
+
+
 }

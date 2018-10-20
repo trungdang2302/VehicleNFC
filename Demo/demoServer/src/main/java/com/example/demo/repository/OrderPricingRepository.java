@@ -16,4 +16,5 @@ public interface OrderPricingRepository extends JpaRepository<OrderPricing, Inte
             value = "SELECT * FROM tbl_order_pricing u WHERE u.tbl_order_id = :order_id",
             nativeQuery = true)
     List<OrderPricing> findByOrderId(@Param("order_id") Integer orderId);
+
 }

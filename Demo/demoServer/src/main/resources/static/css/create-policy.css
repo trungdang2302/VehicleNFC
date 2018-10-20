@@ -1,0 +1,11 @@
+.left-form-group {
+    width: 48%;
+    float: left;
+    margin-right: 2%;
+}
+
+.right-form-group {
+    width: 48%;
+    float: right;
+    margin-left: 2%;
+}

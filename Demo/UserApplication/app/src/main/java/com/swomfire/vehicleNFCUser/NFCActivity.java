@@ -3,6 +3,8 @@ package com.swomfire.vehicleNFCUser;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -11,14 +13,22 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Chronometer;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,10 +39,12 @@ import model.HourHasPrice;
 import model.NotificationSerial;
 import model.Order;
 import model.OrderPricing;
+import model.User;
 import remote.RmaAPIService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import service.UserService;
 
 
 public class NFCActivity extends Activity implements NfcAdapter.CreateNdefMessageCallback {
@@ -42,19 +54,21 @@ public class NFCActivity extends Activity implements NfcAdapter.CreateNdefMessag
     Chronometer parkingChorno;
     boolean blink = false;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
+
+        ImageView gifImageView = (ImageView) findViewById(R.id.gifHahah);
+        Glide.with(this).load(R.raw.holding).into(gifImageView);
+        //TODO check internet connection
+        checkInternetConnection();
+
         NotificationSerial notificationSerial = (NotificationSerial) getIntent().getSerializableExtra("Notification");
         if (notificationSerial != null) {
             setContentView(R.layout.activity_checkout);
             parkingChorno = findViewById(R.id.chroParking);
-
             getOrderInfo(notificationSerial.getOrderId());
-
-
         }
 
         context = this;
@@ -126,8 +140,8 @@ public class NFCActivity extends Activity implements NfcAdapter.CreateNdefMessag
             totalPrice += hourHasPrice.getPrice();
         }
 
-        totalPrice += lastPrice * ((double) m/ 60);
-        lblTotal.setText((long)(totalPrice*1000)+" đ");
+        totalPrice += lastPrice * ((double) m / 60);
+        lblTotal.setText(UserService.convertMoney(totalPrice));
     }
 
     TextView lblTotal;
@@ -142,13 +156,41 @@ public class NFCActivity extends Activity implements NfcAdapter.CreateNdefMessag
             String timeString = (blink) ? String.format("%02d %02d", h, m) : String.format("%02d:%02d", h, m);
             blink = !blink;
             chronometer.setText(timeString);
-            updatePrice(h,m,order);
+            updatePrice(h, m, order);
         });
         parkingChorno.start();
     }
 
     public void getOrderInfo(String orderId) {
         if (orderId == null) {
+            //TODO get user info
+            User user = null;
+//            if (user == null) {
+//                return;
+//            }
+
+            RmaAPIService mService = RmaAPIUtils.getAPIService();
+            mService.getOpenOrderByUserId(Integer.parseInt("2")).enqueue(new Callback<Order>() {
+                @Override
+                public void onResponse(Call<Order> call, Response<Order> response) {
+                    if (response.isSuccessful()) {
+                        Order result = response.body();
+                        if (result != null) {
+                            setContentView(R.layout.activity_checkout);
+                            parkingChorno = findViewById(R.id.chroParking);
+                            setUpChrono(result);
+                            setUpOrderInfo(result);
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Order> call, Throwable t) {
+                    Toast toast = Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT);
+                    System.out.println(t.getMessage());
+                    toast.show();
+                }
+            });
             return;
         }
         RmaAPIService mService = RmaAPIUtils.getAPIService();
@@ -173,11 +215,18 @@ public class NFCActivity extends Activity implements NfcAdapter.CreateNdefMessag
     }
 
     public void setUpOrderInfo(Order order) {
-        TextView lblLocation, lblVehicleType, lblVehicleNumber, lblTotal;
+        TextView lblLocation, lblVehicleType, lblVehicleNumber, lblCheckInDate;
         lblLocation = findViewById(R.id.lblOrderLocation);
         lblVehicleNumber = findViewById(R.id.lblUserVehicleNumber);
         lblVehicleType = findViewById(R.id.lblUserVehicleType);
+        lblCheckInDate = findViewById(R.id.lblCheckin);
 
+        String pattern = "HH:mm dd-MM-yyyy";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+        String date = simpleDateFormat.format(new Date(order.getCheckInDate()));
+
+        lblCheckInDate.setText(date);
         lblLocation.setText(order.getLocation().getLocation());
 
         lblVehicleNumber.setText(order.getUser().getVehicleNumber());
@@ -189,5 +238,29 @@ public class NFCActivity extends Activity implements NfcAdapter.CreateNdefMessag
         recyclerView.setLayoutManager(gLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(orderPricingAdapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkInternetConnection();
+    }
+
+    public void checkInternetConnection() {
+        ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        //get all networks information
+        NetworkInfo networkInfo[] = cm.getAllNetworkInfo();
+        int i;
+        //checking internet connectivity
+        for (i = 0; i < networkInfo.length; ++i) {
+            if (networkInfo[i].getState() == NetworkInfo.State.CONNECTED) {
+                getOrderInfo(null);
+                return;
+            }
+        }
+
+        if (i == networkInfo.length) {
+            Toast.makeText(getApplicationContext(), "Không có kết nối internet", Toast.LENGTH_LONG).show();
+        }
     }
 }

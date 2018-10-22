@@ -102,21 +102,22 @@ public class SignUpActivity extends Activity {
             user.setVehicleNumber(veid);
             user.setLicensePlateId(vechungnhan);
 
-            Toast.makeText(getBaseContext(), "Thanh cong!", Toast.LENGTH_LONG).show();
-
             RmaAPIService mService = RmaAPIUtils.getAPIService();
-            mService.sendUserToServer(user).enqueue(new Callback<User>() {
+            mService.sendUserToServer(user).enqueue(new Callback<String>() {
                 @Override
-                public void onResponse(Call<User> call, Response<User> response) {
-                    if (response.isSuccessful()) {
-//                        Toast.makeText(getBaseContext(), "Thanh cong!", Toast.LENGTH_LONG).show();
+                public void onResponse(Call<String> call, Response<String> response) {
+
+                    String id = response.body();
+                    if (!id.matches("")) {
                         Intent intent = new Intent(context, VerifyActivity.class);
+                        intent.putExtra("phoneNumber", phone);
                         startActivity(intent);
                     }
+
                 }
 
                 @Override
-                public void onFailure(Call<User> call, Throwable t) {
+                public void onFailure(Call<String> call, Throwable t) {
                     Toast toast = Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT);
                     toast.show();
                 }

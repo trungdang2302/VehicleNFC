@@ -33,6 +33,7 @@
                 </View>
 
                 <TextView
+                    android:id="@+id/txtUserName"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_gravity="bottom"
@@ -44,6 +45,7 @@
                     android:text="Dang Ngoc Trung" />
 
                 <TextView
+                    android:id="@+id/txtUserPhone"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_gravity="bottom"
@@ -178,6 +180,7 @@
                 android:layout_weight="1"
                 android:background="#006699"
                 android:orientation="vertical"
+                android:onClick="logOut"
                 android:weightSum="3">
 
                 <ImageView

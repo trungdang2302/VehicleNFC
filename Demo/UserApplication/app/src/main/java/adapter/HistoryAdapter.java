@@ -3,8 +3,7 @@ package adapter;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.Gravity;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import android.widget.TextView;
 import com.swomfire.vehicleNFCUser.R;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -40,19 +40,22 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
-        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm", Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat full = new SimpleDateFormat("dd-MM-yyyy");
 
         History history = hislist.get(position);
 
-        holder.txtDatetime.setText("Từ   : " + sdf.format(history.getCheck_in_date()));
+        holder.txtDate.setText(full.format(new Date(history.getCheck_in_date())));
 
-        holder.txtToDate.setText("Đến : " + sdf.format(history.getCheck_out_date()));
+        holder.txtDatetime.setText("Từ   : " + sdf.format(new Date(history.getCheck_in_date())));
+
+        holder.txtToDate.setText("Đến : " + sdf.format(new Date(history.getCheck_out_date())));
 
         holder.txtAddress.setText("Thời gian đỗ : " + history.getTbl_location_id());
 
-        holder.txtPrice.setText("Chi phí : " + (long)history.getTotal()*1000 + " vnd");
+        holder.txtPrice.setText("Chi phí : " + (long) history.getTotal() * 1000 + " vnd");
 
-        holder.txtPos.setText(""+position);
+        holder.txtPos.setText("" + position);
 
     }
 
@@ -62,7 +65,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        private TextView txtDatetime, txtAddress, txtPrice, txtToDate, txtPos;
+        private TextView txtDatetime, txtAddress, txtPrice, txtToDate, txtPos, txtDate;
         private LinearLayout layoutMain;
 
         public MyViewHolder(View itemView) {
@@ -71,6 +74,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
             txtAddress = itemView.findViewById(R.id.txtAddress);
             txtPrice = itemView.findViewById(R.id.txtPrice);
             txtToDate = itemView.findViewById(R.id.txtToDate);
+            txtDate = itemView.findViewById(R.id.txtDate);
             layoutMain = itemView.findViewById(R.id.layoutMain);
             txtPos = itemView.findViewById(R.id.txtPos);
 

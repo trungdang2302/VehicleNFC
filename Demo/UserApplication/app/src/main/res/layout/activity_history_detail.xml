@@ -31,8 +31,8 @@
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="3"
                     android:layout_marginBottom="-10dp"
+                    android:layout_weight="1"
                     android:gravity="center">
 
                     <ImageView
@@ -53,9 +53,9 @@
                         android:id="@+id/textView1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_weight="5"
                         android:gravity="center"
                         android:text="Khách hàng :"
-                        android:layout_weight="5"
                         android:textColor="#000000"
                         android:textSize="20dp" />
 
@@ -147,9 +147,9 @@
                         android:id="@+id/txtLocation"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
                         android:gravity="center"
                         android:text="Quang Trung, HCM"
-                        android:layout_marginRight="5dp"
                         android:textColor="#000000"
                         android:textSize="22dp" />
 
@@ -168,7 +168,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="Đỗ từ :"
+                        android:text="Thời gian:"
                         android:textColor="#000000"
                         android:textSize="20dp" />
 
@@ -177,6 +177,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:paddingLeft="10dp"
                         android:text="8:00:00 1/1/2018"
                         android:textColor="#000000"
                         android:textSize="22dp" />
@@ -196,7 +197,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="Đỗ đến :"
+                        android:text="Ngày :"
                         android:textColor="#000000"
                         android:textSize="20dp" />
 
@@ -224,7 +225,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="Đỗ đến :"
+                        android:text="Thời lượng :"
                         android:textColor="#000000"
                         android:textSize="20dp" />
 
@@ -252,7 +253,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="Tổng chi phí :"
+                        android:text="Tổng :"
                         android:textColor="#000000"
                         android:textSize="20dp" />
 
@@ -262,8 +263,17 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="20.000 vnd"
+                        android:layout_weight="1"
                         android:textColor="#000000"
                         android:textSize="22dp" />
+
+                    <ImageView
+                        android:id="@+id/imgMore"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:onClick="clickMore"
+                        android:paddingRight="7dp"
+                        android:src="@drawable/plus" />
 
                 </TableRow>
 

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/btn_reverse">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include layout="@layout/tool_bar" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:src="@drawable/paypaltranslogo" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <ImageView
+                android:id="@+id/imgMinus"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight=".2"
+                android:onClick="onClickMinus"
+                android:src="@drawable/minus" />
+
+            <TextView
+                android:id="@+id/txtMoney"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:text="50"
+                android:textAlignment="center"
+                android:textColor="#000"
+                android:textSize="30dp" />
+
+            <TextView
+                android:id="@+id/txtMoneyShow"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".6"
+                android:background="@drawable/textbokedt"
+                android:gravity="center"
+                android:text="50,000 vnđ"
+                android:textAlignment="center"
+                android:textColor="#000"
+                android:textSize="25dp" />
+
+            <ImageView
+                android:id="@+id/imgPlus"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight=".2"
+                android:onClick="onClickPlus"
+                android:src="@drawable/plus" />
+        </TableRow>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Quy đổi: "
+                android:textColor="#000"
+                android:textSize="24dp"></TextView>
+
+            <TextView
+                android:id="@+id/txtConvertShow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="40.00 USD"
+                android:textColor="#000"
+                android:textSize="24dp"></TextView>
+
+            <TextView
+                android:id="@+id/txtConvert"
+                android:layout_width="0dp"
+                android:layout_height="0dp"></TextView>
+        </LinearLayout>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:padding="10dp">
+
+            <Button
+                android:id="@+id/button6"
+                android:layout_width="20dp"
+                android:layout_height="@dimen/btn_nor_height"
+                android:background="@drawable/btn_normal"
+                android:onClick="topUpConfirm"
+                android:text="Nạp tiền"
+                android:textColor="#FFFFFF"
+                android:textSize="25dp" />
+        </TableRow>
+    </TableLayout>
+
+
+</LinearLayout>

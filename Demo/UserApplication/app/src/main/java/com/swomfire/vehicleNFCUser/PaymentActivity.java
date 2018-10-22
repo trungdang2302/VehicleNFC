@@ -2,6 +2,7 @@ package com.swomfire.vehicleNFCUser;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -56,14 +57,12 @@ public class PaymentActivity extends Activity {
         if (requestCode == 0) {
             PaymentConfirmation confirm = data.getParcelableExtra(com.paypal.android.sdk.payments.PaymentActivity.EXTRA_RESULT_CONFIRMATION);
             if (confirm != null) {
-                try {
-
-                    Log.i("Payment Example", confirm.toJSONObject().toString(4));
-                    topUpAccount("1",amount);
-                    Toast.makeText(this, "Payment successfull!", Toast.LENGTH_SHORT).show();
-
-                } catch (JSONException e) {
-                    Log.e("Payment Example", "Error:", e);
+                SharedPreferences prefs = getSharedPreferences("localData", MODE_PRIVATE);
+                String restoredText = prefs.getString("userId", null);
+                if (restoredText!=null) {
+                    topUpAccount(restoredText, amount);
+                }else {
+                    finish();
                 }
             }
         } else if (resultCode == Activity.RESULT_CANCELED) {
@@ -73,18 +72,14 @@ public class PaymentActivity extends Activity {
         }
     }
 
-    public void topUpAccount(String userId, double amount){
+    public void topUpAccount(String userId, double amount) {
 
         RmaAPIService mService = RmaAPIUtils.getAPIService();
-        mService.topUp(userId,amount).enqueue(new Callback<User>() {
+        mService.topUp(userId, amount).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
-//                    Order result = response.body();
-//                    if (result != null) {
-//                        setUpChrono(result);
-//                        setUpOrderInfo(result);
-//                    }
+                    finish();
                 }
             }
 
@@ -92,6 +87,7 @@ public class PaymentActivity extends Activity {
             public void onFailure(Call<User> call, Throwable t) {
                 Toast toast = Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT);
                 toast.show();
+                finish();
             }
         });
     }

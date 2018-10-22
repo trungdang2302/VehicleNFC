@@ -3,6 +3,7 @@ package com.swomfire.vehicleNFCUser;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.nfc.NdefMessage;
@@ -98,7 +99,9 @@ public class NFCActivity extends Activity implements NfcAdapter.CreateNdefMessag
      */
     @Override
     public NdefMessage createNdefMessage(NfcEvent nfcEvent) {
-        String message = "{'userId':2,'token':'" + token + "'}";
+        SharedPreferences prefs = getSharedPreferences("localData", MODE_PRIVATE);
+        String restoredText = prefs.getString("userId", "1");
+        String message = "{'userId':" + restoredText + ",'token':'" + token + "'}";
         NdefRecord ndefRecord = NdefRecord.createMime("text/plain", message.getBytes());
         NdefMessage ndefMessage = new NdefMessage(ndefRecord);
         return ndefMessage;
@@ -106,7 +109,8 @@ public class NFCActivity extends Activity implements NfcAdapter.CreateNdefMessag
 
 
     public void popUpMenu(View view) {
-        Intent intent = new Intent(NFCActivity.this, PopMenuActivity.class);
+        Intent intent = new Intent(NFCActivity.this, TransparentActivity.class);
+        intent.putExtra("switcher", TransparentActivity.POP_MENU);
         startActivity(intent);
     }
 

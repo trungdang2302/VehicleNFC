@@ -7,6 +7,7 @@ import com.example.demo.entities.User;
 import com.example.demo.entities.VehicleType;
 import com.example.demo.service.UserService;
 import com.example.demo.service.VehicleTypeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpRequest;
@@ -16,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
@@ -29,6 +31,9 @@ import static org.springframework.http.ResponseEntity.status;
 @CrossOrigin
 @RequestMapping(value = "/user")
 public class UserController {
+
+    @Autowired
+    private ServletContext servletContext;
 
     private final UserService userService;
     private final VehicleTypeService vehicleTypeService;
@@ -45,7 +50,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/create-user")
-    public String createUser(@RequestBody User user, HttpServletRequest httpRequest) {
+    public ResponseEntity<String> createUser(@RequestBody User user) {
         String hashedID = "";
         // Cần đoạn lấy thông tin xe
 //        Optional<VehicleType> vehicleTypeOptional = vehicleTypeService.getVehicleTypeById(user.getVehicleTypeId().getId());
@@ -55,13 +60,12 @@ public class UserController {
 //            user.setVehicleTypeId(vehicleType);
         String confirmCode = encodeGenerator();
         userService.createUser(user, confirmCode);
-        HttpSession session = httpRequest.getSession();
-        Map<String, String> confirmSMSList = (Map<String, String>) session.getAttribute("confirmSMSList");
+        Map<String, String> confirmSMSList = (Map<String, String>) servletContext.getAttribute("confirmSMSList");
         if (confirmSMSList == null) {
             confirmSMSList = new HashMap<>();
         }
         confirmSMSList.put(user.getPhoneNumber(), confirmCode);
-        session.setAttribute("confirmSMSList", confirmSMSList);
+        servletContext.setAttribute("confirmSMSList", confirmSMSList);
 //        }
         Optional<User> userOptional = userService.getUserByPhone(user.getPhoneNumber());
         if (userOptional.isPresent()) {
@@ -70,22 +74,37 @@ public class UserController {
             hashedID = userId + "";
 //            hashedID = userService.hashID(userId);
         }
-        return hashedID;
+        return status(OK).body(hashedID);
+    }
+
+
+    @PostMapping(value = "/request-new-confirm")
+    public ResponseEntity<String> requestNewConfirm(@Param("phone") String phone) {
+        // Cần đoạn lấy thông tin xe
+        String confirmCode = encodeGenerator();
+        userService.requestNewConfirmCode(phone, confirmCode);
+        Map<String, String> confirmSMSList = (Map<String, String>) servletContext.getAttribute("confirmSMSList");
+        if (confirmSMSList == null) {
+            confirmSMSList = new HashMap<>();
+        }
+        confirmSMSList.put(phone, confirmCode);
+        servletContext.setAttribute("confirmSMSList", confirmSMSList);
+        return status(OK).body("success");
     }
 
     @PostMapping(value = "/confirm-user")
-    public String confirmUser(User user, HttpServletRequest httpRequest) {
+    public ResponseEntity<Boolean> confirmUser(@Param("phone") String phone, @Param("confirmCode") String confirmCode) {
         // Cần đoạn lấy thông tin xe
-        HttpSession session = httpRequest.getSession();
-        Map<String, String> confirmSMSList = (Map<String, String>) session.getAttribute("confirmSMSList");
+        Map<String, String> confirmSMSList = (Map<String, String>) servletContext.getAttribute("confirmSMSList");
 //        String confirmCode = (String) session.getAttribute(user.getPhoneNumber());
         if (confirmSMSList != null) {
-            String confirmCode = confirmSMSList.get(user.getPhoneNumber());
-            if (confirmCode != null && confirmCode.equals(user.getConfirmCode())) {
-                userService.activateUser(user);
+            String confirmCodeInSession = confirmSMSList.get(phone);
+            if (confirmCodeInSession != null && confirmCodeInSession.equals(confirmCode)) {
+                userService.activateUser(phone);
+                return status(OK).body(true);
             }
         }
-        return "success";
+        return status(OK).body(false);
     }
 
 

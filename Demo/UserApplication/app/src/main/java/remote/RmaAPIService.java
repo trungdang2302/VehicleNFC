@@ -53,10 +53,17 @@ public interface RmaAPIService {
 
     @POST("/user/create-user")
     @Headers({"Content-Type: application/json"})
-    Call<User> sendUserToServer(@Body User user);
+    Call<String> sendUserToServer(@Body User user);
 
 
     @GET("user/get-user-by-phone")
     Call<User> getUserByPhone(@Query("phoneNumber") String phone);
 
+    @POST("/user/confirm-user")
+    @FormUrlEncoded
+    Call<Boolean> verifyNumber(@Field("phone") String phone,@Field("confirmCode")  String code);
+
+    @POST("/user/request-new-confirm")
+    @FormUrlEncoded
+    Call<String> resendcode(@Field("phone") String phone);
 }

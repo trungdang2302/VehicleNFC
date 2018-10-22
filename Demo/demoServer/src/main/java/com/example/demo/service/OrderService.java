@@ -186,6 +186,7 @@ public class OrderService {
             pushNotificationService.sendNotificationToSendSms(NFCServerProperties.getSmsHostToken(), notification, order);
         } else {
             PushNotificationService pushNotificationService = new PushNotificationService();
+            order.setOrderPricings(orderPricings);
             pushNotificationService.sendNotification(userToken, notification, order.getId());
         }
     }
@@ -275,7 +276,7 @@ public class OrderService {
     }
 
     public List<Order> findOrdersByUserId(Integer userId) {
-        return orderRepository.findByUserIdOrderById(userRepository.findById(userId).get());
+        return orderRepository.findByUserIdOrderByCheckInDateDesc(userRepository.findById(userId).get());
     }
 
     public static double round(double value, int places) {

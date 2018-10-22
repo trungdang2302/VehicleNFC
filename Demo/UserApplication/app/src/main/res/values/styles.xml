@@ -7,12 +7,34 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@drawable/app_background</item>
     </style>
+
     <style name="AppTheme.PopUpTheme">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowCloseOnTouchOutside">true</item>
     </style>
+
+    <style name="AppTheme.PopUpMenuTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@style/PopUpMenuAnimation</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+    </style>
+
+    <style name="AppTheme.TransparentActivity">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@style/Animation</item>
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:colorForeground">#fff</item>
+    </style>
+
     <style name="Animation">
         <item name="android:windowEnterAnimation">@anim/popup_show</item>
         <item name="android:windowExitAnimation">@anim/popup_hide</item>
+    </style>
+
+
+    <style name="PopUpMenuAnimation">
+        <item name="android:windowEnterAnimation">@anim/popup_menu_enter</item>
+        <item name="android:windowExitAnimation">@anim/popup_menu_exit</item>
     </style>
 </resources>

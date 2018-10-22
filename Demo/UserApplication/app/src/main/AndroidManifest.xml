@@ -19,7 +19,9 @@
         android:label="Đỗ xe với NFC"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".NFCActivity" />
+        <activity
+            android:name=".NFCActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,14 +30,29 @@
             </intent-filter>
         </activity>
         <activity android:name=".SignInActivity" />
-        <activity android:name=".SignUpActivity" />
+        <activity
+            android:name=".SignUpActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".PopMenuActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.PopUpTheme" />
-        <activity android:name=".PaymentActivity" />
-        <activity android:name=".HistoryActivity" />
-        <activity android:name=".HistoryDetailActivity" />
-        <activity android:name=".ProfileActivity" />
+        <activity
+            android:name=".PaymentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".HistoryActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".HistoryDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ActivityTopUpExtras"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.PopUpTheme" />
 
         <service android:name="service.CustomFBMService">
             <intent-filter>
@@ -50,7 +67,13 @@
             android:name="firebase_analytics_collection_enabled"
             android:value="false" />
 
-        <activity android:name=".VerifyActivity"></activity>
+        <activity
+            android:name=".VerifyActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ShowPopupPrice"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.PopUpTheme"></activity>
     </application>
 
 </manifest>

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
 
 public class PopMenuActivity extends Activity {
@@ -16,15 +17,15 @@ public class PopMenuActivity extends Activity {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
-        int width= displayMetrics.widthPixels;
+        int width = displayMetrics.widthPixels;
         int height = displayMetrics.heightPixels;
-
-        getWindow().setLayout((int)(width*.9),(int) (height*.9));
+        getWindow().setGravity(Gravity.LEFT);
+        getWindow().setLayout((int) (width * .8), height);
 //        getWindow().setLayout(width, height);
     }
 
     public void topUp(View view) {
-        Intent intent = new Intent(this,PaymentActivity.class);
+        Intent intent = new Intent(this, ActivityTopUpExtras.class);
         startActivity(intent);
     }
 
@@ -32,13 +33,13 @@ public class PopMenuActivity extends Activity {
         finish();
     }
 
-    public void toUserProfile(View view){
-        Intent intent = new Intent(this,ProfileActivity.class);
+    public void toUserProfile(View view) {
+        Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
     }
 
     public void viewHistory(View view) {
-        Intent intent = new Intent(this,HistoryActivity.class);
+        Intent intent = new Intent(this, HistoryActivity.class);
         startActivity(intent);
     }
 }

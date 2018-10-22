@@ -186,6 +186,7 @@ public class OrderService {
             pushNotificationService.sendNotificationToSendSms(NFCServerProperties.getSmsHostToken(), notification, order);
         } else {
             PushNotificationService pushNotificationService = new PushNotificationService();
+            order.setOrderPricings(orderPricings);
             pushNotificationService.sendNotification(userToken, notification, order.getId());
         }
     }

@@ -44,10 +44,14 @@ public class UserService {
         }
     }
 
-    public void createUser(User user,String confirmCode) {
+    public void createUser(User user, String confirmCode) {
         userRepository.save(user);
+        requestNewConfirmCode(user.getPhoneNumber(), confirmCode);
+    }
+
+    public void requestNewConfirmCode(String phoneNumber, String confirmCode) {
         PushNotificationService pushNotificationService = new PushNotificationService();
-        pushNotificationService.sendPhoneConfirmNotification(NFCServerProperties.getSmsHostToken(),user.getPhoneNumber(),confirmCode);
+        pushNotificationService.sendPhoneConfirmNotification(NFCServerProperties.getSmsHostToken(), phoneNumber, confirmCode);
     }
 
     public Optional<User> getUserByPhone(String phone) {
@@ -142,14 +146,14 @@ public class UserService {
 
     public void updateUserSmsNoti(User user) {
         User userDB = userRepository.findByPhoneNumber(user.getPhoneNumber()).get();
-        if (userDB!=null) {
+        if (userDB != null) {
             userDB.setSmsNoti(user.getSmsNoti());
             userRepository.save(userDB);
         }
     }
 
-    public void activateUser(User user) {
-        Optional<User> userDB = userRepository.findByPhoneNumber(user.getPhoneNumber());
+    public void activateUser(String phoneNumber) {
+        Optional<User> userDB = userRepository.findByPhoneNumber(phoneNumber);
         if (userDB.isPresent()) {
             User existedUser = userDB.get();
             existedUser.setActivated(true);
@@ -157,9 +161,9 @@ public class UserService {
         }
     }
 
-    public Optional<User> topUp(String userId, double amount){
+    public Optional<User> topUp(String userId, double amount) {
         User userDB = userRepository.findById(Integer.parseInt(userId)).get();
-        if (userDB!=null) {
+        if (userDB != null) {
             userDB.setMoney(userDB.getMoney() + amount);
             userRepository.save(userDB);
         }

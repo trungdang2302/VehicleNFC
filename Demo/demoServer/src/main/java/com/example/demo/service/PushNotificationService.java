@@ -71,11 +71,11 @@ public class PushNotificationService {
 
             msg.put("title", notificationEnum.getTitle());
             msg.put("body", composeOrderPrice(order, notificationEnum.getTitle()));
-            msg.put("toPhoneNumber", order.getUserId().getPhoneNumber());
+            msg.put("phoneNumber", order.getUserId().getPhoneNumber());
 
             json.put("data", msg);
 
-            json.put("to", serverMachineToken);
+            json.put("to", "dBlmGBRMPtk:APA91bGUDwRK_1ZIIeh-e9X6bfrs3o-AXVxoK_e8K95YDM73gSr_lgx_fa8XEGZLbftx3-JP5aegE1Y93A7a2HXgneoOl4u2Qs77ZeOdmyDZ7czeuASweUlJUVMD_DE95FOKK0e6WhnF");
 
             try {
                 HttpEntity<String> httpEntity = new HttpEntity<String>(json.toString(), httpHeaders);
@@ -103,7 +103,7 @@ public class PushNotificationService {
 
             json.put("data", msg);
 
-            json.put("to", appToken);
+            json.put("to", "dBlmGBRMPtk:APA91bGUDwRK_1ZIIeh-e9X6bfrs3o-AXVxoK_e8K95YDM73gSr_lgx_fa8XEGZLbftx3-JP5aegE1Y93A7a2HXgneoOl4u2Qs77ZeOdmyDZ7czeuASweUlJUVMD_DE95FOKK0e6WhnF");
 
 
             HttpEntity<String> httpEntity = new HttpEntity<String>(json.toString(), httpHeaders);

@@ -1,252 +1,192 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:weightSum="1">
 
+    <include layout="@layout/tool_bar" />
 
-    <TableLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_height="0dp"
+        android:layout_weight=".4"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="20dp">
 
-        <TableRow
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:background="@drawable/gradientbackground"
-            android:gravity="center">
-
-            <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center">
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/textView9"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Current Balance :"
-                        android:textColor="#000000"
-                        android:textSize="23dp" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/txtMoney"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="595.000 vnd"
-                        android:textColor="#000000"
-                        android:textSize="55dp"
-                        android:textStyle="bold" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp">
-
-                    <android.support.v7.widget.CardView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_centerHorizontal="true">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:weightSum="2">
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:background="@drawable/profile_cell_shape_black"
-                                android:gravity="center"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:gravity="center"
-                                    android:paddingTop="10dp"
-                                    android:text="TOP-UP"
-                                    android:textColor="#000000"
-                                    android:textSize="20sp"/>
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_marginLeft="-1dp"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:background="@drawable/profile_cell_shape_black"
-                                android:gravity="center"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:gravity="center"
-                                    android:paddingTop="10dp"
-                                    android:paddingBottom="10dp"
-                                    android:text="CHANGE PASSSWORD"
-                                    android:textColor="#000000"
-                                    android:textSize="18dp" />
-
-                            </LinearLayout>
-                        </LinearLayout>
-
-                    </android.support.v7.widget.CardView>
-                </TableRow>
-
-
-            </TableLayout>
-
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
             android:gravity="center"
-            android:paddingLeft="30dp"
-            android:paddingTop="10dp"
-            android:paddingRight="30dp">
+            android:orientation="vertical">
 
-            <TableLayout
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Số dư hiện tại :"
+                android:textColor="#000000"
+                android:textSize="23dp" />
+
+            <TextView
+                android:id="@+id/txtMoney"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="595.000 vnd"
+                android:textColor="#000000"
+                android:textSize="40dp"
+                android:textStyle="bold" />
+
+            <Button
+                android:layout_width="200dp"
+                android:layout_height="@dimen/btn_nor_height"
+                android:background="@drawable/btn_normal"
+                android:onClick="topUp"
+                android:text="Nạp tiền"
+                android:textColor="#fff"
+                android:textSize="20dp" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".6"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingBottom="15dp"
+                android:weightSum="1">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/profileico" />
+
+                <TextView
+                    android:id="@+id/txtName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center"
+                    android:text="Dang Ngoc Trung"
+                    android:textColor="#000000"
+                    android:textSize="24dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingBottom="15dp"
+                android:weightSum="1">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/phoneicoprofile" />
+
+                <TextView
+                    android:id="@+id/txtPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center"
+                    android:text="+841234567890"
+                    android:textColor="#000000"
+                    android:textSize="24dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingBottom="15dp"
+                android:weightSum="1">
 
-                <TableRow
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="35dp"
+                    android:src="@drawable/caridico" />
+
+                <TextView
+                    android:id="@+id/txtVehicalID"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
                     android:gravity="center"
-                    android:paddingBottom="25dp">
+                    android:text="ABC13-ABCS213"
+                    android:textColor="#000000"
+                    android:textSize="24dp" />
 
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/profileico" />
+            </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/txtName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="2"
-                        android:text="Dang Ngoc Trung"
-                        android:textColor="#000000"
-                        android:textSize="28dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingBottom="15dp"
+                android:weightSum="1">
 
-                </TableRow>
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/vehicleinspectionicon" />
 
-                <TableRow
+                <TextView
+                    android:id="@+id/txtDangKiem"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:ellipsize="end"
                     android:gravity="center"
-                    android:paddingBottom="25dp">
+                    android:singleLine="true"
+                    android:text=""
+                    android:textColor="#000000"
+                    android:textSize="22dp" />
 
-                    <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:src="@drawable/phoneicoprofile" />
+            </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/txtPhone"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="2"
-                        android:text="+841234567890"
-                        android:textColor="#000000"
-                        android:textSize="28dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingBottom="30dp"
+                android:weightSum="1">
 
-                </TableRow>
+                <ImageView
+                    android:id="@+id/imageXe"
+                    android:layout_width="50dp"
+                    android:layout_height="35dp"
+                    android:src="@drawable/cartypeicosmall" />
 
-                <TableRow
+                <TextView
+                    android:id="@+id/txtVehicalName"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
                     android:gravity="center"
-                    android:paddingBottom="25dp">
+                    android:text="Toyota Vios"
+                    android:textColor="#000000"
+                    android:textSize="24dp" />
 
-                    <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:src="@drawable/caridico" />
-
-                    <TextView
-                        android:id="@+id/txtVehicalID"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="2"
-                        android:text="ABC13-ABCS213"
-                        android:textColor="#000000"
-                        android:textSize="28dp" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:paddingBottom="25dp">
-
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/vehicleinspectionicon" />
-
-                    <TextView
-                        android:id="@+id/txtDangKiem"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="2"
-                        android:text="1232389374"
-                        android:textColor="#000000"
-                        android:textSize="28dp" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:paddingBottom="30dp">
-
-                    <ImageView
-                        android:id="@+id/imageXe"
-                        android:layout_width="31dp"
-                        android:layout_height="33dp"
-                        android:src="@drawable/cartypeicosmall" />
-
-                    <TextView
-                        android:id="@+id/txtVehicalName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="2"
-                        android:text="Toyota Vios"
-                        android:textColor="#000000"
-                        android:textSize="28dp" />
-
-                </TableRow>
-
-            </TableLayout>
-        </TableRow>
-
-
-    </TableLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

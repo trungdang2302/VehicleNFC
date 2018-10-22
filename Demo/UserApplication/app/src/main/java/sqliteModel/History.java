@@ -130,4 +130,5 @@ public class History implements Serializable {
     public void setTbl_location_id(String tbl_location_id) {
         this.tbl_location_id = tbl_location_id;
     }
+
 }

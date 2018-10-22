@@ -1,8 +1,11 @@
 package com.swomfire.vehicleNFCUser;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,11 +22,14 @@ public class ProfileActivity extends Activity {
 
     TextView txtMoney, txtName, txtPhone, txtVehicalID, txtVehicalName, txtDangKiem;
     ImageView imageXe;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        progressDialog = UserService.setUpProcessDialog(this);
+        progressDialog.show();
 
         txtMoney = findViewById(R.id.txtMoney);
         txtName = findViewById(R.id.txtName);
@@ -34,21 +40,20 @@ public class ProfileActivity extends Activity {
         imageXe = findViewById(R.id.imageXe);
 
         SharedPreferences prefs = getSharedPreferences("localData", MODE_PRIVATE);
-        String restoredText = prefs.getString("phoneNumberSignIn", null);
-        String name = "1";
-        if (restoredText != null) {
-            name = prefs.getString("phoneNumberSignIn", "1");
-            //Toast.makeText(getApplicationContext(), name, Toast.LENGTH_SHORT).show();
-        }
-
-
+        String restoredText = prefs.getString("phoneNumberSignIn", "1");
         //String name = "1324658";
+        getUserInfo(restoredText);
+
+    }
+
+    public void getUserInfo(String phone) {
 
         RmaAPIService mService = RmaAPIUtils.getAPIService();
-        mService.getUserByPhone(name).enqueue(new Callback<User>() {
+        mService.getUserByPhone(phone).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
+                    progressDialog.cancel();
                     User user = response.body();
                     if (user != null) {
 
@@ -70,9 +75,25 @@ public class ProfileActivity extends Activity {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
+                progressDialog.cancel();
                 Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
 
+    public void topUp(View view) {
+        Intent intent = new Intent(this, ActivityTopUpExtras.class);
+        intent.putExtra("isFromProfile", true);
+        startActivity(intent);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences prefs = getSharedPreferences("localData", MODE_PRIVATE);
+        String restoredText = prefs.getString("phoneNumberSignIn", "1");
+        //String name = "1324658";
+        getUserInfo(restoredText);
     }
 }

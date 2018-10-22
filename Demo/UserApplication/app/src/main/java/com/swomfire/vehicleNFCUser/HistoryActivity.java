@@ -1,6 +1,7 @@
 package com.swomfire.vehicleNFCUser;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import service.DBHelper;
+import service.UserService;
 import sqliteModel.History;
 import sqliteModel.HistoryDetail;
 
@@ -30,12 +32,15 @@ public class HistoryActivity extends Activity {
     private Context context;
     TextView txtPos;
     List<History> historyList = new ArrayList<History>();
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
         context = this;
+        progressDialog = UserService.setUpProcessDialog(context);
+        progressDialog.show();
         loadOrderByUserId();
     }
 
@@ -45,6 +50,7 @@ public class HistoryActivity extends Activity {
             @Override
             public void onResponse(Call<List<Order>> call, Response<List<Order>> response) {
                 if (response.isSuccessful()) {
+                    progressDialog.cancel();
                     List<Order> resultList = response.body();
                     if (resultList != null) {
                         DBHelper db = new DBHelper(context);
@@ -68,6 +74,7 @@ public class HistoryActivity extends Activity {
 
             @Override
             public void onFailure(Call<List<Order>> call, Throwable t) {
+                progressDialog.cancel();
                 Toast toast = Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT);
                 toast.show();
             }

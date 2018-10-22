@@ -2,8 +2,7 @@
 # Usage
 ### Order
 ---
-- To add new Order into Server queue
-
+- To add new Order
 `localhost:8080/order/create`
 
 Method used: `POST`
@@ -35,4 +34,40 @@ Sample JSON:
 
 `localhost:8080/order/get-order`
 
+```
+### User
+
+- Login
+
+`localhost:8080/user/login`
+
+Method used: `POST`
+
+Params: "phone","password"
+
+Return: User Object (Success), null (Failed)
+
+Sample URL:
+```
+localhost:8080/user/login?phone=+541422223&password=123
+```
+
+- Sign up
+
+`localhost:8080/user/create-user`
+
+Method used: `POST`
+
+Return: UserId (Success), False (Failed)
+
+Sample JSON:
+```
+{
+  "phoneNumber": 159321874,
+  "password": 123,
+  "firstName": cuong,
+  "lastName": mai,
+  "vehicleNumber": 84A-41424,
+  "licensePlateId": 4381249327
+}
 ```

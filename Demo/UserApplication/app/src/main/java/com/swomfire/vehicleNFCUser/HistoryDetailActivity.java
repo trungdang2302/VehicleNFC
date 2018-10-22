@@ -52,12 +52,10 @@ public class HistoryDetailActivity extends Activity {
     }
 
     public void clickMore(View view) {
-
-        Intent intent = new Intent(this, ShowPopupPrice.class);
-        intent.putExtra("itemID", item.getId());
+        Intent intent = new Intent(this, TransparentActivity.class);
+        intent.putExtra("switcher", TransparentActivity.POP_PRICE_LIST);
+        intent.putExtra("extra", item.getId());
         startActivity(intent);
-
-
     }
 
 }

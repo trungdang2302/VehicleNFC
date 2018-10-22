@@ -103,8 +103,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
             int id = res.getInt(res.getColumnIndex(COLUMN_ID));
             double total = res.getDouble(res.getColumnIndex(COLUMN_TOTAL));
-            int indate = res.getInt(res.getColumnIndex(COLUMN_CHECK_IN_DATE));
-            int outdate = res.getInt(res.getColumnIndex(COLUMN_CHECK_OUT_DATE));
+            long indate = res.getLong(res.getColumnIndex(COLUMN_CHECK_IN_DATE));
+            long outdate = res.getLong(res.getColumnIndex(COLUMN_CHECK_OUT_DATE));
             int duration = res.getInt(res.getColumnIndex(COLUMN_DURATION));
             int parkfrom = res.getInt(res.getColumnIndex(COLUMN_ALLOWED_PARKING_FROM));
             int parkto = res.getInt(res.getColumnIndex(COLUMN_ALLOWED_PARKING_TO));

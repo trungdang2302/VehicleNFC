@@ -6,8 +6,8 @@ public class History implements Serializable {
 
     private int id;
     private double total;
-    private int check_in_date;
-    private int check_out_date;
+    private long check_in_date;
+    private long check_out_date;
     private int duration;
     private int allowed_parking_from;
     private int allowed_parking_to;
@@ -20,7 +20,7 @@ public class History implements Serializable {
     public History() {
     }
 
-    public History(int id, double total, int check_in_date, int check_out_date, int duration, int allowed_parking_from, int allowed_parking_to, String tbl_order_status_id, String username, String vehical_name, String vehical_id, String tbl_location_id) {
+    public History(int id, double total, long check_in_date, long check_out_date, int duration, int allowed_parking_from, int allowed_parking_to, String tbl_order_status_id, String username, String vehical_name, String vehical_id, String tbl_location_id) {
         this.id = id;
         this.total = total;
         this.check_in_date = check_in_date;
@@ -51,19 +51,19 @@ public class History implements Serializable {
         this.total = total;
     }
 
-    public int getCheck_in_date() {
+    public long getCheck_in_date() {
         return check_in_date;
     }
 
-    public void setCheck_in_date(int check_in_date) {
+    public void setCheck_in_date(long check_in_date) {
         this.check_in_date = check_in_date;
     }
 
-    public int getCheck_out_date() {
+    public long getCheck_out_date() {
         return check_out_date;
     }
 
-    public void setCheck_out_date(int check_out_date) {
+    public void setCheck_out_date(long check_out_date) {
         this.check_out_date = check_out_date;
     }
 

@@ -36,7 +36,7 @@
         <activity
             android:name=".PopMenuActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.PopUpTheme" />
+            android:theme="@style/AppTheme.PopUpMenuTheme" />
         <activity
             android:name=".PaymentActivity"
             android:screenOrientation="portrait" />
@@ -69,11 +69,15 @@
 
         <activity
             android:name=".VerifyActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ShowPopupPrice"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.PopUpTheme"></activity>
+            android:theme="@style/AppTheme.PopUpTheme" />
+        <activity
+            android:name=".TransparentActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.TransparentActivity"></activity>
     </application>
 
 </manifest>

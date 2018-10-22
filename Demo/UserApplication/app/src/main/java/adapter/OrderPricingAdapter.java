@@ -32,7 +32,8 @@ public class OrderPricingAdapter extends RecyclerView.Adapter<OrderPricingAdapte
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         OrderPricing orderPricing = orderPricings.get(position);
-        holder.txtFrom.setText("Từ " + orderPricing.getFromHour() + " giờ");
+        String fromHour = (orderPricing.getFromHour() == 0) ? "Giờ đầu" : "Từ " + orderPricing.getFromHour() + " giờ";
+        holder.txtFrom.setText(fromHour);
         holder.txtPrice.setText(UserService.convertMoney(orderPricing.getPricePerHour()));
         holder.txtFee.setText(UserService.convertMoney(orderPricing.getLateFeePerHour()));
     }

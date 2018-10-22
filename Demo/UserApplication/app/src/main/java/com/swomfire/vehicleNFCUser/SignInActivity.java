@@ -51,6 +51,7 @@ public class SignInActivity extends Activity {
                         SharedPreferences.Editor editor = getSharedPreferences("localData", MODE_PRIVATE).edit();
                         editor.putString("phoneNumberSignIn", phone );
                         editor.putString("userId", result.getId());
+                        editor.putString("userName", result.getLastName()+" "+ result.getFirstName());
                         editor.commit();
 
                         Intent intent = new Intent(context, NFCActivity.class);

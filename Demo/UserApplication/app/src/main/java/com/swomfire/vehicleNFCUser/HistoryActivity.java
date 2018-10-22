@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -41,12 +42,28 @@ public class HistoryActivity extends Activity {
         context = this;
         progressDialog = UserService.setUpProcessDialog(context);
         progressDialog.show();
+        DBHelper db = new DBHelper(context);
+
+        historyList = db.getAllOrder();
+        if (historyList != null) {
+            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.historyList);
+            HistoryAdapter historyAdapter = new HistoryAdapter(historyList);
+            GridLayoutManager gLayoutManager = new GridLayoutManager(context, 1);
+            recyclerView.setLayoutManager(gLayoutManager);
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
+            recyclerView.setAdapter(historyAdapter);
+            progressDialog.cancel();
+        }
         loadOrderByUserId();
+
     }
 
     public void loadOrderByUserId() {
+        SharedPreferences prefs = getSharedPreferences("localData", MODE_PRIVATE);
+        String restoredText = prefs.getString("userId", "1");
+
         RmaAPIService mService = RmaAPIUtils.getAPIService();
-        mService.getOrderByUserId(Integer.parseInt("1")).enqueue(new Callback<List<Order>>() {
+        mService.getOrderByUserId(Integer.parseInt(restoredText)).enqueue(new Callback<List<Order>>() {
             @Override
             public void onResponse(Call<List<Order>> call, Response<List<Order>> response) {
                 if (response.isSuccessful()) {
@@ -58,7 +75,6 @@ public class HistoryActivity extends Activity {
                         for (Order order : resultList) {
                             db.insertOrder(order);
                         }
-
                         historyList = db.getAllOrder();
                         if (historyList != null) {
                             RecyclerView recyclerView = (RecyclerView) findViewById(R.id.historyList);
@@ -83,7 +99,7 @@ public class HistoryActivity extends Activity {
 
 
     public void onClickCard(View view) {
-        txtPos = findViewById(R.id.txtPos);
+        txtPos = view.findViewById(R.id.txtPos);
         int i = Integer.parseInt((String) txtPos.getText());
 
         Intent newActivity1 = new Intent(context, com.swomfire.vehicleNFCUser.HistoryDetailActivity.class);

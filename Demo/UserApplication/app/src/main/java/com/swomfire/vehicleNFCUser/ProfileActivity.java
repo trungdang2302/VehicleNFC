@@ -82,8 +82,9 @@ public class ProfileActivity extends Activity {
     }
 
     public void topUp(View view) {
-        Intent intent = new Intent(this, ActivityTopUpExtras.class);
-        intent.putExtra("isFromProfile", true);
+        Intent intent = new Intent(this, TransparentActivity.class);
+        intent.putExtra("switcher", TransparentActivity.POP_TOP_UP);
+        intent.putExtra("extra", true);
         startActivity(intent);
     }
 

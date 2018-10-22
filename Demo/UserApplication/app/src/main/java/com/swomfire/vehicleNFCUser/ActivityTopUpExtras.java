@@ -34,6 +34,7 @@ public class ActivityTopUpExtras extends Activity {
     TextView txtMoney, txtMoneyShow, txtConvert, txtConvertShow;
 
     boolean isFromProfile = false;
+    boolean clickPay = false;
 
     Context context;
 
@@ -130,7 +131,7 @@ public class ActivityTopUpExtras extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode == 0) {
+        if (requestCode == 0 && data != null) {
             PaymentConfirmation confirm = data.getParcelableExtra(com.paypal.android.sdk.payments.PaymentActivity.EXTRA_RESULT_CONFIRMATION);
             if (confirm != null) {
                 SharedPreferences prefs = getSharedPreferences("localData", MODE_PRIVATE);
@@ -155,6 +156,7 @@ public class ActivityTopUpExtras extends Activity {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
+                    clickPay = true;
                     finish();
                 }
             }
@@ -171,7 +173,7 @@ public class ActivityTopUpExtras extends Activity {
     @Override
     public void finish() {
         super.finish();
-        if (!isFromProfile) {
+        if (!isFromProfile && clickPay) {
             Intent intent = new Intent(context, ProfileActivity.class);
             startActivity(intent);
         }

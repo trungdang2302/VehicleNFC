@@ -107,4 +107,8 @@ public class HistoryActivity extends Activity {
         startActivity(newActivity1);
 
     }
+
+    public void onBackButton(View view) {
+        finish();
+    }
 }

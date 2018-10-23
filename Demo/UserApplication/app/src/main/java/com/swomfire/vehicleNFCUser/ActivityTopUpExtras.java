@@ -178,5 +178,9 @@ public class ActivityTopUpExtras extends Activity {
             startActivity(intent);
         }
     }
+
+    public void onBackButton(View view) {
+        finish();
+    }
 }
 

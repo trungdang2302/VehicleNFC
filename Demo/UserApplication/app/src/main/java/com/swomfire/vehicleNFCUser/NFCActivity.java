@@ -172,7 +172,6 @@ public class NFCActivity extends Activity implements NfcAdapter.CreateNdefMessag
 //            if (user == null) {
 //                return;
 //            }
-
             RmaAPIService mService = RmaAPIUtils.getAPIService();
             mService.getOpenOrderByUserId(Integer.parseInt("2")).enqueue(new Callback<Order>() {
                 @Override

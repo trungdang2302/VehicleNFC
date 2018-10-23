@@ -21,15 +21,16 @@
             <EditText
                 android:id="@+id/txtPhone"
                 android:layout_width="match_parent"
+                android:background="@color/colorPrimaryEditText"
                 android:layout_height="@dimen/txt_nor_height"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
                 android:layout_weight="3"
-                android:background="#F0F0F0"
+                android:textColorHint="#fff"
                 android:hint="Số điện thoại"
                 android:inputType="phone"
                 android:paddingLeft="15dp"
-                android:textColor="#999999"
+                android:textColor="#fff"
                 android:textSize="20dp" />
         </TableRow>
 
@@ -42,16 +43,17 @@
             <EditText
                 android:id="@+id/txtPassword"
                 android:layout_width="match_parent"
+                android:background="@color/colorPrimaryEditText"
                 android:layout_height="@dimen/txt_nor_height"
                 android:layout_marginLeft="30dp"
                 android:fontFamily="sans-serif"
                 android:layout_marginRight="30dp"
                 android:layout_weight="3"
-                android:background="#F0F0F0"
+                android:textColorHint="#fff"
                 android:hint="Mật khẩu"
                 android:inputType="textPassword"
                 android:paddingLeft="15dp"
-                android:textColor="#999999"
+                android:textColor="#fff"
                 android:textSize="20dp" />
             />
         </TableRow>
@@ -102,13 +104,15 @@
             android:layout_marginBottom="15dp"
             android:gravity="center">
 
-            <TextView
+            <Button
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
+                android:background="#00000000"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/forgetyourpass"
-                android:textColor="#999999"
+                android:onClick="toResetPassword"
+                android:textColor="#000"
                 android:textSize="18dp" />
         </TableRow>
 

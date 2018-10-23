@@ -4,11 +4,21 @@
     android:layout_height="@dimen/toolbar_min_height"
     android:background="@drawable/toolbar_default"
     android:minHeight="50dp">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/btn_transparent"
+        android:layout_marginLeft="10dp"
+        android:drawableLeft="@android:drawable/ic_menu_close_clear_cancel"
+        android:onClick="onBackButton" />
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginLeft="-40dp"
         android:layout_weight="1"
         android:text="@string/parkingwithnfc"
         android:textColor="#FFFFFF"

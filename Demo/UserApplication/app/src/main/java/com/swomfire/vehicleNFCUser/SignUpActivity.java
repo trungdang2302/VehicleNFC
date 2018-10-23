@@ -111,6 +111,8 @@ public class SignUpActivity extends Activity {
                     if (!id.matches("")) {
                         Intent intent = new Intent(context, VerifyActivity.class);
                         intent.putExtra("phoneNumber", phone);
+                        intent.putExtra("type", "create-account");
+
                         startActivity(intent);
                     }
 
@@ -124,5 +126,9 @@ public class SignUpActivity extends Activity {
             });
 
         }
+    }
+
+    public void onBackButton(View view) {
+        finish();
     }
 }

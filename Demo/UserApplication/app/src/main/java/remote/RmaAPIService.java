@@ -14,10 +14,6 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-/**
- * Created by elpsychris on 03/12/2018.
- */
-
 public interface RmaAPIService {
     @GET("/test")
     Call<String> getServer();
@@ -61,9 +57,25 @@ public interface RmaAPIService {
 
     @POST("/user/confirm-user")
     @FormUrlEncoded
-    Call<Boolean> verifyNumber(@Field("phone") String phone,@Field("confirmCode")  String code);
+    Call<Boolean> verifyNumber(@Field("phone") String phone, @Field("confirmCode") String code);
+
+    @POST("/user/confirm-reset-password")
+    @FormUrlEncoded
+    Call<Boolean> verifyResetPassword(@Field("phone") String phone, @Field("confirmCode") String code);
 
     @POST("/user/request-new-confirm")
     @FormUrlEncoded
-    Call<String> resendcode(@Field("phone") String phone);
+    Call<Boolean> resendCode(@Field("phone") String phone);
+
+    @GET("/user/request-reset-password")
+    Call<Boolean> requestResetPassword(@Query("phoneNumber") String phone);
+
+    @POST("/user/reset-password")
+    @FormUrlEncoded
+    Call<Boolean> updatePasswordByPhone(@Field("phoneNumber") String phone, @Field("newPassword") String pass);
+
+    @POST("/user/change-password")
+    @FormUrlEncoded
+    Call<Boolean> changePassword(@Field("phoneNumber") String phone,
+                                 @Field("oldPassword") String currentPass, @Field("newPassword") String newPass);
 }

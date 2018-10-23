@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:text="595.000 vnd"
                 android:textColor="#000000"
-                android:textSize="40dp"
+                android:textSize="30dp"
                 android:textStyle="bold" />
 
             <Button
@@ -47,6 +47,18 @@
                 android:text="Nạp tiền"
                 android:textColor="#fff"
                 android:textSize="20dp" />
+
+            <Button
+                android:background="#00000000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:onClick="onClickChangePass"
+                android:text="@string/changpass"
+                android:textColor="#000000"
+                android:textSize="20dp" />
+
         </LinearLayout>
 
 
@@ -156,7 +168,7 @@
                     android:ellipsize="end"
                     android:gravity="center"
                     android:singleLine="true"
-                    android:text=""
+                    android:text="a"
                     android:textColor="#000000"
                     android:textSize="22dp" />
 

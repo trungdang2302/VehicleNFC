@@ -42,7 +42,7 @@ public class HistoryDetailActivity extends Activity {
 
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm", Locale.US);
 
-        txtFrom.setText(sdf.format(item.getCheck_in_date()) + " -> " +  sdf.format(item.getCheck_out_date()) + "   ");
+        txtFrom.setText(sdf.format(item.getCheck_in_date()) + " -> " + sdf.format(item.getCheck_out_date()) + "   ");
 
         SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
 
@@ -57,5 +57,10 @@ public class HistoryDetailActivity extends Activity {
         intent.putExtra("extra", item.getId());
         startActivity(intent);
     }
+
+    public void onBackButton(View view) {
+        finish();
+    }
+
 
 }

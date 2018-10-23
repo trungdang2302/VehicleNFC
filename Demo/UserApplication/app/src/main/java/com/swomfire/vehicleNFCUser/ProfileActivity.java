@@ -89,6 +89,12 @@ public class ProfileActivity extends Activity {
     }
 
 
+    public void onClickChangePass(View v) {
+        Intent intent = new Intent(this, ChangePasswordActivity.class);
+        startActivity(intent);
+    }
+
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -96,5 +102,9 @@ public class ProfileActivity extends Activity {
         String restoredText = prefs.getString("phoneNumberSignIn", "1");
         //String name = "1324658";
         getUserInfo(restoredText);
+    }
+
+    public void onBackButton(View view) {
+        finish();
     }
 }

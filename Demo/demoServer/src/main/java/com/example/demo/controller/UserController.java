@@ -59,6 +59,7 @@ public class UserController {
 //            VehicleType vehicleType = vehicleTypeOptional.get();
 //            user.setVehicleTypeId(vehicleType);
         String confirmCode = encodeGenerator();
+        System.err.println(user.getPhoneNumber() + ", Code:" + confirmCode);
         userService.createUser(user, confirmCode);
         Map<String, String> confirmSMSList = (Map<String, String>) servletContext.getAttribute("confirmSMSList");
         if (confirmSMSList == null) {
@@ -79,9 +80,10 @@ public class UserController {
 
 
     @PostMapping(value = "/request-new-confirm")
-    public ResponseEntity<String> requestNewConfirm(@Param("phone") String phone) {
+    public ResponseEntity<Boolean> requestNewConfirm(@Param("phone") String phone) {
         // Cần đoạn lấy thông tin xe
         String confirmCode = encodeGenerator();
+        System.err.println(phone + ", Code:" + confirmCode);
         userService.requestNewConfirmCode(phone, confirmCode);
         Map<String, String> confirmSMSList = (Map<String, String>) servletContext.getAttribute("confirmSMSList");
         if (confirmSMSList == null) {
@@ -89,7 +91,7 @@ public class UserController {
         }
         confirmSMSList.put(phone, confirmCode);
         servletContext.setAttribute("confirmSMSList", confirmSMSList);
-        return status(OK).body("success");
+        return status(OK).body(true);
     }
 
     @PostMapping(value = "/confirm-user")
@@ -107,6 +109,20 @@ public class UserController {
         return status(OK).body(false);
     }
 
+    @PostMapping(value = "/confirm-reset-password")
+    public ResponseEntity<Boolean> confirmResetPass(@Param("phone") String phone, @Param("confirmCode") String confirmCode) {
+        // Cần đoạn lấy thông tin xe
+        Map<String, String> confirmSMSList = (Map<String, String>) servletContext.getAttribute("confirmResetSMSList");
+//        String confirmCode = (String) session.getAttribute(user.getPhoneNumber());
+        if (confirmSMSList != null) {
+            String confirmCodeInSession = confirmSMSList.get(phone);
+            if (confirmCodeInSession != null && confirmCodeInSession.equals(confirmCode)) {
+                userService.activateUser(phone);
+                return status(OK).body(true);
+            }
+        }
+        return status(OK).body(false);
+    }
 
     @PostMapping("/save-user")
     public String updateUser(User user) {
@@ -186,5 +202,33 @@ public class UserController {
         return status(OK).body(userService.getUserByPhone(phoneNumber));
     }
 
+    @GetMapping(value = {"/request-reset-password"})
+    public ResponseEntity<Boolean> requestResetPassword(@Param("phoneNumber") String phoneNumber) {
+        Optional<User> user = userService.getUserByPhone(phoneNumber);
+        if (user.isPresent()) {
+            String confirmCode = encodeGenerator();
+            System.err.println(phoneNumber + ", Code: " + confirmCode);
+            userService.requestNewConfirmCode(phoneNumber, confirmCode);
+            Map<String, String> confirmSMSList = (Map<String, String>) servletContext.getAttribute("confirmResetSMSList");
+            if (confirmSMSList == null) {
+                confirmSMSList = new HashMap<>();
+            }
+            confirmSMSList.put(phoneNumber, confirmCode);
+            servletContext.setAttribute("confirmResetSMSList", confirmSMSList);
+            return status(OK).body(true);
+        }
+        return status(OK).body(false);
+    }
 
+    @PostMapping(value = "/change-password")
+    public ResponseEntity<Boolean> changePassword(@Param("phoneNumber") String phoneNumber, @Param("oldPassword") String oldPassword,
+                                                  @Param("newPassword") String newPassword) {
+        return ResponseEntity.status(OK).body(userService.changePassword(phoneNumber, oldPassword, newPassword).isPresent());
+    }
+
+    @PostMapping(value = "/reset-password")
+    public ResponseEntity<Boolean> resetPassword(@Param("phoneNumber") String phoneNumber,
+                                                 @Param("newPassword") String newPassword) {
+        return ResponseEntity.status(OK).body(userService.resetPassword(phoneNumber, newPassword).isPresent());
+    }
 }

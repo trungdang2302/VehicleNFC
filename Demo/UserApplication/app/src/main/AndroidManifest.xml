@@ -70,6 +70,19 @@
         <activity
             android:name=".VerifyActivity"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ChangePasswordActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ForgetPasswordActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ResetPasswordActivity"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ShowPopupPrice"
             android:screenOrientation="portrait"

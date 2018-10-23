@@ -162,13 +162,29 @@ public class UserService {
     }
 
     public Optional<User> topUp(String userId, double amount) {
-        User userDB = userRepository.findById(Integer.parseInt(userId)).get();
-        if (userDB != null) {
-            userDB.setMoney(userDB.getMoney() + amount);
-            userRepository.save(userDB);
+        Optional<User> userDB = userRepository.findById(Integer.parseInt(userId));
+        if (userDB.isPresent()) {
+            userDB.get().setMoney(userDB.get().getMoney() + amount);
+            userRepository.save(userDB.get());
         }
-        return Optional.of(userDB);
+        return userDB;
     }
 
+    public Optional<User> changePassword(String phoneNumber, String oldPassword, String newPassword) {
+        Optional<User> user = userRepository.findByPhoneNumberAndPassword(phoneNumber, oldPassword);
+        if (user.isPresent()) {
+            user.get().setPassword(newPassword);
+            userRepository.save(user.get());
+        }
+        return user;
+    }
 
+    public Optional<User> resetPassword(String phoneNumber, String newPassword) {
+        Optional<User> user = userRepository.findByPhoneNumber(phoneNumber);
+        if (user.isPresent()) {
+            user.get().setPassword(newPassword);
+            userRepository.save(user.get());
+        }
+        return user;
+    }
 }

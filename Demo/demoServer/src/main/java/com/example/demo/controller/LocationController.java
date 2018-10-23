@@ -31,7 +31,7 @@ public class LocationController {
 
     }
 
-    @GetMapping("/page")
+    @GetMapping("/index")
     public ModelAndView getAllMeters(ModelAndView mav) {
         mav.setViewName("location-management");
         return mav;
@@ -40,5 +40,10 @@ public class LocationController {
     public ResponseEntity<ResponseObject> getLocations() {
         ResponseObject response = locationService.getAllLocations();
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/location-has-vehicles/{id}")
+    public  ResponseEntity getLocationHasVehicles(@PathVariable("id") Integer locationId){
+        return ResponseEntity.status(HttpStatus.OK).body(locationService.getLocationHasVehicleTypes(locationId));
     }
 }

@@ -54,6 +54,10 @@ public class UserService {
 
     public void createUser(User user, String confirmCode) {
         if (user.getVehicle() != null) {
+            user.getVehicle().setVerified(false);
+            user.setActivated(false);
+            vehicleRepository.save(user.getVehicle());
+            user.setVehicleNumber(user.getVehicle().getVehicleNumber());
             userRepository.save(user);
 //            requestNewConfirmCode(user.getPhoneNumber(), confirmCode);
         }
@@ -65,7 +69,11 @@ public class UserService {
     }
 
     public Optional<User> getUserByPhone(String phone) {
-        return userRepository.findByPhoneNumber(phone);
+        Optional<User> user = userRepository.findByPhoneNumber(phone);
+        if (user.isPresent()) {
+            user.get().setVehicle(vehicleRepository.findByVehicleNumber(user.get().getVehicleNumber()).get());
+        }
+        return user;
 
     }
 
@@ -160,7 +168,11 @@ public class UserService {
     }
 
     public Optional<User> login(String phone, String password) {
-        return userRepository.findByPhoneNumberAndPassword(phone, password);
+        Optional<User> user = userRepository.findByPhoneNumberAndPassword(phone, password);
+        if (user.isPresent()) {
+            user.get().setVehicle(vehicleRepository.findByVehicleNumber(user.get().getVehicleNumber()).get());
+        }
+        return user;
     }
 
     public void updateUserSmsNoti(User user) {

@@ -24,8 +24,9 @@ public class OrderService {
     private final OrderPricingRepository orderPricingRepository;
     private final PolicyHasVehicleTypeRepository policyHasVehicleTypeRepository;
     private final PricingRepository pricingRepository;
+    private final VehicleRepository vehicleRepository;
 
-    public OrderService(OrderRepository orderRepository, OrderStatusRepository orderStatusRepository, UserRepository userRepository, LocationRepository locationRepository, OrderPricingRepository orderPricingRepository, PolicyHasVehicleTypeRepository policyHasVehicleTypeRepository, PricingRepository pricingRepository) {
+    public OrderService(OrderRepository orderRepository, OrderStatusRepository orderStatusRepository, UserRepository userRepository, LocationRepository locationRepository, OrderPricingRepository orderPricingRepository, PolicyHasVehicleTypeRepository policyHasVehicleTypeRepository, PricingRepository pricingRepository, VehicleRepository vehicleRepository) {
         this.orderRepository = orderRepository;
         this.orderStatusRepository = orderStatusRepository;
         this.userRepository = userRepository;
@@ -33,18 +34,27 @@ public class OrderService {
         this.orderPricingRepository = orderPricingRepository;
         this.policyHasVehicleTypeRepository = policyHasVehicleTypeRepository;
         this.pricingRepository = pricingRepository;
+        this.vehicleRepository = vehicleRepository;
     }
 
     public Optional<Order> getOrderById(Integer id) {
-        Order order = orderRepository.findById(id).get();
-        order.setOrderPricings(orderPricingRepository.findByOrderId(order.getId()));
-        return Optional.of(order);
+        Optional<Order> order = orderRepository.findById(id);
+        if (order.isPresent()) {
+            order.get().getUserId().setVehicle(
+                    vehicleRepository.findByVehicleNumber(order.get().getUserId().getVehicleNumber()).get()
+            );
+            order.get().setOrderPricings(orderPricingRepository.findByOrderId(order.get().getId()));
+        }
+        return order;
     }
 
     public Optional<Order> getOpenOrderByUserId(Integer id) {
         Optional<Order> order = orderRepository.findFirstByUserIdAndOrderStatusId(userRepository.findById(id).get()
                 , orderStatusRepository.findByName(OrderStatusEnum.Open.getName()).get());
         if (order.isPresent()) {
+            order.get().getUserId().setVehicle(
+                    vehicleRepository.findByVehicleNumber(order.get().getUserId().getVehicleNumber()).get()
+            );
             order.get().setOrderPricings(orderPricingRepository.findByOrderId(order.get().getId()));
         }
         return order;
@@ -169,7 +179,7 @@ public class OrderService {
         }
         totalPrice += lastPrice * ((double) totalMinute / 60);
 
-        order.setDuration(duration.toMilisecond()/1000);
+        order.setDuration(duration.toMilisecond() / 1000);
         order.setTotal(round(totalPrice, 0));
         OrderStatus orderStatus = orderStatusRepository.findByName(OrderStatusEnum.Close.getName()).get();
         order.setOrderStatusId(orderStatus);
@@ -276,7 +286,15 @@ public class OrderService {
     }
 
     public List<Order> findOrdersByUserId(Integer userId) {
-        return orderRepository.findByUserIdOrderByCheckInDateDesc(userRepository.findById(userId).get());
+        List<Order> orders = orderRepository.findByUserIdOrderByCheckInDateDesc(userRepository.findById(userId).get());
+
+        for (Order order : orders) {
+            order.getUserId().setVehicle(
+                    vehicleRepository.findByVehicleNumber(order.getUserId().getVehicleNumber()).get()
+            );
+            order.setOrderPricings(orderPricingRepository.findByOrderId(order.getId()));
+        }
+        return orders;
     }
 
     public static double round(double value, int places) {

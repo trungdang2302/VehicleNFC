@@ -122,7 +122,7 @@ public class SignUpActivity extends Activity {
                 public void onResponse(Call<String> call, Response<String> response) {
 
                     String id = response.body();
-                    if (!id.matches("")) {
+                    if (!id.equals("")) {
                         Intent intent = new Intent(context, CreateSuccessActivity.class);
                         startActivity(intent);
                     }

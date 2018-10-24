@@ -33,6 +33,10 @@ public class Vehicle {
     @Expose
     private VehicleType VehicleTypeId;
 
+    @SerializedName("isVerified")
+    @Expose
+    private boolean isVerified;
+
 
     public String getVehicleNumber() {
         return vehicleNumber;
@@ -88,5 +92,13 @@ public class Vehicle {
 
     public void setVehicleTypeId(VehicleType vehicleTypeId) {
         VehicleTypeId = vehicleTypeId;
+    }
+
+    public boolean isVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(boolean verified) {
+        isVerified = verified;
     }
 }

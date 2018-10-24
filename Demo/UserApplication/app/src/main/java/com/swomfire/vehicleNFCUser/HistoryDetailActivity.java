@@ -42,17 +42,17 @@ public class HistoryDetailActivity extends Activity {
         txtTo = findViewById(R.id.txtTo);
         txtDuration = findViewById(R.id.txtDuration);
         txtTotal = findViewById(R.id.txtTotal);
+        Date date = new Date(item.getCheck_in_date());
 
-        txtName.setText(item.getUsername());
         txtVehicalName.setText(item.getVehical_name());
         txtVehicalID.setText(item.getVehical_id());
         txtLocation.setText(item.getTbl_location_id());
 
-        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm", Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
 
         txtFrom.setText(sdf.format(item.getCheck_in_date()) + " -> " + sdf.format(item.getCheck_out_date()) + "   ");
 
-        SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+        SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
 
         txtTo.setText(sdf2.format(item.getCheck_in_date()));
 

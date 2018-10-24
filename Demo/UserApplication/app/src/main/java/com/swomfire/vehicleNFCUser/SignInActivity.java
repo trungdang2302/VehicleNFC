@@ -53,10 +53,7 @@ public class SignInActivity extends Activity {
                     progressDialog.cancel();
                     User result = response.body();
                     if (result != null) {
-
-
-                        if (result.isSmsNoti()) {
-
+                        if (result.isActivated()) {
                             SharedPreferences.Editor a = getSharedPreferences("localData", MODE_PRIVATE).edit();
                             a.clear();
                             SharedPreferences.Editor editor = getSharedPreferences("localData", MODE_PRIVATE).edit();

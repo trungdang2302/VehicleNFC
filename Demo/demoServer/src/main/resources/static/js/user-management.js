@@ -166,7 +166,9 @@ function loadData(res) {
         row += '<td>' + content[i].firstName + ' ' + content[i].lastName + '</td>';
         row += '<td>' + content[i].vehicle.vehicleNumber + '</td>';
         row += '<td>' + content[i].vehicle.licensePlateId + '</td>';
-        row += '<td>' + content[i].vehicle.vehicleTypeId.name + '</td>';
+        var vehicleType = (content[i].vehicle.vehicleTypeId != null)
+            ? content[i].vehicle.vehicleTypeId.name : "Empty";
+        row += '<td>' + vehicleType + '</td>';
         // row += '<td>' + content[i].vehicleTypeId.name + '</td>';
         row += '<td><a href="#" onclick="loadUserModal(' + content[i].id + ')" class="btn btn-primary edtBtn"><i class="lnr lnr-pencil"></i></a></td>';
         row += '<td><a href="#" onclick="deleteModal(' + content[i].id + ')" class="btn btn-danger delBtn"><i class="lnr lnr-trash"></i></a></td>'

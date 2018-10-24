@@ -24,8 +24,9 @@ public class OrderService {
     private final OrderPricingRepository orderPricingRepository;
     private final PolicyHasVehicleTypeRepository policyHasVehicleTypeRepository;
     private final PricingRepository pricingRepository;
+    private final VehicleRepository vehicleRepository;
 
-    public OrderService(OrderRepository orderRepository, OrderStatusRepository orderStatusRepository, UserRepository userRepository, LocationRepository locationRepository, OrderPricingRepository orderPricingRepository, PolicyHasVehicleTypeRepository policyHasVehicleTypeRepository, PricingRepository pricingRepository) {
+    public OrderService(OrderRepository orderRepository, OrderStatusRepository orderStatusRepository, UserRepository userRepository, LocationRepository locationRepository, OrderPricingRepository orderPricingRepository, PolicyHasVehicleTypeRepository policyHasVehicleTypeRepository, PricingRepository pricingRepository, VehicleRepository vehicleRepository) {
         this.orderRepository = orderRepository;
         this.orderStatusRepository = orderStatusRepository;
         this.userRepository = userRepository;
@@ -33,6 +34,7 @@ public class OrderService {
         this.orderPricingRepository = orderPricingRepository;
         this.policyHasVehicleTypeRepository = policyHasVehicleTypeRepository;
         this.pricingRepository = pricingRepository;
+        this.vehicleRepository = vehicleRepository;
     }
 
     public Optional<Order> getOrderById(Integer id) {
@@ -207,8 +209,14 @@ public class OrderService {
         typedQuery.setMaxResults(pageSize);
 
         List<Order> orders = typedQuery.getResultList();
-
-        responseObject.setData(orders);
+        List<Order> result = new ArrayList<>();
+        for (Order order: orders) {
+            User user = order.getUserId();
+            user.setVehicle(vehicleRepository.findByVehicleNumber(user.getVehicleNumber()).get());
+            order.setUserId(user);
+            result.add(order);
+        }
+        responseObject.setData(result);
         responseObject.setPageNumber(pagNumber);
         int totalPages = getTotalOrders(pageSize).intValue();
         responseObject.setTotalPages(totalPages);
@@ -226,39 +234,58 @@ public class OrderService {
         return (long) (count / pageSize) + 1;
     }
 
-    public ResponseObject filterOrders(SearchCriteria param, int pagNumber, int pageSize) {
+    public ResponseObject filterOrders(List<SearchCriteria> params, int pagNumber, int pageSize) {
         ResponseObject responseObject = new ResponseObject();
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Order> query = builder.createQuery(Order.class);
         Root r = query.from(Order.class);
 
         Predicate predicate = builder.conjunction();
+        for (SearchCriteria param:params) {
+            if (param.getOperation().equalsIgnoreCase(">")) {
+                predicate = builder.and(predicate,
+                        builder.greaterThanOrEqualTo(r.get(param.getKey()),
+                                param.getValue().toString()));
+            } else if (param.getOperation().equalsIgnoreCase("<")) {
+                predicate = builder.and(predicate,
+                        builder.lessThanOrEqualTo(r.get(param.getKey()),
+                                param.getValue().toString()));
+            } else if (param.getOperation().equalsIgnoreCase(":")) {
+                Object type = new Object();
+                if (param.getKey().equalsIgnoreCase("vehicleNumber")) {
+                    // do vehicleNumber la object nam trong User
+                    type = User.class;
+                } else {
+                    type = r.get(param.getKey()).getJavaType();
+                }
+                if (type == String.class) {
+                    predicate = builder.and(predicate,
+                            builder.like(r.get(param.getKey()),
+                                    "%" + param.getValue() + "%"));
+                } else if (type == Location.class) {
+                    Join<Order, Location> join = r.join("locationId");
+                    Predicate locationNamePredicate = builder.like(join.get("location"), "%" + param.getValue() + "%");
+                    predicate = builder.and(predicate, locationNamePredicate);
+                } else if (type == OrderStatus.class) {
+                    Join<Order, Location> join = r.join("orderStatusId");
+                    Predicate locationNamePredicate = builder.like(join.get("name"), param.getValue() + "%");
+                    predicate = builder.and(predicate, locationNamePredicate);
+                } else if (type == long.class){
+                    // search in range between SearchDay 0h0p0s and searchDay 23h59p
+                    Long endOfDay = Long.parseLong("86340000"); // 23h59p
+                    predicate = builder.and(predicate, builder.between(r.get(param.getKey()), (long) param.getValue(), (long) param.getValue() + endOfDay ));
+                } else if (type == User.class){
+                    if (param.getKey().equalsIgnoreCase("vehicleNumber")) {
+                        Join<Order, User> join = r.join("userId");
+                        Predicate vehiclePredicate = builder.equal(join.get("vehicleNumber"), param.getValue());
+                        predicate = builder.and(predicate, vehiclePredicate);
+                    }
 
-        if (param.getOperation().equalsIgnoreCase(">")) {
-            predicate = builder.and(predicate,
-                    builder.greaterThanOrEqualTo(r.get(param.getKey()),
-                            param.getValue().toString()));
-        } else if (param.getOperation().equalsIgnoreCase("<")) {
-            predicate = builder.and(predicate,
-                    builder.lessThanOrEqualTo(r.get(param.getKey()),
-                            param.getValue().toString()));
-        } else if (param.getOperation().equalsIgnoreCase(":")) {
-            Object type = r.get(param.getKey()).getJavaType();
-            if (type == String.class) {
-                predicate = builder.and(predicate,
-                        builder.like(r.get(param.getKey()),
-                                "%" + param.getValue() + "%"));
-            } else if (type == Location.class) {
-                Join<Order, Location> join = r.join("locationId");
-                Predicate locationNamePredicate = builder.like(join.get("location"), "%" + param.getValue() + "%");
-                predicate = builder.and(predicate, locationNamePredicate);
-            } else if (type == OrderStatus.class) {
-                Join<Order, Location> join = r.join("orderStatusId");
-                Predicate locationNamePredicate = builder.like(join.get("name"), param.getValue() + "%");
-                predicate = builder.and(predicate, locationNamePredicate);
-            } else {
-                predicate = builder.and(predicate,
-                        builder.equal(r.get(param.getKey()), param.getValue()));
+
+                }  else {
+                    predicate = builder.and(predicate,
+                            builder.equal(r.get(param.getKey()), param.getValue()));
+                }
             }
         }
         query.where(predicate);
@@ -269,7 +296,14 @@ public class OrderService {
         typedQuery.setFirstResult(pagNumber * pageSize);
         typedQuery.setMaxResults(pageSize);
         List<Order> orderList = typedQuery.getResultList();
-        responseObject.setData(orderList);
+        List<Order> result = new ArrayList<>();
+        for (Order order: orderList) {
+            User user = order.getUserId();
+            user.setVehicle(vehicleRepository.findByVehicleNumber(user.getVehicleNumber()).get());
+            order.setUserId(user);
+            result.add(order);
+        }
+        responseObject.setData(result);
         responseObject.setTotalPages(totalPages + 1);
         responseObject.setPageNumber(pagNumber);
         return responseObject;

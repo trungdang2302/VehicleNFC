@@ -54,7 +54,7 @@ public class OrderController {
 //    }
 
     @GetMapping(value = "/get-orders")
-    public ResponseEntity<?> getAllOrders(@RequestParam(defaultValue = "1") Integer page) {
+    public ResponseEntity<?> getAllOrders(@RequestParam(defaultValue = "0") Integer page) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(orderService.getOrders(page,AppConstant.ORDER_PAGESIZE));
         } catch (Exception e) {
@@ -69,7 +69,7 @@ public class OrderController {
     }
 
     @PostMapping(value = "/filter-order")
-    public ResponseEntity<?> filterOrder(@RequestBody SearchCriteria params
+    public ResponseEntity<?> filterOrder(@RequestBody List<SearchCriteria> params
             , @RequestParam(defaultValue = "0") Integer page) {
         try{
             return  ResponseEntity.status(HttpStatus.OK).body(orderService.filterOrders(params,page,AppConstant.ORDER_PAGESIZE));

@@ -7,10 +7,15 @@
     <link rel="stylesheet" href="/assets/vendor/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="/assets/vendor/linearicons/style.css">
     <link rel="stylesheet" href="/assets/vendor/chartist/css/chartist-custom.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css" rel="stylesheet"/>
+    <!--<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"></head>-->
+
+    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>-->
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />-->
     <!-- MAIN CSS -->
     <link rel="stylesheet" href="/assets/css/main.css">
     <!-- FOR DEMO PURPOSES ONLY. You should remove this in your project -->
-    <link rel="stylesheet" href="/assets/css/demo.css">
+    <!--<link rel="stylesheet" href="/assets/css/demo.css">-->
     <link rel="stylesheet" href="/css/order.css">
     <!-- GOOGLE FONTS -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
@@ -22,11 +27,15 @@
 <div class="main-content">
     <div class="container-fluid">
         <div class="panel panel-headline">
+
             <div class="searchBox">
                 <div class="form-container">
-                    <form action="search-user" id="search-box" method="post">
+                    <form action="" id="search-box" method="post">
+                        <span>CheckInDate</span>
+                        <input data-date-format="dd/mm/yyyy" class="form-control" id="datepicker" placeholder="Choose date">
                         <select id="search-filter" class="form-control">
-                            <option value="locationId" selected="selected">Search By Location</option>
+                            <option value="vehicleNumber" selected="selected">Search By Vehicle Number</option>
+                            <option value="locationId">Search By Location</option>
                             <option value="orderStatusId">Search By Status</option>
                         </select>
                         <input type="text" class="form-control" id="searchValue" name="searchValue" value=""/>
@@ -46,8 +55,8 @@
                             <th>CheckOut Date</th>
                             <th>Location</th>
                             <th>Status</th>
-                            <th>LastName</th>
-                            <th>Phone</th>
+                            <th>Vehicle Number</th>
+                            <th>License Plate</th>
                             <th>Duration</th>
                             <th>Total</th>
                             <th>Action</th>
@@ -65,8 +74,6 @@
 
         </div>
     </div>
-</div>
-</div>
 </div>
 
 
@@ -154,6 +161,8 @@
 <script src="/assets/vendor/jquery-slimscroll/jquery.slimscroll.min.js"></script>
 <script src="/js/order-management.js"></script>
 <script src="/assets/scripts/klorofil-common.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
+<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>-->
 
 </body>
 </html>

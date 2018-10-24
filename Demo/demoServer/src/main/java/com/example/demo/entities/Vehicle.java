@@ -1,7 +1,6 @@
 package com.example.demo.entities;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity

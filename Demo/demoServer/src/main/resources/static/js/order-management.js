@@ -1,11 +1,31 @@
 $(document).ready(function () {
     initOrders();
     sortHeaders();
+    $('#datepicker').datepicker({
+        weekStart: 1,
+        autoclose: true,
+        format: "mm-dd-yyyy",
+        todayHighlight: true,
+    });
+    // var picker = $('#datepicker');
 
+    // picker.on('changeDate', function(e) {
+    //     console.log($('#datepicker').val());
+    // });
     $('#searchBtn').on('click', function (e) {
         e.preventDefault();
         filterOrder(0);
     });
+
+    // $('.clockpicker').clockpicker({
+    //     placement: 'bottom',
+    //     align: 'left',
+    //     donetext: 'Done',
+    //     // afterDone: function () {
+    //     //     console.log("after done");
+    //     //     parseTimeToLong("clockpickerFrom", "ParkingFrom");
+    //     // }
+    // });
 });
 function initOrders() {
     $.ajax({
@@ -36,8 +56,10 @@ function loadData(res) {
             row += '<td style="color: #339933;">' + content[i].orderStatusId.name + '</td>';
         }
 
-        row += '<td>' + content[i].userId.firstName+' '+ content[i].userId.lastName + '</td>';
-        row += '<td>' + content[i].userId.phoneNumber + '</td>';
+        // row += '<td>' + content[i].userId.firstName+' '+ content[i].userId.lastName + '</td>';
+        // row += '<td>' + content[i].userId.phoneNumber + '</td>';
+        row += '<td>' + content[i].userId.vehicleNumber + '</td>';
+        row += '<td>' + content[i].userId.vehicle.licensePlateId + '</td>';
         var duration = "";
         if (content[i].duration === null) {
             duration = 0;
@@ -52,8 +74,6 @@ function loadData(res) {
             total = content[i].total;
         }
         row += '<td>' + total + '</td>';
-        // var orderObject = JSON.stringify(content[i]);
-        // row += '<td><a href="#" onclick="viewPricingDetail(' + orderObject + ')" class="btn btn-primary viewBtn">View Detail</a></td>';
         row += '<td><a href="#" onclick="viewPricingDetail(' + content[i].id + ')" class="btn btn-primary viewBtn">View Detail</a></td>'
         row += '</tr>';
         $('#order-table tbody').append(row);
@@ -88,16 +108,21 @@ function filterOrder(pageNumber) {
     }
     var searchType = $('#search-filter option:selected').val();
     var searchValue =  $('#searchValue').val();
+    var checkInDate = convertDateToMs($('#datepicker').val());
+    var timeType = 'checkInDate';
     console.log("Search By: "+searchType);
     console.log("SearchValue: "+searchValue);
-
-    var filterObject = createSearchObject(searchType, ":", searchValue);
+    var listFilterObject = [];
+    var searchValue = createSearchObject(searchType, ":", searchValue);
+    var searchTime = createSearchObject(timeType,":", checkInDate);
+    listFilterObject.push(searchValue);
+    listFilterObject.push(searchTime);
     $.ajax({
         type:'POST',
         url: url,
         dataType:"json",
         contentType: 'application/json',
-        data: JSON.stringify(filterObject),
+        data: JSON.stringify(listFilterObject),
         success:function(response){
             emptyTable();
             emptyPaginationLi();
@@ -132,7 +157,7 @@ function viewPricingDetail(orderId) {
         dataType: "json",
         url: 'http://localhost:8080/order-pricing/get/' + orderId,
         success: function (res) {
-            $('.myForm #lastName').text(order.userId.firstName+' '+ order.userId.lastName);
+            // $('.myForm #lastName').text(order.userId.firstName+' '+ order.userId.lastName);
             $('.myForm #phoneNumber').text(order.userId.phoneNumber);
             $('.myForm #location').text(order.locationId.location);
             $('.myForm #allowedParkingFrom').text(order.allowedParkingFrom);
@@ -212,9 +237,24 @@ function msToTime (ms) {
     var hours = parseInt(minutes/60, 10);
     minutes = minutes%60;
 
-    return hours + 'h' + minutes + 'p' + seconds;
+    return hours + 'h' + minutes + 'p';
 }
-
+function parseTimeToLong(clockPicker, type) {
+    // console.log(type);
+    // console.log("log: " + $('.clockpickerFrom #ParkingFrom').val());
+    var time = $('.' + clockPicker + ' #' + type).val();
+    // console.log("Time: " + time);
+    var temp = time.split(":")
+    var hour = temp[0];
+    // console.log("hour: " + hour);
+    var minute = temp[1];
+    // console.log("Minute: " + minute);
+    // console.log("hour ms: " + parseInt(hour * 3600000));
+    // console.log("minute ms: " + parseInt(minute * 60000));
+    var ms = parseInt(hour * 3600000) + parseInt(minute * 60000);
+    // console.log(ms);
+    $('#allowed' + type).val(ms);
+}
 function convertDate(dateTypeLong) {
     if (dateTypeLong === null){
         return "Empty";
@@ -227,6 +267,24 @@ function convertDate(dateTypeLong) {
                 dateStr.getMinutes(),
                 dateStr.getSeconds()].join(':');
     return dformat;
+}
+
+function toDate(dateStr) {
+    var parts = dateStr.split("-")
+    return new Date(parts[2], parts[1] - 1, parts[0])
+}
+
+function convertDateToMs(dateStr) {
+    console.log("NEWDATE: "+toDate(dateStr));
+    console.log(dateStr);
+    var date = new Date(dateStr);
+    var ms = date.getTime();
+    console.log("MS: "+ms);
+
+    console.log("redundant: "+(parseInt(23 * 3600000) + parseInt(59 * 60000) + parseInt(59)));
+    console.log(convertDate(154030));
+    return ms;
+
 }
 function sortHeaders() {
     $('th').click(function(){

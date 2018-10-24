@@ -41,8 +41,7 @@ public class PolicyController {
     }
 
     @GetMapping("/create")
-    public ModelAndView createPage(ModelAndView mav
-                                 , @RequestParam("locationId") Integer locationId) {
+    public ModelAndView createPage(ModelAndView mav) {
         mav.setViewName("policy-create");
         return mav;
     }

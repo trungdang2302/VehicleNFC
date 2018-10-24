@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/vendor/linearicons/style.css">
+    <link rel="stylesheet" href="/css/user.css">
 </head>
 <body>
-<div class="row">
-    <div class="card">
+<div class="main-content">
+    <div class="container-fluid">
         <div class="panel-heading">
             <button class="btn btn-success" id="newBtn" onclick="loadCreateModal()" name="New" value="New">New</button>
         </div>
@@ -24,29 +26,32 @@
             </form>
         </div>
         <div class="panel-body">
-            <table class="table table-hover" id="user-table">
-                <thead>
-                <tr>
-                    <th>Phone Number</th>
-                    <th>Money</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Vehicle Number</th>
-                    <th>License Plate</th>
-                    <th>Vehicle Type</th>
-                    <th colspan="3" style="text-align: center;">Action</th>
-                </tr>
-                </thead>
-                <tbody>
+            <div class="row">
+                <table class="table table-hover" id="user-table">
+                    <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Phone Number</th>
+                        <th>Money</th>
+                        <th>Name</th>
+                        <th>Vehicle Number</th>
+                        <th>License Plate</th>
+                        <th>Vehicle Type</th>
+                        <th colspan="3" style="text-align: center;">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
 
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <ul class="nav nav-pills" id="pagination"></ul>
+            </div>
         </div>
     </div>
 </div>
-<div class="row">
-    <ul class="nav nav-pills" id="pagination">
-</div>
+
 
 <div class="myForm">
     <form action="save-user" id="save-user-form" method="GET">

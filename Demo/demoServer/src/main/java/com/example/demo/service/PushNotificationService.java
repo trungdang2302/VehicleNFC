@@ -125,7 +125,7 @@ public class PushNotificationService {
 
                 body += "Bắt đầu đậu xe tại: " + order.getLocationId().getLocation() + "\n";
                 body += "Vào lúc: " + date + "\n";
-                body += "Bảng giá cho loại xe: " + order.getUserId().getVehicleTypeId().getName() + "\n";
+                body += "Bảng giá cho loại xe: " + order.getUserId().getVehicle().getVehicleTypeId().getName() + "\n";
                 for (OrderPricing orderPricing : order.getOrderPricings()) {
                     body += (orderPricing.getFromHour() == 0) ? "Từ Giờ đầu: " + ((long) orderPricing.getPricePerHour() * 1000) + "đ/h\n"
                             : "Từ giờ thứ " + orderPricing.getFromHour() + ": " + ((long) orderPricing.getPricePerHour() * 1000) + "đ/h\n";

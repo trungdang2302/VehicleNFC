@@ -182,14 +182,14 @@ function loadData(res) {
     for (currentPage = 0; currentPage <= res.totalPages - 1; currentPage++) {
         if (currentPage === pageNumber) {
             li = '<li class="nav-item active">\n' +
-                '<a href="#" class="nav-link" onclick="searchUser(' + currentPage + ')">' + currentPage + '</a>\n' +
+                '<a href="#" class="nav-link" onclick="searchUser(' + currentPage + ')">' + (currentPage + 1) + '</a>\n' +
                 '</li>';
             $('#pagination').append(li);
         } else {
 
             li = '<li class="nav-item">\n' +
                 '<a href="#" class="nav-link" onclick="searchUser(' + currentPage + ')">\n' +
-                +currentPage + '</a>\n' +
+                +(currentPage + 1) + '</a>\n' +
                 '</li>';
             $('#pagination').append(li);
         }

@@ -4,6 +4,7 @@ import com.example.demo.Config.PaginationEnum;
 import com.example.demo.Config.ResponseObject;
 import com.example.demo.Config.SearchCriteria;
 import com.example.demo.entities.User;
+import com.example.demo.entities.Vehicle;
 import com.example.demo.entities.VehicleType;
 import com.example.demo.service.UserService;
 import com.example.demo.service.VehicleService;
@@ -187,9 +188,25 @@ public class UserController {
         return mav;
     }
 
-    @GetMapping("/verify-vehicle")
-    public ModelAndView verifyPage(ModelAndView mav) {
-        mav.setViewName("verify-vehicle");
+    @GetMapping("/lookup-vehicle")
+    public ModelAndView lookupPage(ModelAndView mav) {
+        mav.setViewName("lookup-vehicle");
+        return mav;
+    }
+
+    @PostMapping("/verify-vehicle")
+    public Boolean verifyPage(Vehicle vehicle) {
+        if (vehicleService.verifyVehicle(vehicle).isPresent()) {
+            return true;
+        }
+        return false;
+    }
+
+
+    @GetMapping("/verify-vehicle-form")
+    public ModelAndView verifyForm(ModelAndView mav) {
+        mav.setViewName("verify-vehicle-form");
+        mav.addObject("vehicleNumber", "abc");
         return mav;
     }
 
@@ -245,6 +262,16 @@ public class UserController {
 
     @GetMapping(value = "/get-vehicles")
     public ResponseEntity<ResponseObject> getVehicles(@RequestParam(defaultValue = "0") Integer page) {
-        return ResponseEntity.status(OK).body(vehicleService.getAllVehicle())   ;
+        ResponseObject response = new ResponseObject();
+        response.setData(vehicleService.getAllVehicle());
+        response.setPageNumber(page);
+        response.setTotalPages(vehicleService.getTotalVehicles(PaginationEnum.userPageSize.getNumberOfRows()).intValue());
+
+        return ResponseEntity.status(OK).body(response);
+    }
+
+    @GetMapping(value = "/get-vehicle/{vehicleNumber}")
+    public ResponseEntity<Optional<Vehicle>> getVehicle(@PathVariable(value = "vehicleNumber") String vehicleNumber) {
+        return ResponseEntity.status(OK).body(vehicleService.getVehicle(vehicleNumber));
     }
 }

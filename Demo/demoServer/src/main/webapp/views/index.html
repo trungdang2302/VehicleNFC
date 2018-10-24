@@ -5,54 +5,57 @@
     <title>Title</title>
     <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/vendor/linearicons/style.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/demo.css">
     <link rel="stylesheet" href="/css/user.css">
 </head>
 <body>
-<div class="main-content">
+<div class="main-content" id="main-content-vehicle-list">
     <div class="container-fluid">
-        <div class="panel-heading">
-            <button class="btn btn-success" id="newBtn" onclick="loadCreateModal()" name="New" value="New">New</button>
-        </div>
-        <div class="panel-heading">
-
-            <form action="search-user" id="search-box" method="post">
-                <select id="search-filter" style="float: left;">
-                    <option value="lastName" selected="selected">Search By LastName</option>
-                    <option value="licensePlateId">Search By License Plate</option>
-                </select>
-                <input type="text" class="form-control" id="searchValue" name="searchValue" value=""
-                       style="width: 50%; float: left;"/>
-                <button class="btn btn-primary" id="searchBtn" name="Search" value="Search">Search</button>
-            </form>
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <table class="table table-hover" id="user-table">
-                    <thead>
-                    <tr>
-                        <th>No.</th>
-                        <th>Phone Number</th>
-                        <th>Money</th>
-                        <th>Name</th>
-                        <th>Vehicle Number</th>
-                        <th>License Plate</th>
-                        <th>Vehicle Type</th>
-                        <th colspan="3" style="text-align: center;">Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-
-                    </tbody>
-                </table>
+        <div class="panel">
+            <div class="panel-headline">
+                <button class="btn btn-success" id="newBtn" onclick="loadCreateModal()" name="New" value="New">New
+                </button>
             </div>
-            <div class="row">
-                <ul class="nav nav-pills" id="pagination"></ul>
+            <div class="panel-heading">
+
+                <form action="search-user" id="search-box" method="post">
+                    <select id="search-filter" style="float: left;">
+                        <option value="lastName" selected="selected">Search By LastName</option>
+                        <option value="licensePlateId">Search By License Plate</option>
+                    </select>
+                    <input type="text" class="form-control" id="searchValue" name="searchValue" value=""
+                           style="width: 50%; float: left;"/>
+                    <button class="btn btn-primary" id="searchBtn" name="Search" value="Search">Search</button>
+                </form>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <table class="table table-hover" id="user-table">
+                        <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Phone Number</th>
+                            <th>Money</th>
+                            <th>Name</th>
+                            <th>Vehicle Number</th>
+                            <th>License Plate</th>
+                            <th>Vehicle Type</th>
+                            <th colspan="3" style="text-align: center;">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <ul class="nav nav-pills" id="pagination"></ul>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
-
 <div class="myForm">
     <form action="save-user" id="save-user-form" method="GET">
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
@@ -84,17 +87,20 @@
                         </div>
                         <div class="form-group">
                             <label for="vehicleNumber" class="col-form-label">VehicleNumber:</label>
-                            <input type="text" class="form-control" id="vehicleNumber" name="vehicleNumber" value=""/>
+                            <input type="text" class="form-control" id="vehicleNumber" name="vehicleNumber"
+                                   value=""/>
                         </div>
                         <div class="form-group">
                             <label for="licensePlateId" class="col-form-label">LicensePlateId:</label>
-                            <input type="text" class="form-control" id="licensePlateId" name="licensePlateId" value=""/>
+                            <input type="text" class="form-control" id="licensePlateId" name="licensePlateId"
+                                   value=""/>
                         </div>
                         <div class="form-group">
                             <label for="vehicleTypeName" class="col-form-label">VehicleType:</label>
                             <input type="text" class="form-control" id="vehicleTypeName" name="vehicleTypeName"
                                    value=""/>
-                            <input type="hidden" class="form-control" id="vehicleTypeId" name="vehicleTypeId" value=""/>
+                            <input type="hidden" class="form-control" id="vehicleTypeId" name="vehicleTypeId"
+                                   value=""/>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -169,11 +175,13 @@
                         </div>
                         <div class="form-group">
                             <label for="vehicleNumber" class="col-form-label">VehicleNumber:</label>
-                            <input type="text" class="form-control" id="vehicleNumber" name="vehicleNumber" value=""/>
+                            <input type="text" class="form-control" id="vehicleNumber" name="vehicleNumber"
+                                   value=""/>
                         </div>
                         <div class="form-group">
                             <label for="licensePlateId" class="col-form-label">LicensePlateId:</label>
-                            <input type="text" class="form-control" id="licensePlateId" name="licensePlateId" value=""/>
+                            <input type="text" class="form-control" id="licensePlateId" name="licensePlateId"
+                                   value=""/>
                         </div>
                         <div class="form-group">
                             <label for="vehicleTypeId" class="col-form-label">VehicleType:</label>
@@ -183,7 +191,8 @@
 
                             <!--<input type="text" class="form-control" id="vehicleTypeName" name="vehicleTypeName"-->
                             <!--value=""/>-->
-                            <input type="hidden" class="form-control" id="vehicleTypeId" name="vehicleTypeId" value=""/>
+                            <input type="hidden" class="form-control" id="vehicleTypeId" name="vehicleTypeId"
+                                   value=""/>
                         </div>
                     </div>
                     <div class="modal-footer">

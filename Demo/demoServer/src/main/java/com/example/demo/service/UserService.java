@@ -36,7 +36,11 @@ public class UserService {
     }
 
     public Optional<User> getUserById(Integer userId) {
-        return userRepository.findById(userId);
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isPresent()) {
+            user.get().setVehicle(vehicleRepository.findByVehicleNumber(user.get().getVehicleNumber()).get());
+        }
+        return user;
     }
 
     public void updateUser(User user) {
@@ -49,8 +53,10 @@ public class UserService {
     }
 
     public void createUser(User user, String confirmCode) {
-        userRepository.save(user);
-        requestNewConfirmCode(user.getPhoneNumber(), confirmCode);
+        if (user.getVehicle() != null) {
+            userRepository.save(user);
+//            requestNewConfirmCode(user.getPhoneNumber(), confirmCode);
+        }
     }
 
     public void requestNewConfirmCode(String phoneNumber, String confirmCode) {
@@ -111,6 +117,9 @@ public class UserService {
         query.where(predicate);
         TypedQuery<User> typedQuery = entityManager.createQuery(query);
         List<User> result = typedQuery.getResultList();
+        for (User user : result) {
+            user.setVehicle(vehicleRepository.findByVehicleNumber(user.getVehicleNumber()).get());
+        }
         int totalPages = result.size() / pageSize;
         typedQuery.setFirstResult(pagNumber * pageSize);
         typedQuery.setMaxResults(pageSize);

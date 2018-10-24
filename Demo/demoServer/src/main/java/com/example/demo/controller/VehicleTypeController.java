@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "/vehicleType")
+@RequestMapping(value = "/vehicle-type")
 public class VehicleTypeController {
 
     private final VehicleTypeService vehicleTypeService;

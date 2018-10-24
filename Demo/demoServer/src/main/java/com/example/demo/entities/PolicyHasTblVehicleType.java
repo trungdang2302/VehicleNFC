@@ -29,7 +29,7 @@ public class PolicyHasTblVehicleType implements Serializable {
     @Transient
     private List<Pricing> pricings;
 
-    @NotNull
+//    @NotNull
     @Column(name = "min_hour")
     private Integer minHour;
 

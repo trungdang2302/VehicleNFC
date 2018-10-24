@@ -11,6 +11,7 @@ import com.example.demo.repository.VehicleTypeRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,6 +77,13 @@ public class PolicyHasVehicleTypeService {
 
     public List<PolicyHasTblVehicleType> findListByPolicyId(Integer policyId) {
         Policy policy = policyRepository.findById(policyId).get();
-        return policyHasVehicleTypeRepository.findByPolicyId(policy.getId());
+        List<PolicyHasTblVehicleType> policyHasTblVehicleTypes = policyHasVehicleTypeRepository.findByPolicyId(policyId);
+        List<PolicyHasTblVehicleType> policyHasTblVehicleTypeList = new ArrayList<>();
+        for (PolicyHasTblVehicleType policyHasTblVehicleType: policyHasTblVehicleTypes) {
+            List<Pricing> pricings = pricingRepository.findAllByPolicyHasTblVehicleTypeId(policyHasTblVehicleType.getId());
+            policyHasTblVehicleType.setPricings(pricings);
+            policyHasTblVehicleTypeList.add(policyHasTblVehicleType);
+        }
+        return policyHasTblVehicleTypeList;
     }
 }

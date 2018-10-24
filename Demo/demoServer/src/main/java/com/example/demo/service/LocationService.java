@@ -4,7 +4,11 @@ import com.example.demo.Config.ResponseObject;
 import com.example.demo.entities.Location;
 
 import com.example.demo.entities.Policy;
+import com.example.demo.entities.PolicyHasTblVehicleType;
+import com.example.demo.entities.VehicleType;
 import com.example.demo.repository.LocationRepository;
+import com.example.demo.repository.PolicyHasVehicleTypeRepository;
+import com.example.demo.repository.PolicyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,27 +17,30 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class LocationService {
     private final LocationRepository locationRepository;
-    private final PolicyHasVehicleTypeService policyHasVehicleTypeService;
+    private final PolicyHasVehicleTypeRepository policyHasVehicleTypeRepository;
+    private final PolicyRepository policyRepository;
 
     @Autowired
     private EntityManager entityManager;
 
-    public LocationService(LocationRepository locationRepository, PolicyHasVehicleTypeService policyHasVehicleTypeService) {
+    public LocationService(LocationRepository locationRepository, PolicyHasVehicleTypeRepository policyHasVehicleTypeRepository, PolicyRepository policyRepository) {
         this.locationRepository = locationRepository;
-        this.policyHasVehicleTypeService = policyHasVehicleTypeService;
+        this.policyHasVehicleTypeRepository = policyHasVehicleTypeRepository;
+        this.policyRepository = policyRepository;
     }
 
     public Optional<Location> getMeterById(Integer id) {
         Optional<Location> location = locationRepository.findById(id);
-        if (location.isPresent()){
-            for(Policy policy : location.get().getPolicyList()) {
-                policy.setPolicyHasTblVehicleTypeList(policyHasVehicleTypeService.findByPolicyId(policy.getId()));
+        if (location.isPresent()) {
+            for (Policy policy : location.get().getPolicyList()) {
+                policy.setPolicyHasTblVehicleTypeList(policyHasVehicleTypeRepository.findByPolicyId(policy.getId()));
             }
         }
         return location;
@@ -61,5 +68,29 @@ public class LocationService {
 //        }
         responseObject.setData(locationList);
         return responseObject;
+    }
+
+    public List<VehicleType> getLocationHasVehicleTypes(Integer locationId) {
+        Optional<Location> location = locationRepository.findById(locationId);
+        List<VehicleType> vehicleTypeList = new ArrayList<>();
+        if (location.isPresent()) {
+            List<Policy> policyList = location.get().getPolicyList();
+            if (policyList != null) {
+                for (Policy policy : policyList) {
+                    List<PolicyHasTblVehicleType> policyHasTblVehicleTypes = policyHasVehicleTypeRepository.findByPolicyId(policy.getId());
+                    if (policyHasTblVehicleTypes != null) {
+                        for (PolicyHasTblVehicleType policyHasTblVehicleType : policyHasTblVehicleTypes) {
+                            VehicleType vehicleType = policyHasTblVehicleType.getVehicleTypeId();
+                            if (!vehicleTypeList.contains(vehicleType)) {
+                                vehicleTypeList.add(vehicleType);
+                            }
+                        }
+                    }
+
+                }
+            }
+
+        }
+        return vehicleTypeList;
     }
 }

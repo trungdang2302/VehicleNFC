@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.entities.Policy;
 import com.example.demo.entities.VehicleType;
 import com.example.demo.service.PolicyService;
+import com.example.demo.view.DeletePolicyObject;
 import com.example.demo.view.PolicyView;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,8 @@ public class PolicyController {
     @GetMapping("/edit")
     public ModelAndView index(ModelAndView mav
                             , @RequestParam("policyId") Integer policyId
-                            , @RequestParam("vehicleTypeId") Integer vehicleTypeId) {
+                            , @RequestParam("vehicleTypeId") Integer vehicleTypeId
+                            , @RequestParam("locationId") Integer locaitonId) {
         mav.setViewName("policy-edit");
         return mav;
     }
@@ -57,6 +59,19 @@ public class PolicyController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-
+    }
+    @PostMapping(value = "/delete")
+    public ResponseEntity deletePolicy(@RequestBody DeletePolicyObject deletePolicyObject) {
+        try{
+            Integer locationId = deletePolicyObject.getLocationId();
+            Policy policy = deletePolicyObject.getPolicy();
+            List<Integer> policyHasVehicleTypeIdList = deletePolicyObject.getPolicyHasVehicleTypeId();
+            List<VehicleType> vehicleTypeList  = deletePolicyObject.getVehicleTypes();
+            policyService.deletePolicy(locationId, policy, policyHasVehicleTypeIdList, vehicleTypeList);
+            return ResponseEntity.status(HttpStatus.OK).body("Success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 }

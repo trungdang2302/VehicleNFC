@@ -4,8 +4,10 @@ import com.example.demo.Config.PaginationEnum;
 import com.example.demo.Config.ResponseObject;
 import com.example.demo.Config.SearchCriteria;
 import com.example.demo.entities.User;
+import com.example.demo.entities.Vehicle;
 import com.example.demo.entities.VehicleType;
 import com.example.demo.service.UserService;
+import com.example.demo.service.VehicleService;
 import com.example.demo.service.VehicleTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,10 +38,12 @@ public class UserController {
     private ServletContext servletContext;
 
     private final UserService userService;
+    private final VehicleService vehicleService;
     private final VehicleTypeService vehicleTypeService;
 
-    public UserController(UserService userService, VehicleTypeService vehicleTypeService) {
+    public UserController(UserService userService, VehicleService vehicleService, VehicleTypeService vehicleTypeService) {
         this.userService = userService;
+        this.vehicleService = vehicleService;
         this.vehicleTypeService = vehicleTypeService;
     }
 
@@ -53,11 +57,6 @@ public class UserController {
     public ResponseEntity<String> createUser(@RequestBody User user) {
         String hashedID = "";
         // Cần đoạn lấy thông tin xe
-//        Optional<VehicleType> vehicleTypeOptional = vehicleTypeService.getVehicleTypeById(user.getVehicleTypeId().getId());
-
-//        if (vehicleTypeOptional.isPresent()) {
-//            VehicleType vehicleType = vehicleTypeOptional.get();
-//            user.setVehicleTypeId(vehicleType);
         String confirmCode = encodeGenerator();
         System.err.println(user.getPhoneNumber() + ", Code:" + confirmCode);
         userService.createUser(user, confirmCode);
@@ -182,6 +181,35 @@ public class UserController {
         return mav;
     }
 
+
+    @GetMapping("/vehicle")
+    public ModelAndView vehiclePage(ModelAndView mav) {
+        mav.setViewName("vehicle");
+        return mav;
+    }
+
+    @GetMapping("/lookup-vehicle")
+    public ModelAndView lookupPage(ModelAndView mav) {
+        mav.setViewName("lookup-vehicle");
+        return mav;
+    }
+
+    @PostMapping("/verify-vehicle")
+    public Boolean verifyPage(Vehicle vehicle) {
+        if (vehicleService.verifyVehicle(vehicle).isPresent()) {
+            return true;
+        }
+        return false;
+    }
+
+
+    @GetMapping("/verify-vehicle-form")
+    public ModelAndView verifyForm(ModelAndView mav) {
+        mav.setViewName("verify-vehicle-form");
+        mav.addObject("vehicleNumber", "abc");
+        return mav;
+    }
+
     public String encodeGenerator() {
         String result = "";
         for (int i = 0; i < 6; i++) {
@@ -230,5 +258,20 @@ public class UserController {
     public ResponseEntity<Boolean> resetPassword(@Param("phoneNumber") String phoneNumber,
                                                  @Param("newPassword") String newPassword) {
         return ResponseEntity.status(OK).body(userService.resetPassword(phoneNumber, newPassword).isPresent());
+    }
+
+    @GetMapping(value = "/get-vehicles")
+    public ResponseEntity<ResponseObject> getVehicles(@RequestParam(defaultValue = "0") Integer page) {
+        ResponseObject response = new ResponseObject();
+        response.setData(vehicleService.getAllVehicle());
+        response.setPageNumber(page);
+        response.setTotalPages(vehicleService.getTotalVehicles(PaginationEnum.userPageSize.getNumberOfRows()).intValue());
+
+        return ResponseEntity.status(OK).body(response);
+    }
+
+    @GetMapping(value = "/get-vehicle/{vehicleNumber}")
+    public ResponseEntity<Optional<Vehicle>> getVehicle(@PathVariable(value = "vehicleNumber") String vehicleNumber) {
+        return ResponseEntity.status(OK).body(vehicleService.getVehicle(vehicleNumber));
     }
 }

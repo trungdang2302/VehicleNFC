@@ -48,7 +48,7 @@ public class ShowPopupPrice extends Activity {
 
                         txtTime = findViewById(R.id.txtTime);
 
-                        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm", Locale.US);
+                        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
 
                         txtTime.setText(sdf.format(result.getAllowedParkingFrom()) + " đến " + sdf.format(result.getAllowedParkingTo()));
 

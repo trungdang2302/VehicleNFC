@@ -11,24 +11,7 @@ $(document).ready(function (e) {
         }
 
     });
-    $('.clockpickerFrom').clockpicker({
-        placement: 'bottom',
-        align: 'left',
-        donetext: 'Done',
-        afterDone: function () {
-            console.log("after done");
-            parseTimeToLong("clockpickerFrom","ParkingFrom");
-        }
-    });
-    $('.clockpickerTo').clockpicker({
-        placement: 'bottom',
-        align: 'left',
-        donetext: 'Done',
-        afterDone: function () {
-            console.log("after done");
-            parseTimeToLong("clockpickerTo","ParkingTo");
-        }
-    });
+
 });
 
 function emptyTable() {
@@ -133,6 +116,7 @@ function loadPolicyTable(data) {
     console.log(data);
     var content = "";
     content = data.policyList;
+    var locationId = data.id;
     for (i = 0; i < content.length; i++) {
         // alert(content[i].id);
         emptyTable();
@@ -146,7 +130,7 @@ function loadPolicyTable(data) {
             success: function (data) {
                 console.log("Policies: " + data);
 
-                loadPolicy(data);
+                loadPolicy(data,locationId);
             }, error: function () {
                 console.log("Could not load policy")
             }
@@ -154,7 +138,7 @@ function loadPolicyTable(data) {
     }
 }
 
-function loadPolicy(data) {
+function loadPolicy(data,locationId) {
     var row = "";
 var pricings = "";
     for (i = 0; i < data.length; i++) {
@@ -168,8 +152,8 @@ var pricings = "";
             row += '<td>' + pricings[j].fromHour + '</td>';
             row += '<td>' + pricings[j].pricePerHour + '</td>';
             row += '<td>' + pricings[j].lateFeePerHour + '</td>';
-            row += '<td> <button class="editBtn" onclick="Edit('+ data[i].policyId.id +', ' + data[i].vehicleTypeId.id + ', '+ j +')">Edit</button>';
-            row += '<td> <button class="saveBtn" onclick="Save('+ pricings[j].id +', ' + i + ', '+ j +')">Save</button>';
+            row += '<td> <button class="editBtn" onclick="Edit('+ data[i].policyId +', ' + data[i].vehicleTypeId.id + ', '+ locationId +')">Edit</button>';
+            // row += '<td> <button class="saveBtn" onclick="Save('+ pricings[j].id +', ' + i + ', '+ j +')">Save</button>';
             row += '</tr>';
             $('#policy-table tbody').append(row);
         }
@@ -179,12 +163,12 @@ var pricings = "";
     // $('.saveBtn').hide();
 }
 
-function Edit(policyId, vehicleTypeId, pricingIndex ) {
+function Edit(policyId, vehicleTypeId, locationId ) {
 
     // $('.index-'+policyIndex+'-'+pricingIndex).prop('disabled', false);
     $('.saveBtn').show();
     $('.editBtn').hide();
-    var url = "http://localhost:8080/policy/edit?policyId="+policyId+"&vehicleTypeId="+vehicleTypeId;
+    var url = "http://localhost:8080/policy/edit?policyId="+policyId+"&vehicleTypeId="+vehicleTypeId+"&locationId="+locationId;
     window.location.href = url;
 
 }

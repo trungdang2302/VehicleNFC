@@ -54,7 +54,7 @@ public class OrderController {
 //    }
 
     @GetMapping(value = "/get-orders")
-    public ResponseEntity<?> getAllOrders(@RequestParam(defaultValue = "0") Integer page) {
+    public ResponseEntity<?> getAllOrders(@RequestParam(defaultValue = "1") Integer page) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(orderService.getOrders(page,AppConstant.ORDER_PAGESIZE));
         } catch (Exception e) {

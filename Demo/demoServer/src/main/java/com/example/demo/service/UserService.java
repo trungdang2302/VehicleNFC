@@ -4,7 +4,9 @@ import com.example.demo.Config.NFCServerProperties;
 import com.example.demo.Config.ResponseObject;
 import com.example.demo.Config.SearchCriteria;
 import com.example.demo.entities.User;
+import com.example.demo.entities.Vehicle;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,13 +28,19 @@ import java.util.Optional;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final VehicleRepository vehicleRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, VehicleRepository vehicleRepository) {
         this.userRepository = userRepository;
+        this.vehicleRepository = vehicleRepository;
     }
 
     public Optional<User> getUserById(Integer userId) {
-        return userRepository.findById(userId);
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isPresent()) {
+            user.get().setVehicle(vehicleRepository.findByVehicleNumber(user.get().getVehicleNumber()).get());
+        }
+        return user;
     }
 
     public void updateUser(User user) {
@@ -45,8 +53,14 @@ public class UserService {
     }
 
     public void createUser(User user, String confirmCode) {
-        userRepository.save(user);
-        requestNewConfirmCode(user.getPhoneNumber(), confirmCode);
+        if (user.getVehicle() != null) {
+            user.getVehicle().setVerified(false);
+            user.setActivated(false);
+            vehicleRepository.save(user.getVehicle());
+            user.setVehicleNumber(user.getVehicle().getVehicleNumber());
+            userRepository.save(user);
+//            requestNewConfirmCode(user.getPhoneNumber(), confirmCode);
+        }
     }
 
     public void requestNewConfirmCode(String phoneNumber, String confirmCode) {
@@ -55,7 +69,11 @@ public class UserService {
     }
 
     public Optional<User> getUserByPhone(String phone) {
-        return userRepository.findByPhoneNumber(phone);
+        Optional<User> user = userRepository.findByPhoneNumber(phone);
+        if (user.isPresent()) {
+            user.get().setVehicle(vehicleRepository.findByVehicleNumber(user.get().getVehicleNumber()).get());
+        }
+        return user;
 
     }
 
@@ -107,6 +125,9 @@ public class UserService {
         query.where(predicate);
         TypedQuery<User> typedQuery = entityManager.createQuery(query);
         List<User> result = typedQuery.getResultList();
+        for (User user : result) {
+            user.setVehicle(vehicleRepository.findByVehicleNumber(user.getVehicleNumber()).get());
+        }
         int totalPages = result.size() / pageSize;
         typedQuery.setFirstResult(pagNumber * pageSize);
         typedQuery.setMaxResults(pageSize);
@@ -126,6 +147,12 @@ public class UserService {
         typedQuery.setFirstResult(pagNumber * pageSize);
         typedQuery.setMaxResults(pageSize);
         List<User> listUsers = typedQuery.getResultList();
+        for (User user : listUsers) {
+            Optional<Vehicle> vehicle = vehicleRepository.findByVehicleNumber(user.getVehicleNumber());
+            if (vehicle.isPresent()) {
+                user.setVehicle(vehicle.get());
+            }
+        }
         return listUsers;
     }
 
@@ -141,7 +168,11 @@ public class UserService {
     }
 
     public Optional<User> login(String phone, String password) {
-        return userRepository.findByPhoneNumberAndPassword(phone, password);
+        Optional<User> user = userRepository.findByPhoneNumberAndPassword(phone, password);
+        if (user.isPresent()) {
+            user.get().setVehicle(vehicleRepository.findByVehicleNumber(user.get().getVehicleNumber()).get());
+        }
+        return user;
     }
 
     public void updateUserSmsNoti(User user) {

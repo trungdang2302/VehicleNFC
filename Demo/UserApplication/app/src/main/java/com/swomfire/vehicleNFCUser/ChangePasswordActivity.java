@@ -3,9 +3,11 @@ package com.swomfire.vehicleNFCUser;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import Util.RmaAPIUtils;
@@ -19,6 +21,7 @@ import service.UserService;
 public class ChangePasswordActivity extends Activity {
 
     EditText edtCurPass, edtOldPass, edtNewPass;
+    TextView lbl_toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +31,10 @@ public class ChangePasswordActivity extends Activity {
         edtCurPass = findViewById(R.id.edtCurPass);
         edtOldPass = findViewById(R.id.edtOldPass);
         edtNewPass = findViewById(R.id.edtNewPass);
+
+        lbl_toolbar = findViewById(R.id.lbl_toolbar);
+        lbl_toolbar.setText("Change Password");
+        lbl_toolbar.setTypeface(null, Typeface.BOLD);
 
     }
 

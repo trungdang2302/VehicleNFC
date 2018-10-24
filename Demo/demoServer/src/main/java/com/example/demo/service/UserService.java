@@ -4,7 +4,9 @@ import com.example.demo.Config.NFCServerProperties;
 import com.example.demo.Config.ResponseObject;
 import com.example.demo.Config.SearchCriteria;
 import com.example.demo.entities.User;
+import com.example.demo.entities.Vehicle;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,9 +28,11 @@ import java.util.Optional;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final VehicleRepository vehicleRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, VehicleRepository vehicleRepository) {
         this.userRepository = userRepository;
+        this.vehicleRepository = vehicleRepository;
     }
 
     public Optional<User> getUserById(Integer userId) {
@@ -126,6 +130,12 @@ public class UserService {
         typedQuery.setFirstResult(pagNumber * pageSize);
         typedQuery.setMaxResults(pageSize);
         List<User> listUsers = typedQuery.getResultList();
+        for (User user : listUsers) {
+            Optional<Vehicle> vehicle = vehicleRepository.findByVehicleNumber(user.getVehicleNumber());
+            if (vehicle.isPresent()) {
+                user.setVehicle(vehicle.get());
+            }
+        }
         return listUsers;
     }
 

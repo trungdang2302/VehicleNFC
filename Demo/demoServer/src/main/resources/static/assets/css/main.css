@@ -2578,3 +2578,21 @@ ul.activity-timeline > li:last-child:after {
     background: #252c35;
     overflow: hidden;
 }
+
+#pagination{
+    display: table;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+#content-title-holder{
+    left: 280px;
+    position: relative;
+    top: 15px;
+}
+
+#content-title{
+    color: black;
+    font-size: 25px;
+    font-weight: 600;
+}

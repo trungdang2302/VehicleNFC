@@ -1,6 +1,9 @@
-function switchContentFragment(url, button) {
-    deActiveAllMenuButton();
-    button.className = "active pointer menu";
+function switchContentFragment(url, title, button) {
+    if (button != null) {
+        deActiveAllMenuButton();
+        button.className = "active pointer menu";
+    }
+    $('#content-title').text(title);
     $('#main-content').attr('src', url);
 }
 

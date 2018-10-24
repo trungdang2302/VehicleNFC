@@ -5,6 +5,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+
 @Entity
 @Table(name = "tbl_user")
 public class User implements Serializable {
@@ -34,20 +35,13 @@ public class User implements Serializable {
     @Size(max = 45)
     @Column(name = "last_name")
     private String lastName;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 10)
-    @Column(name = "vehicle_number")
-    private String vehicleNumber;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 10)
-    @Column(name = "license_plate_id")
-    private String licensePlateId;
 
-    @JoinColumn(name = "tbl_vehicle_type_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private VehicleType vehicleTypeId;
+    @Basic(optional = false)
+    @Column(name = "tbl_vehicle_vehicle_number")
+    private String vehicleNumber;
+
+    @Transient
+    private Vehicle vehicle;
 
     @Basic(optional = false)
     @Column(name = "sms_noti")
@@ -56,6 +50,7 @@ public class User implements Serializable {
     @Basic(optional = false)
     @Column(name = "is_activated")
     private Boolean isActivated;
+
 
     @Transient
     private String deviceToken;
@@ -122,22 +117,6 @@ public class User implements Serializable {
         this.vehicleNumber = vehicleNumber;
     }
 
-    public String getLicensePlateId() {
-        return licensePlateId;
-    }
-
-    public void setLicensePlateId(String licensePlateId) {
-        this.licensePlateId = licensePlateId;
-    }
-
-    public VehicleType getVehicleTypeId() {
-        return vehicleTypeId;
-    }
-
-    public void setVehicleTypeId(VehicleType vehicleTypeId) {
-        this.vehicleTypeId = vehicleTypeId;
-    }
-
     public String getDeviceToken() {
         return deviceToken;
     }
@@ -166,7 +145,16 @@ public class User implements Serializable {
         return isActivated;
     }
 
+    public Vehicle getVehicle() {
+        return vehicle;
+    }
+
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
+    }
+
     public void setActivated(Boolean activated) {
         isActivated = activated;
     }
+
 }

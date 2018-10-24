@@ -72,7 +72,7 @@ public class OrderService {
         order = new Order();
         order.setOrderStatusId(orderStatus);
 
-        order.setVehicleType(checkInUser.getVehicleTypeId());
+        order.setVehicleType(checkInUser.getVehicle().getVehicleTypeId());
         order.setUserId(checkInUser);
         order.setLocationId(locationRepository.findById(location.getId()).get());
 
@@ -113,7 +113,7 @@ public class OrderService {
         for (Policy policy : matchPolicies) {
             while (choosedPolicy == null) {
                 policyHasTblVehicleType = policyHasVehicleTypeRepository
-                        .findByPolicyIdAndVehicleTypeId(policy.getId(), user.getVehicleTypeId()).get();
+                        .findByPolicyIdAndVehicleTypeId(policy.getId(), user.getVehicle().getVehicleTypeId()).get();
                 if (policyHasTblVehicleType != null) {
                     choosedPolicy = policy;
                     break;

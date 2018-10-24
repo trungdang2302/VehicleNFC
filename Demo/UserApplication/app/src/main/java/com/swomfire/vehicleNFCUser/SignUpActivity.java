@@ -3,14 +3,17 @@ package com.swomfire.vehicleNFCUser;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
 import Util.RmaAPIUtils;
 import model.User;
+import model.Vehicle;
 import remote.RmaAPIService;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -19,12 +22,18 @@ import retrofit2.Response;
 public class SignUpActivity extends Activity {
     EditText txtFirstname, txtLastname, txtPhone, txtPassword, txtVehicalID, txtVehicalLicenceId;
     private Context context;
+    TextView lbl_toolbar;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+
+        lbl_toolbar = findViewById(R.id.lbl_toolbar);
+        lbl_toolbar.setText("Sign Up");
+        lbl_toolbar.setTypeface(null, Typeface.BOLD);
+
         context = this;
         txtFirstname = findViewById(R.id.txtFirstname);
         txtLastname = findViewById(R.id.txtLastname);
@@ -99,8 +108,13 @@ public class SignUpActivity extends Activity {
             user.setLastName(lastname);
             user.setPhone(phone);
             user.setPassword(pass);
-            user.setVehicleNumber(veid);
-            user.setLicensePlateId(vechungnhan);
+            //user. setVehicleNumber(veid);
+            //user.setLicensePlateId(vechungnhan);
+
+            Vehicle vehicle = new Vehicle();
+            vehicle.setVehicleNumber(veid);
+            vehicle.setLicensePlateId(vechungnhan);
+            user.setVehicle(vehicle);
 
             RmaAPIService mService = RmaAPIUtils.getAPIService();
             mService.sendUserToServer(user).enqueue(new Callback<String>() {
@@ -109,10 +123,7 @@ public class SignUpActivity extends Activity {
 
                     String id = response.body();
                     if (!id.matches("")) {
-                        Intent intent = new Intent(context, VerifyActivity.class);
-                        intent.putExtra("phoneNumber", phone);
-                        intent.putExtra("type", "create-account");
-
+                        Intent intent = new Intent(context, CreateSuccessActivity.class);
                         startActivity(intent);
                     }
 

@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 
 public class UserService {
+
     public static String convertMoney(double money) {
         String base = (long) money * 1000 + "";
         String[] strings = base.split("");

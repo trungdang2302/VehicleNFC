@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,7 +21,7 @@ import service.UserService;
 
 public class ProfileActivity extends Activity {
 
-    TextView txtMoney, txtName, txtPhone, txtVehicalID, txtVehicalName, txtDangKiem;
+    TextView lbl_toolbar,txtMoney, txtName, txtPhone, txtVehicalID, txtVehicalName, txtDangKiem;
     ImageView imageXe;
     ProgressDialog progressDialog;
 
@@ -28,6 +29,11 @@ public class ProfileActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        lbl_toolbar = findViewById(R.id.lbl_toolbar);
+        lbl_toolbar.setText("Profile");
+        lbl_toolbar.setTypeface(null, Typeface.BOLD);
+
         progressDialog = UserService.setUpProcessDialog(this);
         progressDialog.show();
 
@@ -60,15 +66,15 @@ public class ProfileActivity extends Activity {
                         txtMoney.setText(UserService.convertMoney(Double.parseDouble(user.getMoney())));
                         txtName.setText(user.getFirstName() + " " + user.getLastName());
                         txtPhone.setText(user.getPhone());
-                        txtVehicalID.setText(user.getVehicleNumber());
+                        txtVehicalID.setText(user.getVehicle().getVehicleNumber());
 
-                        String count = user.getVehicleType().getName();
+                        String count = user.getVehicle().getVehicleTypeId().getName();
                         txtVehicalName.setText(count);
                         if (count.matches("16 chỗ")) {
                             imageXe.setImageDrawable(getResources().getDrawable(R.drawable.cartypeicobig));
                         }
 
-                        txtDangKiem.setText(user.getLicensePlateId());
+                        txtDangKiem.setText(user.getVehicle().getLicensePlateId());
                     }
                 }
             }

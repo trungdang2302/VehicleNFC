@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -31,7 +32,7 @@ public class ActivityTopUpExtras extends Activity {
 
     ImageView imgPlus, imgMinus;
 
-    TextView txtMoney, txtMoneyShow, txtConvert, txtConvertShow;
+    TextView lbl_toolbar,txtMoney, txtMoneyShow, txtConvert, txtConvertShow;
 
     boolean isFromProfile = false;
     boolean clickPay = false;
@@ -42,6 +43,11 @@ public class ActivityTopUpExtras extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_top_up_extras);
+
+        lbl_toolbar = findViewById(R.id.lbl_toolbar);
+        lbl_toolbar.setText("Top Up");
+        lbl_toolbar.setTypeface(null, Typeface.BOLD);
+
         isFromProfile = getIntent().getBooleanExtra("isFromProfile", false);
         context = this;
 

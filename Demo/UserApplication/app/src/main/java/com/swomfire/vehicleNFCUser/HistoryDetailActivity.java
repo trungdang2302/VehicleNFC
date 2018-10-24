@@ -3,18 +3,21 @@ package com.swomfire.vehicleNFCUser;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
+import service.UserService;
 import sqliteModel.History;
 
 public class HistoryDetailActivity extends Activity {
 
-    TextView txtName, txtVehicalName, txtVehicalID, txtLocation, txtFrom, txtTo, txtDuration, txtTotal;
+    TextView lbl_toolbar,txtName, txtVehicalName, txtVehicalID, txtLocation, txtFrom, txtTo, txtDuration, txtTotal;
     History item;
     Dialog myDialog;
 
@@ -23,6 +26,11 @@ public class HistoryDetailActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history_detail);
         myDialog = new Dialog(this);
+
+        lbl_toolbar = findViewById(R.id.lbl_toolbar);
+        lbl_toolbar.setText("History Detail");
+        lbl_toolbar.setTypeface(null, Typeface.BOLD);
+
 
         item = (History) getIntent().getExtras().get("hisItem");
 
@@ -47,8 +55,13 @@ public class HistoryDetailActivity extends Activity {
         SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
 
         txtTo.setText(sdf2.format(item.getCheck_in_date()));
-        txtDuration.setText(item.getDuration() + " Phút");
-        txtTotal.setText(item.getTotal() + " VND");
+
+        long time = item.getDuration();
+        int h = (int) (time / 3600000);
+        int m = (int) (time - h * 3600000) / 60000;
+        txtDuration.setText(h + "giờ "  + m+ " phút");
+
+        txtTotal.setText(UserService.convertMoney((double)item.getTotal()));
     }
 
     public void clickMore(View view) {

@@ -73,8 +73,11 @@ public class PopMenuActivity extends Activity {
         DBHelper db = new DBHelper(context);
         //TODO clear all records
         db.deleteAllContact();
+        //Clear old id
+        SharedPreferences.Editor a = getSharedPreferences("localData", MODE_PRIVATE).edit();
+        a.clear();
 
-        Intent intent = new Intent(this, SignInActivity.class);
+        Intent intent = new Intent(this, WelcomeActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
     }

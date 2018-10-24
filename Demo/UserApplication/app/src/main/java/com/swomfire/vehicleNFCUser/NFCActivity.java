@@ -232,8 +232,8 @@ public class NFCActivity extends Activity implements NfcAdapter.CreateNdefMessag
         lblCheckInDate.setText(date);
         lblLocation.setText(order.getLocation().getLocation());
 
-        lblVehicleNumber.setText(order.getUser().getVehicleNumber());
-        lblVehicleType.setText(order.getUser().getVehicleType().getName());
+        lblVehicleNumber.setText(order.getUser().getVehicle().getVehicleNumber());
+        lblVehicleType.setText(order.getUser().getVehicle().getVehicleTypeId().getName());
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.listOrderPricing);
         OrderPricingAdapter orderPricingAdapter = new OrderPricingAdapter(order.getOrderPricings());

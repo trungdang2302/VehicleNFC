@@ -7,6 +7,8 @@ $(document).ready(function () {
         format: "dd-mm-yyyy",
         todayHighlight: true,
     });
+    // $('#order-table').attr('display','none');
+    // $('#order-table').hide();
     // var picker = $('#datepicker');
 
     // picker.on('changeDate', function(e) {
@@ -38,6 +40,7 @@ function initOrders() {
         url: 'http://localhost:8080/order/get-orders',
         success: function (data) {
             console.log(data);
+            $('#order-table').attr('display','block');
             loadData(data);
         }, error: function () {
             alert("Can't load data")
@@ -47,7 +50,9 @@ function initOrders() {
 function loadData(res) {
     var content = "";
     content = res.data;
+    $('#order-table').show();
     if (content.length != 0) {
+
         var row = "";
         for (i = 0; i < content.length; i++) {
             row = '<tr>';
@@ -104,6 +109,9 @@ function loadData(res) {
                 $('#pagination').append(li);
             }
         }
+    } else {
+        var row = '<tr>No data</tr>'
+        $('#order-table tbody').append(row);
     }
 
 }
@@ -132,6 +140,7 @@ function filterOrder(pageNumber) {
         contentType: 'application/json',
         data: JSON.stringify(listFilterObject),
         success:function(response){
+
             emptyTable();
             emptyPaginationLi();
             loadData(response);
@@ -171,20 +180,46 @@ function viewPricingDetail(orderId) {
             // $('.myForm #lastName').text(order.userId.firstName+' '+ order.userId.lastName);
             $('.myForm #phoneNumber').text(order.userId.phoneNumber);
             $('.myForm #location').text(order.locationId.location);
-            // $('.myForm #allowedParkingFrom').text(order.allowedParkingFrom);
-            // $('.myForm #allowedParkingTo').text(order.allowedParkingTo);
+            $('.myForm #allowedParkingFrom').text(convertTime(order.allowedParkingFrom));
+            $('.myForm #allowedParkingTo').text(convertTime(order.allowedParkingTo));
             $('.myForm #checkInDate').text(convertDate(order.checkInDate));
             $('.myForm #checkOutDate').text(convertDate(order.checkOutDate));
             let row = "";
             emptyPricingTable();
             console.log("Pricing SIze: "+res.length);
-            for ( i = 0; i < res.length; i++) {
+            var hourHasPrices = order.hourHasPrices;
+            var passHour = 0;
+            var minutes = hourHasPrices[hourHasPrices.length-1].minutes;
+            for ( i = 0; i < hourHasPrices.length; i++) {
+                // table as receipt
+                let hourHasPrice = hourHasPrices[i];
+                let fromHour ="";
+                if (i === 0) {
+                    passHour = hourHasPrice.hour;
+                    fromHour =  "First " +hourHasPrice.hour + " Hour";
+                } else if (i === hourHasPrices.length - 1) {
+                    hourHasPrice.hour = hourHasPrice.hour - passHour;
+                    let minutePass = hourHasPrice.minutes + " Minute";
+                    fromHour = " After "+ hourHasPrice.hour + " Hour " + minutePass;
+                    hourHasPrice.total = (hourHasPrice.total + ((parseFloat(minutes / 60)) * (hourHasPrice.price)))
+                } else {
+                    fromHour = " From " + passHour + " Hour To " + hourHasPrice.hour + " Hour";
+                    passHour = hourHasPrice.hour;
+                }
                 row = '<tr>';
-                row += '<td>' + res[i].fromHour + '</td>';
-                row += '<td>' + res[i].pricePerHour + '</td>';
-                row += '<td>' + (res[i].fromHour * res[i].pricePerHour) + '</td>';
-                row += '<td>' + res[i].lateFeePerHour + '</td>';
+                row += '<td>' + fromHour + '</td>';
+                row += '<td>' + hourHasPrice.price + '</td>';
+                row += '<td>' + hourHasPrice.total + '</td>';
                 row += '</tr>';
+
+
+                // table for order pricing
+                // row = '<tr>';
+                // row += '<td>' + res[i].fromHour + '</td>';
+                // row += '<td>' + res[i].pricePerHour + '</td>';
+                // row += '<td>' + (res[i].fromHour * res[i].pricePerHour) + '</td>';
+                // row += '<td>' + res[i].lateFeePerHour + '</td>';
+                // row += '</tr>';
                 $('#orderPricings tbody').append(row);
             }
 
@@ -202,7 +237,7 @@ function viewPricingDetail(orderId) {
             } else {
                 total = order.total;
             }
-            let rowTotal = '<tr><td></td><td>Total: </td><td>' + total + '</td><td></td></tr>';
+            let rowTotal = '<tr><td></td><td><label>Total: </label></td><td><label>' + total + ' .000d-</label></td><td></td></tr>';
             $('#orderPricings tbody').append(rowTotal);
             $('.myForm #total').text(total);
             // $('.myForm #vehicleTypeId').text(order.userId.vehicleTypeId.name);
@@ -253,7 +288,7 @@ function msToTime (ms) {
     var hours = parseInt(minutes/60, 10);
     minutes = minutes%60;
 
-    return hours + 'h' + minutes + 'p';
+    return hours + ':' + minutes;
 }
 function parseTimeToLong(clockPicker, type) {
     // console.log(type);
@@ -285,7 +320,16 @@ function convertDate(dateTypeLong) {
     return dformat;
 }
 
-
+function convertTime(dateTypeLong) {
+    if (dateTypeLong === null){
+        return "Empty";
+    }
+    var dateStr = new Date(dateTypeLong),
+        dformat =
+            [dateStr.getHours(),
+                dateStr.getMinutes()].join(':');
+    return dformat;
+}
 
 function convertDateToMs(dateStr) {
     if (dateStr === "") {

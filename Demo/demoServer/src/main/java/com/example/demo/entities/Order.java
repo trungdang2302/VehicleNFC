@@ -1,5 +1,6 @@
 package com.example.demo.entities;
 
+import com.example.demo.model.HourHasPrice;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -52,6 +53,9 @@ public class Order implements Serializable {
 
     @Transient
     private List<OrderPricing> orderPricings;
+
+    @Transient
+    private List<HourHasPrice> hourHasPrices;
 
     public Order() {
     }
@@ -159,5 +163,13 @@ public class Order implements Serializable {
 
     public void setVehicleType(VehicleType vehicleType) {
         this.vehicleType = vehicleType;
+    }
+
+    public List<HourHasPrice> getHourHasPrices() {
+        return hourHasPrices;
+    }
+
+    public void setHourHasPrices(List<HourHasPrice> hourHasPrices) {
+        this.hourHasPrices = hourHasPrices;
     }
 }

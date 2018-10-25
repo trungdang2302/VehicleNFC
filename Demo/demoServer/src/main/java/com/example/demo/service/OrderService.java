@@ -40,6 +40,61 @@ public class OrderService {
     public Optional<Order> getOrderById(Integer id) {
         Order order = orderRepository.findById(id).get();
         order.setOrderPricings(orderPricingRepository.findByOrderId(order.getId()));
+        if (order.getCheckOutDate() != null) {
+            TimeDuration duration = TimeService.compareTwoDates(order.getCheckInDate(), order.getCheckOutDate());
+
+            int totalHour = duration.getHour();
+            int totalMinute = duration.getMinute();
+
+            List<HourHasPrice> hourHasPrices = new ArrayList<>();
+
+            // duration < getMInHour
+            if (totalHour < order.getMinHour()) {
+                totalHour = order.getMinHour();
+                totalMinute = 0;
+            }
+
+            // Add hour
+            while (totalHour > 0) {
+                hourHasPrices.add(new HourHasPrice(totalHour, null));
+                totalHour--;
+            }
+
+            List<OrderPricing> orderPricings = orderPricingRepository.findByOrderId(order.getId());
+            double lastPrice = 0;
+            for (OrderPricing orderPricing : orderPricings) {
+                if (orderPricing.getPricePerHour() > lastPrice) {
+                    lastPrice = orderPricing.getPricePerHour();
+                }
+                for (HourHasPrice hourHasPrice : hourHasPrices) {
+                    if (orderPricing.getFromHour() < hourHasPrice.getHour()) {
+                        hourHasPrice.setPrice(orderPricing.getPricePerHour());
+                    }
+                }
+            }
+            List<HourHasPrice> hourHasPriceList = new ArrayList<>();
+            for (HourHasPrice hourHasPrice: hourHasPrices) {
+                if (hourHasPriceList.size() < 1) {
+                    hourHasPrice.setTotal(hourHasPrice.getPrice());
+                    hourHasPriceList.add(hourHasPrice);
+                } else {
+                    HourHasPrice tmp = hourHasPriceList.get(hourHasPriceList.size() - 1);
+                    if ((Double.compare(tmp.getPrice(), hourHasPrice.getPrice()) == 0)) {
+                        if (tmp.getTotal() == null) {
+                            tmp.setTotal(hourHasPrice.getPrice());
+                        } else {
+                            tmp.setTotal(tmp.getTotal() + hourHasPrice.getPrice());
+                        }
+                    } else {
+                        hourHasPrice.setTotal(hourHasPrice.getPrice());
+                        hourHasPriceList.add(hourHasPrice);
+                    }
+                }
+            }
+            hourHasPriceList = HourHasPrice.sort(hourHasPriceList);
+            hourHasPriceList.get(hourHasPriceList.size()-1).setMinutes(totalMinute);
+            order.setHourHasPrices(hourHasPriceList);
+        }
         return Optional.of(order);
     }
 

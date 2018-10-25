@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="/assets/vendor/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="/assets/vendor/linearicons/style.css">
     <link rel="stylesheet" href="/assets/vendor/chartist/css/chartist-custom.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css"
+          rel="stylesheet"/>
     <!--<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"></head>-->
 
     <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>-->
@@ -32,7 +33,8 @@
                 <div class="form-container">
                     <form action="" id="search-box" method="post">
                         <span>CheckInDate</span>
-                        <input data-date-format="dd/mm/yyyy" autocomplete="off" required="required" class="form-control" id="datepicker" placeholder="Choose date">
+                        <input data-date-format="dd/mm/yyyy" autocomplete="off" required="required" class="form-control"
+                               id="datepicker" placeholder="Choose date">
                         <select id="search-filter" class="form-control">
                             <option value="vehicleNumber" selected="selected">Search By Vehicle Number</option>
                             <option value="locationId">Search By Location</option>
@@ -45,8 +47,6 @@
                         <input type="hidden" id="search-value">
                     </form>
                 </div>
-
-
             </div>
             <div class="panel-body">
                 <div class="row">
@@ -73,10 +73,56 @@
                         <ul class="nav nav-pills" id="pagination"></ul>
                     </div>
                 </div>
-            </div>
+                <div class="row" id="order-detail" style="display: none;">
+                    <div class="form-group">
+                        <label class="col-form-label">Location:</label>
+                        <p class="form-control" id="location"></p>
+                    </div>
+                    <div class="form-group" style="width:48%; float: left;">
+                        <label for="allowedParkingFrom" class="col-form-label">Allowed Parking From:</label>
+                        <p class="form-control" id="allowedParkingFrom"></p>
+                    </div>
+                    <div class="form-group" style="width: 48%; float: right;">
+                        <label for="allowedParkingTo" class="col-form-label">Allowed Parking To:</label>
+                        <p class="form-control" id="allowedParkingTo"></p>
+                    </div>
+                    <div class="form-group" style="width:48%; float: left;">
+                        <label for="checkInDate" class="col-form-label">CheckIn Date:</label>
+                        <p class="form-control" id="checkInDate"></p>
+                    </div>
+                    <div class="form-group" style="width: 48%; float: right;">
+                        <label for="checkOutDate" class="col-form-label">CheckOut Date:</label>
+                        <p class="form-control" id="checkOutDate"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="orderPricings" class="col-form-label">Pricings:</label>
+                        <table id="orderPricings" class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>From Hour:</th>
+                                <th>Price Per Hour</th>
+                                <th>Amount</th>
+                                <!--<th>Late Fee Per Hour</th>-->
+                            </tr>
+                            </thead>
+                            <tbody>
 
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="form-group">
+                        <label for="duration" class="col-form-label">Duration:</label>
+                        <p class="form-control" id="duration"></p>
+                    </div>
+                    <div class="btn-wrapper">
+                        <button type="button" class="btn btn-success" id="btn-deposit">Deposit
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
 </div>
 
 
@@ -93,20 +139,20 @@
                 </div>
                 <div class="modal-body">
                     <!--<div class="form-group" style="width:45%; float: left; margin-right: 2%;">-->
-                        <!--<label for="lastName" class="col-form-label">UserName:</label>-->
-                        <!--<p class="form-control" id="lastName"></p>-->
+                    <!--<label for="lastName" class="col-form-label">UserName:</label>-->
+                    <!--<p class="form-control" id="lastName"></p>-->
                     <!--</div>-->
                     <!--<div class="form-group" style="width: 45%; float: left; margin-left: 2%;">-->
-                        <!--<label for="phoneNumber" class="col-form-label">PhoneNumber:</label>-->
-                        <!--<p class="form-control" id="phoneNumber"></p>-->
+                    <!--<label for="phoneNumber" class="col-form-label">PhoneNumber:</label>-->
+                    <!--<p class="form-control" id="phoneNumber"></p>-->
                     <!--</div>-->
                     <div class="form-group">
                         <label class="col-form-label">Location:</label>
                         <p class="form-control" id="location"></p>
                     </div>
                     <!--<div class="form-group">-->
-                        <!--<label for="vehicleTypeId" class="col-form-label">Vehicle Type:</label>-->
-                        <!--<p class="form-control" id="vehicleTypeId"></p>-->
+                    <!--<label for="vehicleTypeId" class="col-form-label">Vehicle Type:</label>-->
+                    <!--<p class="form-control" id="vehicleTypeId"></p>-->
                     <!--</div>-->
                     <div class="form-group" style="width:45%; float: left; margin-right: 2%;">
                         <label for="allowedParkingFrom" class="col-form-label">Allowed Parking From:</label>
@@ -140,24 +186,26 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="form-group"">
-                        <label for="duration" class="col-form-label">Duration:</label>
-                        <p class="form-control" id="duration"></p>
-                    </div>
-                    <!--<div class="form-group" style="width:45%; float: left; margin-left: 2%;">-->
-                        <!--<label for="total" class="col-form-label">Total:</label>-->
-                        <!--<p class="form-control" id="total"></p>-->
-                    <!--</div>-->
-
+                    <div class="form-group"
+                    ">
+                    <label for="duration" class="col-form-label">Duration:</label>
+                    <p class="form-control" id="duration"></p>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
-                    </button>
+                <!--<div class="form-group" style="width:45%; float: left; margin-left: 2%;">-->
+                <!--<label for="total" class="col-form-label">Total:</label>-->
+                <!--<p class="form-control" id="total"></p>-->
+                <!--</div>-->
 
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                </button>
+                <button type="button" class="btn btn-success" id="btn-deposit">Deposit
+                </button>
             </div>
         </div>
     </div>
+</div>
 </div>
 <script src="/assets/vendor/jquery/jquery.min.js"></script>
 <script src="/assets/vendor/bootstrap/js/bootstrap.min.js"></script>

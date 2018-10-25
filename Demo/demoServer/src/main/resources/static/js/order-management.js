@@ -169,6 +169,10 @@ function getOrderById(id) {
     return obj;
 }
 function viewPricingDetail(orderId) {
+    $('#order-detail').show();
+    $('.searchBox').hide();
+    $('#order-table').hide();
+    emptyPaginationLi();
     var order = $.getValues("http://localhost:8080/order/get-order/"+orderId);
     console.log(order);
     $.ajax({
@@ -178,41 +182,60 @@ function viewPricingDetail(orderId) {
         success: function (res) {
             // console.log(res);
             // $('.myForm #lastName').text(order.userId.firstName+' '+ order.userId.lastName);
-            $('.myForm #phoneNumber').text(order.userId.phoneNumber);
-            $('.myForm #location').text(order.locationId.location);
-            $('.myForm #allowedParkingFrom').text(convertTime(order.allowedParkingFrom));
-            $('.myForm #allowedParkingTo').text(convertTime(order.allowedParkingTo));
-            $('.myForm #checkInDate').text(convertDate(order.checkInDate));
-            $('.myForm #checkOutDate').text(convertDate(order.checkOutDate));
+            $('#order-detail #phoneNumber').text(order.userId.phoneNumber);
+            $('#order-detail #location').text(order.locationId.location);
+            $('#order-detail #allowedParkingFrom').text(convertTime(order.allowedParkingFrom));
+            $('#order-detail #allowedParkingTo').text(convertTime(order.allowedParkingTo));
+            $('#order-detail #checkInDate').text(convertDate(order.checkInDate));
+            $('#order-detail #checkOutDate').text(convertDate(order.checkOutDate));
             let row = "";
             emptyPricingTable();
             console.log("Pricing SIze: "+res.length);
             var hourHasPrices = order.hourHasPrices;
             var passHour = 0;
             var minutes = hourHasPrices[hourHasPrices.length-1].minutes;
+            console.log("MInute: "+minutes);
+            var checkInDate = order.checkInDate;
+            var checkOutDate = order.checkOutDate;
             for ( i = 0; i < hourHasPrices.length; i++) {
                 // table as receipt
                 let hourHasPrice = hourHasPrices[i];
-                let fromHour ="";
-                if (i === 0) {
-                    passHour = hourHasPrice.hour;
-                    fromHour =  "First " +hourHasPrice.hour + " Hour";
-                } else if (i === hourHasPrices.length - 1) {
-                    hourHasPrice.hour = hourHasPrice.hour - passHour;
-                    let minutePass = hourHasPrice.minutes + " Minute";
-                    fromHour = " After "+ hourHasPrice.hour + " Hour " + minutePass;
-                    hourHasPrice.total = (hourHasPrice.total + ((parseFloat(minutes / 60)) * (hourHasPrice.price)))
-                } else {
-                    fromHour = " From " + passHour + " Hour To " + hourHasPrice.hour + " Hour";
-                    passHour = hourHasPrice.hour;
+                var milliseconds = convertToMilliseconds(hourHasPrice.hour - passHour, "hour");
+                if (i === hourHasPrices.length - 1) {
+                    milliseconds += convertToMilliseconds(minutes, "minute");
                 }
+                let toHour = "";
+                if (!compare2Dates(checkInDate, checkOutDate + milliseconds)) {
+                    toHour = convertDateAsTimeDate(checkInDate + milliseconds);
+                } else {
+                    toHour = msToTime(checkInDate + milliseconds);
+                }
+
+                //
+                // let fromHour ="";
+                // if (i === 0) {
+                //     passHour = hourHasPrice.hour;
+                //     fromHour =  "First " +hourHasPrice.hour + " Hour";
+                // } else if (i === hourHasPrices.length - 1) {
+                //     hourHasPrice.hour = hourHasPrice.hour - passHour;
+                //     let minutePass = hourHasPrice.minutes + " Minute";
+                //     fromHour = " After "+ hourHasPrice.hour + " Hour " + minutePass;
+                //     hourHasPrice.total = (hourHasPrice.total + ((parseFloat(minutes / 60)) * (hourHasPrice.price)))
+                // } else {
+                //     fromHour = " From " + passHour + " Hour To " + hourHasPrice.hour + " Hour";
+                //     passHour = hourHasPrice.hour;
+                // }
+
+                console.log("checkIndate: "+checkInDate);
+                console.log("toHour: "+toHour);
                 row = '<tr>';
-                row += '<td>' + fromHour + '</td>';
+                row += '<td>' + convertTime(checkInDate) + ' To ' + toHour + '</td>';
                 row += '<td>' + hourHasPrice.price + '</td>';
                 row += '<td>' + hourHasPrice.total + '</td>';
                 row += '</tr>';
 
-
+                checkInDate += milliseconds;
+                passHour = hourHasPrice.hour;
                 // table for order pricing
                 // row = '<tr>';
                 // row += '<td>' + res[i].fromHour + '</td>';
@@ -220,7 +243,7 @@ function viewPricingDetail(orderId) {
                 // row += '<td>' + (res[i].fromHour * res[i].pricePerHour) + '</td>';
                 // row += '<td>' + res[i].lateFeePerHour + '</td>';
                 // row += '</tr>';
-                $('#orderPricings tbody').append(row);
+                $('#order-detail #orderPricings tbody').append(row);
             }
 
             var duration = "";
@@ -230,22 +253,23 @@ function viewPricingDetail(orderId) {
                 duration = order.duration;
             }
 
-            $('.myForm #duration').text(msToTime(duration));
+            $('#order-detail #duration').text(msToTime(duration));
             var total = "";
             if (order.total === null) {
                 total = 0;
             } else {
                 total = order.total;
             }
-            let rowTotal = '<tr><td></td><td><label>Total: </label></td><td><label>' + total + ' .000d-</label></td><td></td></tr>';
-            $('#orderPricings tbody').append(rowTotal);
-            $('.myForm #total').text(total);
+            let rowTotal = '<tr><td></td><td><label>Total: </label></td><td><label>' + total + ' .000VNĐ</label></td></tr>';
+            $('#order-detail #orderPricings tbody').append(rowTotal);
+            $('#order-detail #total').text(total);
             // $('.myForm #vehicleTypeId').text(order.userId.vehicleTypeId.name);
-        }, error: function () {
+        }, error: function (res) {
+            console.log(res);
             console.log("Could not load data");
         }
     });
-    $('.myForm #OrderDetailModal').modal();
+    // $('.myForm #OrderDetailModal').modal();
 }
 jQuery.extend({
     getValues: function(url) {
@@ -262,6 +286,13 @@ jQuery.extend({
         return result;
     }
 });
+
+function depositModal() {
+    $('#btn-deposit').onclick(function (e) {
+        
+    });
+}
+
 function emptyTable() {
     $('#order-table td').remove();
 }
@@ -290,22 +321,14 @@ function msToTime (ms) {
 
     return hours + ':' + minutes;
 }
-function parseTimeToLong(clockPicker, type) {
-    // console.log(type);
-    // console.log("log: " + $('.clockpickerFrom #ParkingFrom').val());
-    var time = $('.' + clockPicker + ' #' + type).val();
-    // console.log("Time: " + time);
-    var temp = time.split(":")
-    var hour = temp[0];
-    // console.log("hour: " + hour);
-    var minute = temp[1];
-    // console.log("Minute: " + minute);
-    // console.log("hour ms: " + parseInt(hour * 3600000));
-    // console.log("minute ms: " + parseInt(minute * 60000));
-    var ms = parseInt(hour * 3600000) + parseInt(minute * 60000);
-    // console.log(ms);
-    $('#allowed' + type).val(ms);
-}
+// function parseTimeToLong(clockPicker, type) {
+//     var time = $('.' + clockPicker + ' #' + type).val();
+//     var temp = time.split(":")
+//     var hour = temp[0];
+//     var minute = temp[1];
+//     var ms = parseInt(hour * 3600000) + parseInt(minute * 60000);
+//     $('#allowed' + type).val(ms);
+// }
 function convertDate(dateTypeLong) {
     if (dateTypeLong === null){
         return "Empty";
@@ -317,6 +340,18 @@ function convertDate(dateTypeLong) {
             [dateStr.getHours(),
                 dateStr.getMinutes(),
                 dateStr.getSeconds()].join(':');
+    return dformat;
+}
+
+function convertDateAsTimeDate(dateTypeLong) {
+    if (dateTypeLong === null){
+        return "Empty";
+    }
+    var dateStr = new Date(dateTypeLong),
+        dformat = [dateStr.getDate(),
+                dateStr.getMonth()+1].join('-')+' '+
+            [dateStr.getHours(),
+                dateStr.getMinutes()].join(':');
     return dformat;
 }
 
@@ -346,8 +381,28 @@ function convertDateToMs(dateStr) {
     // console.log("redundant: "+(parseInt(23 * 3600000) + parseInt(59 * 60000) + parseInt(59)));
     // console.log(convertDate(154030));
     return ms;
-
 }
+
+function convertToMilliseconds(value, type) {
+    if (type === "hour") {
+        return value * 3600000;
+    } else {
+        // minute
+        return value * 60000;
+    }
+}
+
+function compare2Dates(date1, date2) {
+    // let checkInDate = convertDate(date1);
+    // let checkOutDate = convertDate(date2);
+    var checkInDate = new Date(date1);
+    var checkOutDate = new Date(date2);
+    let isTheSameDate =  (checkInDate.getDate() == checkOutDate.getDate()
+        && checkInDate.getMonth() == checkOutDate.getMonth()
+        && checkInDate.getFullYear() == checkOutDate.getFullYear());
+    return isTheSameDate;
+}
+
 function sortHeaders() {
     $('th').click(function(){
         var table = $(this).parents('table').eq(0)

@@ -16,6 +16,7 @@ import remote.RmaAPIService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import service.DBHelper;
 import service.UserService;
 
 public class ChangePasswordActivity extends Activity {
@@ -88,8 +89,20 @@ public class ChangePasswordActivity extends Activity {
                         // DO STH HERE !! show toast + chuyen ve activity profile
                         if (response.isSuccessful()) {
                             if (response.body()) {
-                                Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+
+                                DBHelper db = new DBHelper(getApplicationContext());
+                                //TODO clear all records
+                                db.deleteAllContact();
+                                //Clear old id
+                                SharedPreferences.Editor a = getSharedPreferences("localData", MODE_PRIVATE).edit();
+                                a.clear().commit();
+                                //clear sqlite db
+                                getApplicationContext().deleteDatabase("ParkingWithNFC.db");
+
+                                Intent intent = new Intent(getApplicationContext(), SignInActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
+                                finish();
+
                             }
                         }
                     }

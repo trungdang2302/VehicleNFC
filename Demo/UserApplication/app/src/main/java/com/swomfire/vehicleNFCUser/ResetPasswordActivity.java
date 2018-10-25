@@ -86,4 +86,7 @@ public class ResetPasswordActivity extends Activity {
 
         }
     }
+        public void onBackButton(View v){
+            finish();
+        }
 }

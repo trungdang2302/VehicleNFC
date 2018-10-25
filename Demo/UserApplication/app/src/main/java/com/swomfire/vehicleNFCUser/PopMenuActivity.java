@@ -75,7 +75,9 @@ public class PopMenuActivity extends Activity {
         db.deleteAllContact();
         //Clear old id
         SharedPreferences.Editor a = getSharedPreferences("localData", MODE_PRIVATE).edit();
-        a.clear();
+        a.clear().commit();
+        //clear sqlite db
+        context.deleteDatabase("ParkingWithNFC.db");
 
         Intent intent = new Intent(this, WelcomeActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);

@@ -88,7 +88,7 @@ public class UserController {
         if (confirmSMSList == null) {
             confirmSMSList = new HashMap<>();
         }
-        confirmSMSList.put(phone, confirmCode);
+        confirmSMSList.put(phone, confirmCode) ;
         servletContext.setAttribute("confirmSMSList", confirmSMSList);
         return status(OK).body(true);
     }
@@ -171,8 +171,12 @@ public class UserController {
     @PostMapping("/search-user")
     public ResponseEntity<ResponseObject> searchUser(@RequestBody SearchCriteria params
             , @RequestParam(defaultValue = "0") Integer page) {
-        return ResponseEntity.status(OK).body(userService.searchUser
-                (params, page, PaginationEnum.userPageSize.getNumberOfRows()));
+        ResponseObject response = new ResponseObject();
+        response.setData(userService.searchUser(params, page, PaginationEnum.userPageSize.getNumberOfRows()));
+        response.setPageNumber(page);
+        response.setPageSize(PaginationEnum.userPageSize.getNumberOfRows());
+        response.setTotalPages(userService.getTotalUsers(PaginationEnum.userPageSize.getNumberOfRows()).intValue());
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/admin")
@@ -263,8 +267,20 @@ public class UserController {
     @GetMapping(value = "/get-vehicles")
     public ResponseEntity<ResponseObject> getVehicles(@RequestParam(defaultValue = "0") Integer page) {
         ResponseObject response = new ResponseObject();
-        response.setData(vehicleService.getAllVehicle());
+        response.setData(vehicleService.getAllVehicle(page, PaginationEnum.userPageSize.getNumberOfRows()));
         response.setPageNumber(page);
+        response.setTotalPages(vehicleService.getTotalVehicles(PaginationEnum.userPageSize.getNumberOfRows()).intValue());
+
+        return ResponseEntity.status(OK).body(response);
+    }
+
+    @PostMapping("/search-vehicle")
+    public ResponseEntity<ResponseObject> searchVehicle(@RequestBody SearchCriteria params
+            , @RequestParam(defaultValue = "0") Integer page) {
+        ResponseObject response = new ResponseObject();
+        response.setData(vehicleService.searchVehicle(params, page, PaginationEnum.userPageSize.getNumberOfRows()));
+        response.setPageNumber(page);
+        response.setPageSize(PaginationEnum.userPageSize.getNumberOfRows());
         response.setTotalPages(vehicleService.getTotalVehicles(PaginationEnum.userPageSize.getNumberOfRows()).intValue());
 
         return ResponseEntity.status(OK).body(response);

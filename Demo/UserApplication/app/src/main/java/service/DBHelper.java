@@ -70,6 +70,7 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
+        contentValues.put(COLUMN_ID, order.getId());
         contentValues.put(COLUMN_TOTAL, order.getTotal());
         contentValues.put(COLUMN_CHECK_IN_DATE, order.getCheckInDate());
         contentValues.put(COLUMN_CHECK_OUT_DATE, order.getCheckOutDate());
@@ -78,7 +79,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_ALLOWED_PARKING_TO, order.getAllowedParkingTo());
         contentValues.put(COLUMN_TBL_ORDER_STATUS_ID, order.getOrderStatus().getName());
         contentValues.put(COLUMN_TBL_USER_ID, order.getUser().getLastName() + order.getUser().getFirstName());
-        if (order.getUser().getVehicle()!=null) {
+        if (order.getUser().getVehicle() != null) {
             contentValues.put(COLUMN_TBL_VEHICAL_NAME, order.getUser().getVehicle().getVehicleTypeId().getName());
             contentValues.put(COLUMN_TBL_VEHICAL_ID, order.getUser().getVehicle().getVehicleNumber());
         }
@@ -98,7 +99,7 @@ public class DBHelper extends SQLiteOpenHelper {
         ArrayList<History> array_list = new ArrayList<History>();
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("select * from tbl_order", null);
+        Cursor res = db.rawQuery("select * from tbl_order ORDER BY check_in_date DESC;", null);
         res.moveToFirst();
 
         while (res.isAfterLast() == false) {

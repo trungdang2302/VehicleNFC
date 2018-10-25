@@ -88,14 +88,16 @@ public class SignUpActivity extends Activity {
             txtPassword.setBackgroundResource(R.drawable.signupedt);
         }
 
-        if (!veid.matches("[0-9]{2}[A-Z]{1}-[0-9]{5}")) {
+        if (veid.matches("[0-9]{2}[A-Z]{1}-[0-9]{5}") || veid.matches("[0-9]{2}[A-Z]{1}-[0-9]{3}.[0-9]{2}")
+                || veid.matches("[A-Z]{2}[0-9]{2}-[0-9]{2}") || veid.matches("[0-9]{2}[A-Z]{1}[0-9]{1}-[0-9]{5}")
+                || veid.matches("[0-9]{2}[A-Z]{1}[0-9]{1}-[0-9]{3}.[0-9]{2}")) {
+            txtVehicalID.setBackgroundResource(R.drawable.signupedt);
+        } else {
             flag4 = false;
             txtVehicalID.setBackgroundResource(R.drawable.signuperror);
-        } else {
-            txtVehicalID.setBackgroundResource(R.drawable.signupedt);
         }
 
-        if (!vechungnhan.matches("[0-9]{8}")) {
+        if (!vechungnhan.matches("[0-9]{5,15}")) {
             flag5 = false;
             txtVehicalLicenceId.setBackgroundResource(R.drawable.signuperror);
         } else {

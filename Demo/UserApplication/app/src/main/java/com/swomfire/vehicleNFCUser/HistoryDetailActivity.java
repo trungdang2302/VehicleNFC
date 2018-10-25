@@ -48,7 +48,7 @@ public class HistoryDetailActivity extends Activity {
         txtVehicalID.setText(item.getVehical_id());
         txtLocation.setText(item.getTbl_location_id());
 
-        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 
         txtFrom.setText(sdf.format(item.getCheck_in_date()) + " -> " + sdf.format(item.getCheck_out_date()) + "   ");
 

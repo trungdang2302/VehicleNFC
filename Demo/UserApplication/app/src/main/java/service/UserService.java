@@ -3,6 +3,8 @@ package service;
 import android.app.ProgressDialog;
 import android.content.Context;
 
+import java.text.SimpleDateFormat;
+
 public class UserService {
 
     public static String convertMoney(double money) {
@@ -67,4 +69,16 @@ public class UserService {
         return pd;
     }
 
+    public static long convertToMilliseconds(int value, boolean isHour) {
+        if (isHour) {
+            return value * 3600000;
+        } else {
+            return value * 60000;
+        }
+    }
+
+    public static boolean compareTwoDate(long a, long b) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM");
+        return simpleDateFormat.format(a).equals(simpleDateFormat.format(b));
+    }
 }

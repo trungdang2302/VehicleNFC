@@ -39,6 +39,7 @@ public class SignInActivity extends Activity {
         txtPhone = findViewById(R.id.txtPhone);
         txtPassword = findViewById(R.id.txtPassword);
         progressDialog = UserService.setUpProcessDialog(context);
+
     }
 
     public void signIn(View view) {
@@ -70,10 +71,12 @@ public class SignInActivity extends Activity {
                             intent.putExtra("type", "create-account");
                             intent.putExtra("userId", result.getId());
                             intent.putExtra("userName", result.getLastName() + " " + result.getFirstName());
-
                             startActivity(intent);
                         }
-
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Số điện thoại hoặc mật khẩu không đúng!", Toast.LENGTH_LONG).show();
+                        txtPhone.setText("");
+                        txtPassword.setText("");
                     }
                 }
             }

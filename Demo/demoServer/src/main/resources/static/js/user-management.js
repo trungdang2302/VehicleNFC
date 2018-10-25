@@ -159,7 +159,7 @@ function loadData(res) {
     for (i = 0; i < content.length; i++) {
         row = (content[i].vehicle.verified) ? '<tr>' : '<tr class="not-verified">';
         // row += '<td>' + content[i].id + '</td>';
-        row += '<td>' + (i + 1) + '</td>';
+        row += cellBuilder((i + (res.pageNumber * res.pageSize) + 1));
         row += '<td>' + content[i].phoneNumber + '</td>';
         // row += '<td>' + content[i].password + '</td>';
         row += '<td>' + content[i].money + '</td>';
@@ -254,7 +254,7 @@ function searchUser(pageNumber) {
         success: function (response) {
             emptyTable();
             emptyPaginationLi();
-            loadData(response);
+            loadData(response.data);
             console.log(response);
         }
     });
@@ -267,4 +267,9 @@ function createSearchObject(key, operation, value) {
         value: value
     };
     return obj;
+}
+
+function cellBuilder(text) {
+    text = (text != null) ? text : "Empty";
+    return "<td>" + text + "</td>";
 }

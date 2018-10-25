@@ -30,7 +30,7 @@ function loadData(res) {
         var vehicleType = (content[i].vehicleTypeId != null) ? content[i].vehicleTypeId.name : "Empty";
         var ownerPhone = (content[i].owner != null) ? content[i].owner.phoneNumber : "Empty";
 
-        row += cellBuilder((i + 1));
+        row += cellBuilder((i + (res.pageNumber * res.pageSize) + 1));
         row += cellBuilder(content[i].vehicleNumber);
         row += cellBuilder(content[i].licensePlateId);
         row += cellBuilder(vehicleType);
@@ -106,7 +106,7 @@ $(document).ready(function (e) {
 });
 
 function searchUser(pageNumber) {
-    var url = "http://localhost:8080/user/search-user";
+    var url = "search-vehicle";
     if (pageNumber != null) {
         url = url + "?page=" + pageNumber;
     }
@@ -115,7 +115,8 @@ function searchUser(pageNumber) {
     console.log("Search By: " + vehicleType);
     console.log("SearchValue: " + searchValue);
 
-    var filterObject = createSearchObject(vehicleType, ":", searchValue);
+    // var filterObject = createSearchObject(vehicleType, ":", searchValue);
+    var filterObject = createSearchObject("vehicleNumber", ":", "%");
     $.ajax({
         type: 'POST',
         url: url,

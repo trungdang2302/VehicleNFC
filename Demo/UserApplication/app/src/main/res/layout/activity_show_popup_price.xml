@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="300dp"
-    android:layout_height="300dp"
-    android:layout_gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@drawable/cell_shape"
     android:gravity="center_horizontal">
 
@@ -23,9 +22,11 @@
                 android:id="@+id/textView10"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Được phép đỗ xe từ: "
+                android:gravity="center"
+                android:text="Đỗ xe từ:"
                 android:textColor="#000000"
-                android:textSize="20dp" />
+                android:textSize="22dp"
+                android:textStyle="bold|italic" />
         </TableRow>
 
         <TableRow
@@ -41,10 +42,11 @@
                 android:gravity="center"
                 android:text="5:00 -> 10:00 "
                 android:textColor="#000000"
-                android:textSize="20dp" />
+                android:textSize="22dp"
+                android:textStyle="bold|italic" />
         </TableRow>
 
-        <TableRow
+        <!--<TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center">
@@ -54,6 +56,78 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
+        </TableRow>-->
+        <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:paddingLeft="10dp"-->
+            <!--android:paddingRight="10dp"-->
+            <!--android:weightSum="1">-->
+
+            <!--<TextView-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight=".2"-->
+                <!--android:gravity="center"-->
+                <!--android:text=""-->
+                <!--android:textColor="#000"-->
+                <!--android:textSize="18dp" />-->
+
+            <!--<TextView-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_weight=".35"-->
+                <!--android:gravity="center"-->
+                <!--android:text="Giá/giờ"-->
+                <!--android:textColor="#000"-->
+                <!--android:textSize="18dp"-->
+                <!--android:textStyle="bold|italic" />-->
+
+            <!--<TextView-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_weight=".45"-->
+                <!--android:gravity="center"-->
+                <!--android:text="Tổng cộng"-->
+                <!--android:textColor="#000"-->
+                <!--android:textSize="18dp"-->
+                <!--android:textStyle="bold|italic" />-->
+        <!--</LinearLayout>-->
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/listHistoryPricing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </android.support.v7.widget.RecyclerView>
+        <!--<TextView-->
+        <!--android:id="@+id/txtPriceNe"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textColor="#000000"-->
+        <!--android:paddingLeft="10dp"-->
+        <!--android:gravity="center"-->
+        <!--android:textSize="18dp"-->
+        <!--android:lineSpacingExtra="10dp"-->
+        <!--android:text="Anh trung oi" />-->
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="25dp"
+            android:gravity="center_vertical|end">
+
+            <TextView
+                android:id="@+id/txtTotal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="5:00 -> 10:00 "
+                android:textColor="#000000"
+                android:textSize="22dp"
+                android:textStyle="bold|italic" />
         </TableRow>
 
     </TableLayout>

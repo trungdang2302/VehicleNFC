@@ -296,14 +296,14 @@ public class OrderService {
         typedQuery.setFirstResult(pagNumber * pageSize);
         typedQuery.setMaxResults(pageSize);
         List<Order> orderList = typedQuery.getResultList();
-        List<Order> result = new ArrayList<>();
+//        List<Order> result = new ArrayList<>();
         for (Order order: orderList) {
             User user = order.getUserId();
             user.setVehicle(vehicleRepository.findByVehicleNumber(user.getVehicleNumber()).get());
             order.setUserId(user);
-            result.add(order);
+//            result.add(order);
         }
-        responseObject.setData(result);
+        responseObject.setData(orderList);
         responseObject.setTotalPages(totalPages + 1);
         responseObject.setPageNumber(pagNumber);
         return responseObject;

@@ -26,7 +26,7 @@ public class User implements Serializable {
     @Column(name = "password")
     private String password;
     @Basic(optional = false)
-    @NotNull
+//    @NotNull
     @Column(name = "money")
     private double money;
     @Size(max = 45)

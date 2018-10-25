@@ -1,10 +1,10 @@
 $(document).ready(function () {
-    initOrders();
+    // initOrders();
     sortHeaders();
     $('#datepicker').datepicker({
         weekStart: 1,
         autoclose: true,
-        format: "mm-dd-yyyy",
+        format: "dd-mm-yyyy",
         todayHighlight: true,
     });
     // var picker = $('#datepicker');
@@ -14,6 +14,10 @@ $(document).ready(function () {
     // });
     $('#searchBtn').on('click', function (e) {
         e.preventDefault();
+
+        $('#search-date').val($('#datepicker').val());
+        var searchValue =  $('#searchValue').val();
+        $('#search-value').val(searchValue);
         filterOrder(0);
     });
 
@@ -43,62 +47,65 @@ function initOrders() {
 function loadData(res) {
     var content = "";
     content = res.data;
-    var row = "";
-    for (i = 0; i < content.length; i++) {
-        row = '<tr>';
-        row += '<td>' + content[i].id + '</td>';
-        row += '<td>' + convertDate(content[i].checkInDate) + '</td>';
-        row += '<td>' + convertDate(content[i].checkOutDate) + '</td>';
-        row += '<td>' + content[i].locationId.location + '</td>';
-        if (content[i].orderStatusId.name === "close") {
-            row += '<td style=" color: #ff0000;">' + content[i].orderStatusId.name + '</td>';
-        } else {
-            row += '<td style="color: #339933;">' + content[i].orderStatusId.name + '</td>';
+    if (content.length != 0) {
+        var row = "";
+        for (i = 0; i < content.length; i++) {
+            row = '<tr>';
+            row += '<td>' + content[i].id + '</td>';
+            row += '<td>' + convertDate(content[i].checkInDate) + '</td>';
+            row += '<td>' + convertDate(content[i].checkOutDate) + '</td>';
+            row += '<td>' + content[i].locationId.location + '</td>';
+            if (content[i].orderStatusId.name === "close") {
+                row += '<td style=" color: #ff0000;">' + content[i].orderStatusId.name + '</td>';
+            } else {
+                row += '<td style="color: #339933;">' + content[i].orderStatusId.name + '</td>';
+            }
+
+            // row += '<td>' + content[i].userId.firstName+' '+ content[i].userId.lastName + '</td>';
+            // row += '<td>' + content[i].userId.phoneNumber + '</td>';
+            row += '<td>' + content[i].userId.vehicleNumber + '</td>';
+            row += '<td>' + content[i].userId.vehicle.licensePlateId + '</td>';
+            var duration = "";
+            if (content[i].duration === null) {
+                duration = 0;
+            } else {
+                duration = content[i].duration;
+            }
+            row += '<td>' + msToTime(duration) + '</td>';
+            var total = "";
+            if (content[i].total === null) {
+                total = 0;
+            } else {
+                total = content[i].total;
+            }
+            row += '<td>' + total + '</td>';
+            row += '<td><a href="#" onclick="viewPricingDetail(' + content[i].id + ')" class="btn btn-primary viewBtn">View Detail</a></td>'
+            row += '</tr>';
+            $('#order-table tbody').append(row);
         }
 
-        // row += '<td>' + content[i].userId.firstName+' '+ content[i].userId.lastName + '</td>';
-        // row += '<td>' + content[i].userId.phoneNumber + '</td>';
-        row += '<td>' + content[i].userId.vehicleNumber + '</td>';
-        row += '<td>' + content[i].userId.vehicle.licensePlateId + '</td>';
-        var duration = "";
-        if (content[i].duration === null) {
-            duration = 0;
-        } else {
-            duration = content[i].duration;
+        var pageNumber = res.pageNumber;
+        console.log("page: " + pageNumber);
+        console.log("Total Page: " + res.totalPages);
+        var currentPage;
+        var li = "";
+        for (currentPage = 0; currentPage <= res.totalPages - 1; currentPage++) {
+            if (currentPage === pageNumber) {
+                li = '<li class="nav-item active">\n' +
+                    '<a href="#" class="nav-link" onclick="filterOrder(' + currentPage + ')">' + (currentPage+ 1) + '</a>\n' +
+                    '</li>';
+                $('#pagination').append(li);
+            } else {
+
+                li = '<li class="nav-item">\n' +
+                    '<a href="#" class="nav-link" onclick="filterOrder(' + currentPage + ')">\n' +
+                    +(currentPage+1) + '</a>\n' +
+                    '</li>';
+                $('#pagination').append(li);
+            }
         }
-        row += '<td>' + msToTime(duration) + '</td>';
-        var total = "";
-        if (content[i].total === null) {
-            total = 0;
-        } else {
-            total = content[i].total;
-        }
-        row += '<td>' + total + '</td>';
-        row += '<td><a href="#" onclick="viewPricingDetail(' + content[i].id + ')" class="btn btn-primary viewBtn">View Detail</a></td>'
-        row += '</tr>';
-        $('#order-table tbody').append(row);
     }
 
-    var pageNumber = res.pageNumber;
-    console.log("page: " + pageNumber);
-    console.log("Total Page: " + res.totalPages);
-    var currentPage;
-    var li = "";
-    for (currentPage = 0; currentPage <= res.totalPages - 1; currentPage++) {
-        if (currentPage === pageNumber) {
-            li = '<li class="nav-item active">\n' +
-                '<a href="#" class="nav-link" onclick="filterOrder(' + currentPage + ')">' + (currentPage+ 1) + '</a>\n' +
-                '</li>';
-            $('#pagination').append(li);
-        } else {
-
-            li = '<li class="nav-item">\n' +
-                '<a href="#" class="nav-link" onclick="filterOrder(' + currentPage + ')">\n' +
-                +(currentPage+1) + '</a>\n' +
-                '</li>';
-            $('#pagination').append(li);
-        }
-    }
 }
 
 function filterOrder(pageNumber) {
@@ -107,8 +114,9 @@ function filterOrder(pageNumber) {
         url = url+"?page="+pageNumber;
     }
     var searchType = $('#search-filter option:selected').val();
-    var searchValue =  $('#searchValue').val();
-    var checkInDate = convertDateToMs($('#datepicker').val());
+    var searchValue = $('#search-value').val();
+    var checkInDate = convertDateToMs($('#search-date').val());
+    console.log(checkInDate);
     var timeType = 'checkInDate';
     console.log("Search By: "+searchType);
     console.log("SearchValue: "+searchValue);
@@ -128,6 +136,8 @@ function filterOrder(pageNumber) {
             emptyPaginationLi();
             loadData(response);
             console.log(response);
+        }, error: function (res) {
+            console.log(res);
         }
     });
 }
@@ -157,30 +167,34 @@ function viewPricingDetail(orderId) {
         dataType: "json",
         url: 'http://localhost:8080/order-pricing/get/' + orderId,
         success: function (res) {
+            // console.log(res);
             // $('.myForm #lastName').text(order.userId.firstName+' '+ order.userId.lastName);
             $('.myForm #phoneNumber').text(order.userId.phoneNumber);
             $('.myForm #location').text(order.locationId.location);
-            $('.myForm #allowedParkingFrom').text(order.allowedParkingFrom);
-            $('.myForm #allowedParkingTo').text(order.allowedParkingTo);
+            // $('.myForm #allowedParkingFrom').text(order.allowedParkingFrom);
+            // $('.myForm #allowedParkingTo').text(order.allowedParkingTo);
             $('.myForm #checkInDate').text(convertDate(order.checkInDate));
             $('.myForm #checkOutDate').text(convertDate(order.checkOutDate));
-            var row = "";
+            let row = "";
             emptyPricingTable();
             console.log("Pricing SIze: "+res.length);
             for ( i = 0; i < res.length; i++) {
                 row = '<tr>';
                 row += '<td>' + res[i].fromHour + '</td>';
                 row += '<td>' + res[i].pricePerHour + '</td>';
+                row += '<td>' + (res[i].fromHour * res[i].pricePerHour) + '</td>';
                 row += '<td>' + res[i].lateFeePerHour + '</td>';
                 row += '</tr>';
                 $('#orderPricings tbody').append(row);
             }
+
             var duration = "";
             if (order.duration === null) {
                 duration = 0;
             } else {
                 duration = order.duration;
             }
+
             $('.myForm #duration').text(msToTime(duration));
             var total = "";
             if (order.total === null) {
@@ -188,8 +202,10 @@ function viewPricingDetail(orderId) {
             } else {
                 total = order.total;
             }
+            let rowTotal = '<tr><td></td><td>Total: </td><td>' + total + '</td><td></td></tr>';
+            $('#orderPricings tbody').append(rowTotal);
             $('.myForm #total').text(total);
-            $('.myForm #vehicleTypeId').text(order.userId.vehicleTypeId.name);
+            // $('.myForm #vehicleTypeId').text(order.userId.vehicleTypeId.name);
         }, error: function () {
             console.log("Could not load data");
         }
@@ -260,8 +276,8 @@ function convertDate(dateTypeLong) {
         return "Empty";
     }
     var dateStr = new Date(dateTypeLong),
-        dformat = [dateStr.getMonth()+1,
-                dateStr.getDate(),
+        dformat = [dateStr.getDate(),
+                dateStr.getMonth()+1,
                 dateStr.getFullYear()].join('-')+' '+
             [dateStr.getHours(),
                 dateStr.getMinutes(),
@@ -269,20 +285,22 @@ function convertDate(dateTypeLong) {
     return dformat;
 }
 
-function toDate(dateStr) {
-    var parts = dateStr.split("-")
-    return new Date(parts[2], parts[1] - 1, parts[0])
-}
+
 
 function convertDateToMs(dateStr) {
-    console.log("NEWDATE: "+toDate(dateStr));
-    console.log(dateStr);
-    var date = new Date(dateStr);
-    var ms = date.getTime();
-    console.log("MS: "+ms);
+    if (dateStr === "") {
+        return "";
+    }
+    var time = dateStr.split("-")
+    var date = new Date(time[1] + "-" + time[0] + "-" + time[2])
 
-    console.log("redundant: "+(parseInt(23 * 3600000) + parseInt(59 * 60000) + parseInt(59)));
-    console.log(convertDate(154030));
+    var ms = date.getTime();
+    console.log(ms);
+    // alert(ms);
+    // console.log("MS: "+ms);
+
+    // console.log("redundant: "+(parseInt(23 * 3600000) + parseInt(59 * 60000) + parseInt(59)));
+    // console.log(convertDate(154030));
     return ms;
 
 }

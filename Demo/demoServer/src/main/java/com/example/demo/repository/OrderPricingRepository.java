@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface OrderPricingRepository extends JpaRepository<OrderPricing, Integer> {
 
     @Query(
-            value = "SELECT * FROM tbl_order_pricing u WHERE u.tbl_order_id = :order_id",
+            value = "SELECT * FROM tbl_order_pricing u WHERE u.tbl_order_id = :order_id ORDER BY u.from_hour ASC",
             nativeQuery = true)
     List<OrderPricing> findByOrderId(@Param("order_id") Integer orderId);
 

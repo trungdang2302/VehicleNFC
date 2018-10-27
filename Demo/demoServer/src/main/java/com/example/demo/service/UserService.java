@@ -52,20 +52,23 @@ public class UserService {
         }
     }
 
-    public void createUser(User user, String confirmCode) {
+    public void createUser(User user) {
         if (user.getVehicle() != null) {
             user.getVehicle().setVerified(false);
             user.setActivated(false);
             vehicleRepository.save(user.getVehicle());
             user.setVehicleNumber(user.getVehicle().getVehicleNumber());
             userRepository.save(user);
+            PushNotificationService.sendUserNeedVerifyNotification(
+                    "fhRoDKtJR4Q:APA91bFRKKjR2GydlMD0akn71EluhoayB7YXe3a9M5MVat1IRPGo-59onV4VmI-KLj3b-e0zQ2k55brMCxTGJPIcZK2eNslJMnTdq8BNecpqJwsDO5InyL-ALvF0ojQEb_PMtX_xtYsf",
+                    user.getPhoneNumber()
+            );
 //            requestNewConfirmCode(user.getPhoneNumber(), confirmCode);
         }
     }
 
     public void requestNewConfirmCode(String phoneNumber, String confirmCode) {
-        PushNotificationService pushNotificationService = new PushNotificationService();
-        pushNotificationService.sendPhoneConfirmNotification(NFCServerProperties.getSmsHostToken(), phoneNumber, confirmCode);
+        PushNotificationService.sendPhoneConfirmNotification(NFCServerProperties.getSmsHostToken(), phoneNumber, confirmCode);
     }
 
     public Optional<User> getUserByPhone(String phone) {
@@ -217,5 +220,9 @@ public class UserService {
             userRepository.save(user.get());
         }
         return user;
+    }
+
+    public Optional<User> getUserByVehicleNumber(String vehicleNumber) {
+        return userRepository.findByVehicleNumber(vehicleNumber);
     }
 }

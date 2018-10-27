@@ -34,7 +34,7 @@ public class VehicleService {
     @Autowired
     private EntityManager entityManager;
 
-    public ResponseObject getAllVehicle(int pagNumber, int pageSize) {
+    public List<Vehicle> getAllVehicle(int pagNumber, int pageSize) {
         ResponseObject responseObject = new ResponseObject();
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Vehicle> criteriaQuery = builder.createQuery(Vehicle.class);
@@ -50,8 +50,7 @@ public class VehicleService {
                 vehicle.setOwner(owner.get());
             }
         }
-        responseObject.setData(vehicleList);
-        return responseObject;
+        return vehicleList;
     }
 
     public Optional<Vehicle> getVehicle(String vehicleNumber) {
@@ -66,6 +65,19 @@ public class VehicleService {
             vehicleDB.get().setExpireDate(vehicle.getExpireDate());
             vehicleDB.get().setVehicleTypeId(vehicle.getVehicleTypeId());
             vehicleDB.get().setVerified(true);
+            vehicleRepository.save(vehicleDB.get());
+        }
+        return vehicleDB;
+    }
+
+    public Optional<Vehicle> saveVehicle(Vehicle vehicle) {
+        Optional<Vehicle> vehicleDB = vehicleRepository.findByVehicleNumber(vehicle.getVehicleNumber());
+        if (vehicleDB.isPresent()) {
+            vehicleDB.get().setLicensePlateId(vehicle.getLicensePlateId());
+            vehicleDB.get().setBrand(vehicle.getBrand());
+            vehicleDB.get().setSize(vehicle.getSize());
+            vehicleDB.get().setExpireDate(vehicle.getExpireDate());
+            vehicleDB.get().setVehicleTypeId(vehicle.getVehicleTypeId());
             vehicleRepository.save(vehicleDB.get());
         }
         return vehicleDB;
@@ -125,5 +137,14 @@ public class VehicleService {
         responseObject.setTotalPages(totalPages + 1);
         responseObject.setPageNumber(pagNumber);
         return responseObject;
+    }
+
+    public boolean deleteVehicle(String vehicleNumber) {
+        Optional<Vehicle> vehicle = vehicleRepository.findByVehicleNumber(vehicleNumber);
+        if (vehicle.isPresent()) {
+            vehicleRepository.delete(vehicle.get());
+            return true;
+        }
+        return false;
     }
 }

@@ -6,6 +6,7 @@ import com.example.demo.Config.SearchCriteria;
 import com.example.demo.entities.User;
 import com.example.demo.entities.Vehicle;
 import com.example.demo.entities.VehicleType;
+import com.example.demo.service.PushNotificationService;
 import com.example.demo.service.UserService;
 import com.example.demo.service.VehicleService;
 import com.example.demo.service.VehicleTypeService;
@@ -57,15 +58,7 @@ public class UserController {
     public ResponseEntity<String> createUser(@RequestBody User user) {
         String hashedID = "";
         // Cần đoạn lấy thông tin xe
-        String confirmCode = encodeGenerator();
-        System.err.println(user.getPhoneNumber() + ", Code:" + confirmCode);
-        userService.createUser(user, confirmCode);
-        Map<String, String> confirmSMSList = (Map<String, String>) servletContext.getAttribute("confirmSMSList");
-        if (confirmSMSList == null) {
-            confirmSMSList = new HashMap<>();
-        }
-        confirmSMSList.put(user.getPhoneNumber(), confirmCode);
-        servletContext.setAttribute("confirmSMSList", confirmSMSList);
+        userService.createUser(user);
 //        }
         Optional<User> userOptional = userService.getUserByPhone(user.getPhoneNumber());
         if (userOptional.isPresent()) {
@@ -88,7 +81,7 @@ public class UserController {
         if (confirmSMSList == null) {
             confirmSMSList = new HashMap<>();
         }
-        confirmSMSList.put(phone, confirmCode) ;
+        confirmSMSList.put(phone, confirmCode);
         servletContext.setAttribute("confirmSMSList", confirmSMSList);
         return status(OK).body(true);
     }
@@ -201,6 +194,26 @@ public class UserController {
     @PostMapping("/verify-vehicle")
     public Boolean verifyPage(Vehicle vehicle) {
         if (vehicleService.verifyVehicle(vehicle).isPresent()) {
+            Optional<User> user = userService.getUserByVehicleNumber(vehicle.getVehicleNumber());
+            if (user.isPresent()) {
+                String confirmCode = encodeGenerator();
+                PushNotificationService.sendPhoneConfirmNotification(null, user.get().getPhoneNumber(), confirmCode);
+                System.err.println(user.get().getPhoneNumber() + ", Code:" + confirmCode);
+                Map<String, String> confirmSMSList = (Map<String, String>) servletContext.getAttribute("confirmSMSList");
+                if (confirmSMSList == null) {
+                    confirmSMSList = new HashMap<>();
+                }
+                confirmSMSList.put(user.get().getPhoneNumber(), confirmCode);
+                servletContext.setAttribute("confirmSMSList", confirmSMSList);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @PostMapping("/save-vehicle")
+    public Boolean savePage(Vehicle vehicle) {
+        if (vehicleService.saveVehicle(vehicle).isPresent()) {
             return true;
         }
         return false;
@@ -289,5 +302,11 @@ public class UserController {
     @GetMapping(value = "/get-vehicle/{vehicleNumber}")
     public ResponseEntity<Optional<Vehicle>> getVehicle(@PathVariable(value = "vehicleNumber") String vehicleNumber) {
         return ResponseEntity.status(OK).body(vehicleService.getVehicle(vehicleNumber));
+    }
+
+
+    @PostMapping(value = "/delete-vehicle")
+    public ResponseEntity<Boolean> deleteVehicle(@Param(value = "vehicleNumber") String vehicleNumber) {
+        return ResponseEntity.status(OK).body(vehicleService.deleteVehicle(vehicleNumber));
     }
 }

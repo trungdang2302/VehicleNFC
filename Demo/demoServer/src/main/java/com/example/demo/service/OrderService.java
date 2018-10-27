@@ -82,7 +82,8 @@ public class OrderService {
         order = new Order();
         order.setOrderStatusId(orderStatus);
 
-        order.setVehicleType(checkInUser.getVehicle().getVehicleTypeId());
+        Vehicle vehicle = vehicleRepository.findByVehicleNumber(checkInUser.getVehicleNumber()).get();
+        order.setVehicleType(vehicle.getVehicleTypeId());
         order.setUserId(checkInUser);
         order.setLocationId(locationRepository.findById(location.getId()).get());
 
@@ -122,8 +123,9 @@ public class OrderService {
         PolicyHasTblVehicleType policyHasTblVehicleType = null;
         for (Policy policy : matchPolicies) {
             while (choosedPolicy == null) {
+                Vehicle vehicle = vehicleRepository.findByVehicleNumber(user.getVehicleNumber()).get();
                 policyHasTblVehicleType = policyHasVehicleTypeRepository
-                        .findByPolicyIdAndVehicleTypeId(policy.getId(), user.getVehicle().getVehicleTypeId()).get();
+                        .findByPolicyIdAndVehicleTypeId(policy.getId(), vehicle.getVehicleTypeId()).get();
                 if (policyHasTblVehicleType != null) {
                     choosedPolicy = policy;
                     break;
@@ -191,13 +193,11 @@ public class OrderService {
 
     public void sendNotification(User user, Order order, String userToken, List<OrderPricing> orderPricings, NotificationEnum notification) {
         if (user.getSmsNoti()) {
-            PushNotificationService pushNotificationService = new PushNotificationService();
             order.setOrderPricings(orderPricings);
-            pushNotificationService.sendNotificationToSendSms(NFCServerProperties.getSmsHostToken(), notification, order);
+            PushNotificationService.sendNotificationToSendSms(NFCServerProperties.getSmsHostToken(), notification, order);
         } else {
-            PushNotificationService pushNotificationService = new PushNotificationService();
             order.setOrderPricings(orderPricings);
-            pushNotificationService.sendNotification(userToken, notification, order.getId());
+            PushNotificationService.sendNotification(userToken, notification, order.getId());
         }
     }
 

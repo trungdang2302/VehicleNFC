@@ -19,6 +19,8 @@ public class Order implements Serializable {
     private Integer id;
     @Column(name = "total")
     private Double total;
+    @Column(name = "refund")
+    private Double refund;
     @Basic(optional = false)
     @NotNull
     @Column(name = "check_in_date")
@@ -74,6 +76,14 @@ public class Order implements Serializable {
 
     public void setTotal(Double total) {
         this.total = total;
+    }
+
+    public Double getRefund() {
+        return refund;
+    }
+
+    public void setRefund(Double refund) {
+        this.refund = refund;
     }
 
     public long getCheckInDate() {

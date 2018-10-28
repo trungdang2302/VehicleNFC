@@ -13,6 +13,7 @@ import javax.management.Notification;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
+import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
@@ -366,6 +367,24 @@ public class OrderService {
 
     public List<Order> findOrdersByUserId(Integer userId) {
         return orderRepository.findByUserIdOrderByCheckInDateDesc(userRepository.findById(userId).get());
+    }
+
+    @Transactional
+    public void refundOrder(Order order, User user, Double refundMoney) {
+        double lastRefund = 0;
+        OrderStatus orderStatus = orderStatusRepository.findByName(OrderStatusEnum.Refund.getName()).get();
+        Order orderDB = orderRepository.findById(order.getId()).get();
+        orderDB.setOrderStatusId(orderStatus);
+        if (orderDB.getRefund() != null) {
+            lastRefund = orderDB.getRefund();
+        }
+        orderDB.setRefund(refundMoney);
+        orderRepository.save(orderDB);
+
+        User userDB = userRepository.findById(user.getId()).get();
+        double currentMoney = userDB.getMoney();
+        userDB.setMoney(currentMoney + refundMoney - lastRefund);
+        userRepository.save(userDB);
     }
 
     public static double round(double value, int places) {

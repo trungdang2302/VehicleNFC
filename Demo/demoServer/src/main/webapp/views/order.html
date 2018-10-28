@@ -126,87 +126,59 @@
 </div>
 
 
-<div class="myForm">
-    <div class="modal fade" id="OrderDetailModal" tabindex="-1" role="dialog"
-         aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel"><strong>Order Detail</strong></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+<div class="modal fade" id="deposit-modal" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"><strong>Deposit</strong></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" style="width:45%; float: left; margin-left: 2%;">
+                    <label class="col-form-label">User:</label>
+                    <p class="form-control" id="username"></p>
                 </div>
-                <div class="modal-body">
-                    <!--<div class="form-group" style="width:45%; float: left; margin-right: 2%;">-->
-                    <!--<label for="lastName" class="col-form-label">UserName:</label>-->
-                    <!--<p class="form-control" id="lastName"></p>-->
-                    <!--</div>-->
-                    <!--<div class="form-group" style="width: 45%; float: left; margin-left: 2%;">-->
-                    <!--<label for="phoneNumber" class="col-form-label">PhoneNumber:</label>-->
-                    <!--<p class="form-control" id="phoneNumber"></p>-->
-                    <!--</div>-->
-                    <div class="form-group">
-                        <label class="col-form-label">Location:</label>
-                        <p class="form-control" id="location"></p>
-                    </div>
-                    <!--<div class="form-group">-->
-                    <!--<label for="vehicleTypeId" class="col-form-label">Vehicle Type:</label>-->
-                    <!--<p class="form-control" id="vehicleTypeId"></p>-->
-                    <!--</div>-->
-                    <div class="form-group" style="width:45%; float: left; margin-right: 2%;">
-                        <label for="allowedParkingFrom" class="col-form-label">Allowed Parking From:</label>
-                        <p class="form-control" id="allowedParkingFrom"></p>
-                    </div>
-                    <div class="form-group" style="width: 45%; float: left; margin-left: 2%;">
-                        <label for="allowedParkingTo" class="col-form-label">Allowed Parking To:</label>
-                        <p class="form-control" id="allowedParkingTo"></p>
-                    </div>
-                    <div class="form-group" style="width:45%; float: left; margin-right: 2%;">
-                        <label for="checkInDate" class="col-form-label">CheckIn Date:</label>
-                        <p class="form-control" id="checkInDate"></p>
-                    </div>
-                    <div class="form-group" style="width: 45%; float: left; margin-left: 2%;">
-                        <label for="checkOutDate" class="col-form-label">CheckOut Date:</label>
-                        <p class="form-control" id="checkOutDate"></p>
-                    </div>
-                    <div class="form-group">
-                        <label for="orderPricings" class="col-form-label">Pricings:</label>
-                        <table id="orderPricings" class="table table-hover">
-                            <thead>
-                            <tr>
-                                <th>From Hour:</th>
-                                <th>Price Per Hour</th>
-                                <th>Amount</th>
-                                <!--<th>Late Fee Per Hour</th>-->
-                            </tr>
-                            </thead>
-                            <tbody>
+                <div class="form-group" style="width: 45%; float: left; margin-right: 2%;">
+                    <label class="col-form-label">Phone:</label>
+                    <p class="form-control" id="phone"></p>
+                </div>
+                <div class="form-group" style="width:45%; float: left; margin-left: 2%;">
+                    <label for="checkInDate" class="col-form-label">CheckIn Date:</label>
+                    <p class="form-control" id="checkInDate"></p>
+                </div>
+                <div class="form-group" style="width: 45%; float: left; margin-right: 2%;">
+                    <label for="checkOutDate" class="col-form-label">CheckOut Date:</label>
+                    <p class="form-control" id="checkOutDate"></p>
+                </div>
 
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="form-group"
-                    ">
+                <div class="form-group" style="width:45%; float: left; margin-left: 2%;">
                     <label for="duration" class="col-form-label">Duration:</label>
                     <p class="form-control" id="duration"></p>
                 </div>
-                <!--<div class="form-group" style="width:45%; float: left; margin-left: 2%;">-->
-                <!--<label for="total" class="col-form-label">Total:</label>-->
-                <!--<p class="form-control" id="total"></p>-->
-                <!--</div>-->
-
+                <div class="form-group" style="width: 45%; float: left; margin-right:2%;">
+                    <label for="duration" class="col-form-label">Total:</label>
+                    <p class="form-control" id="total"></p>
+                </div>
+                <div class="form-group">
+                    <label for="duration" class="col-form-label">Refund:</label>
+                    <input class="form-control" id="refund-money" value="">
+                </div>
+                <input type="hidden" id="user-id">
+                <input type="hidden" id="order-id">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
                 </button>
-                <button type="button" class="btn btn-success" id="btn-deposit">Deposit
+                <button type="button" class="btn btn-success" id="btn-submit-deposit">Deposit
                 </button>
             </div>
         </div>
     </div>
 </div>
-</div>
+</body>
 <script src="/assets/vendor/jquery/jquery.min.js"></script>
 <script src="/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
 <script src="/assets/vendor/jquery-slimscroll/jquery.slimscroll.min.js"></script>

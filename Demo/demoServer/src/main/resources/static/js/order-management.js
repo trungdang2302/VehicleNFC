@@ -23,15 +23,11 @@ $(document).ready(function () {
         filterOrder(0);
     });
 
-    // $('.clockpicker').clockpicker({
-    //     placement: 'bottom',
-    //     align: 'left',
-    //     donetext: 'Done',
-    //     // afterDone: function () {
-    //     //     console.log("after done");
-    //     //     parseTimeToLong("clockpickerFrom", "ParkingFrom");
-    //     // }
-    // });
+    $('#btn-deposit').on('click', function (e) {
+        e.preventDefault();
+        $('#deposit-modal').modal();
+    })
+    depositModal();
 });
 function initOrders() {
     $.ajax({
@@ -236,13 +232,7 @@ function viewPricingDetail(orderId) {
 
                 checkInDate += milliseconds;
                 passHour = hourHasPrice.hour;
-                // table for order pricing
-                // row = '<tr>';
-                // row += '<td>' + res[i].fromHour + '</td>';
-                // row += '<td>' + res[i].pricePerHour + '</td>';
-                // row += '<td>' + (res[i].fromHour * res[i].pricePerHour) + '</td>';
-                // row += '<td>' + res[i].lateFeePerHour + '</td>';
-                // row += '</tr>';
+
                 $('#order-detail #orderPricings tbody').append(row);
             }
 
@@ -264,6 +254,14 @@ function viewPricingDetail(orderId) {
             $('#order-detail #orderPricings tbody').append(rowTotal);
             $('#order-detail #total').text(total);
             // $('.myForm #vehicleTypeId').text(order.userId.vehicleTypeId.name);
+            $('#deposit-modal #order-id').val(orderId);
+            $('#deposit-modal #user-id').val(order.userId.id);
+            $('#deposit-modal #phone').text(order.userId.phoneNumber);
+            $('#deposit-modal #username').text(order.userId.firstName + " "+ order.userId.lastName);
+            $('#deposit-modal #checkInDate').text(convertDate(order.checkInDate));
+            $('#deposit-modal #checkOutDate').text(convertDate(order.checkOutDate));
+            $('#deposit-modal #duration').text(msToTime(duration));
+            $('#deposit-modal #duration').text(total);
         }, error: function (res) {
             console.log(res);
             console.log("Could not load data");
@@ -281,6 +279,8 @@ jQuery.extend({
             async: false,
             success: function(data) {
                 result = data;
+            }, error: function (res) {
+                console.log(res);
             }
         });
         return result;
@@ -288,8 +288,34 @@ jQuery.extend({
 });
 
 function depositModal() {
-    $('#btn-deposit').onclick(function (e) {
-        
+    $('#btn-submit-deposit').on('click', function (e) {
+        var user = {
+            id: $('#deposit-modal #user-id').val(),
+            money: $('#deposit-modal #refund-money').val()
+        }
+        var order = {
+            id: $('#deposit-modal #order-id').val()
+        }
+        var orderRefund = {
+            user: user,
+            order: order,
+            refundMoney: $('#deposit-modal #refund-money').val()
+        }
+        $.ajax({
+            type: "POST",
+            url: 'http://localhost:8080/order/refund',
+            dataType:"json",
+            contentType: 'application/json',
+            data: JSON.stringify(orderRefund),
+            success: function (data) {
+                console.log("Successfully refund");
+                console.log(data);
+                $('#deposit-modal').modal('hide');
+                location.reload(true);
+            }, error: function (data) {
+                console.log(data);
+            }
+        })
     });
 }
 

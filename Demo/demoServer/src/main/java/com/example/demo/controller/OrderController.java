@@ -9,6 +9,7 @@ import com.example.demo.entities.Order;
 import com.example.demo.entities.User;
 import com.example.demo.service.OrderService;
 import com.example.demo.service.PushNotificationService;
+import com.example.demo.view.RefundObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -87,4 +88,14 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+
+    @PostMapping(value = "/refund")
+    public ResponseEntity refundOrder(@RequestBody RefundObject refundObject) {
+        Order order = refundObject.getOrder();
+        User user = refundObject.getUser();
+        Double refundMoney = (Double) refundObject.getRefundMoney();
+        orderService.refundOrder(order, user, refundMoney);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
 }

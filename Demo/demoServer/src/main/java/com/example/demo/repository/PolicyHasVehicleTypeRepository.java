@@ -4,6 +4,9 @@ import com.example.demo.entities.Policy;
 import com.example.demo.entities.PolicyHasTblVehicleType;
 import com.example.demo.entities.VehicleType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,5 +18,9 @@ public interface PolicyHasVehicleTypeRepository extends JpaRepository<PolicyHasT
 
     List<PolicyHasTblVehicleType> findByPolicyIdIn(List<Policy> policyList);
 
-
+    @Modifying
+    @Query(
+            value = "DELETE FROM tbl_policy_has_tbl_vehicle_type where id= :id",
+            nativeQuery = true)
+    void deletePolicyHasVehicleById(@Param("id") Integer id);
 }

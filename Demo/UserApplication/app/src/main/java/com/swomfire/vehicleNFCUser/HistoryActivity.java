@@ -43,7 +43,7 @@ public class HistoryActivity extends Activity {
         context = this;
 
         lbl_toolbar = findViewById(R.id.lbl_toolbar);
-        lbl_toolbar.setText("History");
+        lbl_toolbar.setText("Lịch Sử");
         lbl_toolbar.setTypeface(null, Typeface.BOLD);
 
 
@@ -108,7 +108,7 @@ public class HistoryActivity extends Activity {
         txtPos = view.findViewById(R.id.txtPos);
         int i = Integer.parseInt((String) txtPos.getText());
 
-        Intent newActivity1 = new Intent(context, com.swomfire.vehicleNFCUser.HistoryDetailActivity.class);
+        Intent newActivity1 = new Intent(context, HistoryDetailActivity.class);
         newActivity1.putExtra("hisItem", historyList.get(i));
         startActivity(newActivity1);
 

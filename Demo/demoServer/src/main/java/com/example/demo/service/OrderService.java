@@ -8,6 +8,7 @@ import com.example.demo.repository.*;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.management.Notification;
 import javax.persistence.EntityManager;
@@ -60,6 +61,7 @@ public class OrderService {
         return order;
     }
 
+    @Transactional
     public Optional<Order> createOrder(User checkInUser, Location location) {
         String userToken = checkInUser.getDeviceToken();
         checkInUser = userRepository.findById(checkInUser.getId()).get();
@@ -82,7 +84,8 @@ public class OrderService {
         order = new Order();
         order.setOrderStatusId(orderStatus);
 
-        order.setVehicleType(checkInUser.getVehicle().getVehicleTypeId());
+        Vehicle vehicle = vehicleRepository.findByVehicleNumber(checkInUser.getVehicleNumber()).get();
+        order.setVehicleType(vehicle.getVehicleTypeId());
         order.setUserId(checkInUser);
         order.setLocationId(locationRepository.findById(location.getId()).get());
 
@@ -122,8 +125,9 @@ public class OrderService {
         PolicyHasTblVehicleType policyHasTblVehicleType = null;
         for (Policy policy : matchPolicies) {
             while (choosedPolicy == null) {
+                Vehicle vehicle = vehicleRepository.findByVehicleNumber(user.getVehicleNumber()).get();
                 policyHasTblVehicleType = policyHasVehicleTypeRepository
-                        .findByPolicyIdAndVehicleTypeId(policy.getId(), user.getVehicle().getVehicleTypeId()).get();
+                        .findByPolicyIdAndVehicleTypeId(policy.getId(), vehicle.getVehicleTypeId()).get();
                 if (policyHasTblVehicleType != null) {
                     choosedPolicy = policy;
                     break;
@@ -140,6 +144,7 @@ public class OrderService {
         return null;
     }
 
+    @Transactional
     public Optional<Order> checkOutOrder(Order order, String userToken, User user) {
         order.setCheckOutDate(new Date().getTime());
         TimeDuration duration = TimeService.compareTwoDates(order.getCheckInDate(), order.getCheckOutDate());
@@ -184,6 +189,8 @@ public class OrderService {
         OrderStatus orderStatus = orderStatusRepository.findByName(OrderStatusEnum.Close.getName()).get();
         order.setOrderStatusId(orderStatus);
         orderRepository.save(order);
+        user.setMoney(user.getMoney() - totalPrice);
+        userRepository.save(user);
         sendNotification(user, order, userToken, orderPricings, NotificationEnum.CHECK_OUT);
 
         return Optional.of(order);
@@ -191,13 +198,11 @@ public class OrderService {
 
     public void sendNotification(User user, Order order, String userToken, List<OrderPricing> orderPricings, NotificationEnum notification) {
         if (user.getSmsNoti()) {
-            PushNotificationService pushNotificationService = new PushNotificationService();
             order.setOrderPricings(orderPricings);
-            pushNotificationService.sendNotificationToSendSms(NFCServerProperties.getSmsHostToken(), notification, order);
+            PushNotificationService.sendNotificationToSendSms(NFCServerProperties.getSmsHostToken(), notification, order);
         } else {
-            PushNotificationService pushNotificationService = new PushNotificationService();
             order.setOrderPricings(orderPricings);
-            pushNotificationService.sendNotification(userToken, notification, order.getId());
+            PushNotificationService.sendNotification(userToken, notification, order.getId());
         }
     }
 

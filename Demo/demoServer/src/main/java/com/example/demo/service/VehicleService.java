@@ -34,8 +34,7 @@ public class VehicleService {
     @Autowired
     private EntityManager entityManager;
 
-    public ResponseObject getAllVehicle(int pagNumber, int pageSize) {
-        ResponseObject responseObject = new ResponseObject();
+    public List<Vehicle> getAllVehicle(int pagNumber, int pageSize) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Vehicle> criteriaQuery = builder.createQuery(Vehicle.class);
         Root<Vehicle> from = criteriaQuery.from(Vehicle.class);
@@ -50,8 +49,7 @@ public class VehicleService {
                 vehicle.setOwner(owner.get());
             }
         }
-        responseObject.setData(vehicleList);
-        return responseObject;
+        return vehicleList;
     }
 
     public Optional<Vehicle> getVehicle(String vehicleNumber) {
@@ -71,6 +69,23 @@ public class VehicleService {
         return vehicleDB;
     }
 
+    public Optional<Vehicle> saveVehicle(Vehicle vehicle) {
+        Optional<Vehicle> vehicleDB = vehicleRepository.findByVehicleNumber(vehicle.getVehicleNumber());
+        if (vehicleDB.isPresent()) {
+            vehicleDB.get().setLicensePlateId(vehicle.getLicensePlateId());
+            vehicleDB.get().setBrand(vehicle.getBrand());
+            vehicleDB.get().setSize(vehicle.getSize());
+            vehicleDB.get().setExpireDate(vehicle.getExpireDate());
+            vehicleDB.get().setVehicleTypeId(vehicle.getVehicleTypeId());
+            vehicleRepository.save(vehicleDB.get());
+        } else {
+            vehicle.setVerified(true);
+            vehicleRepository.save(vehicle);
+            vehicleDB = Optional.of(vehicle);
+        }
+        return vehicleDB;
+    }
+
     public Long getTotalVehicles(int pageSize) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> countQuery = criteriaBuilder
@@ -79,7 +94,7 @@ public class VehicleService {
                 countQuery.from(Vehicle.class)));
         Long count = entityManager.createQuery(countQuery)
                 .getSingleResult();
-        return (long) (count / pageSize) + 1;
+        return (long) Math.ceil((double) count / pageSize);
     }
 
     public ResponseObject searchVehicle(SearchCriteria param, int pagNumber, int pageSize) {
@@ -117,13 +132,23 @@ public class VehicleService {
                 vehicle.setOwner(owner.get());
             }
         }
-        int totalPages = result.size() / pageSize;
+        int totalPages = (int) Math.ceil((double) result.size() / pageSize);
         typedQuery.setFirstResult(pagNumber * pageSize);
         typedQuery.setMaxResults(pageSize);
         List<Vehicle> userList = typedQuery.getResultList();
         responseObject.setData(userList);
-        responseObject.setTotalPages(totalPages + 1);
+        responseObject.setTotalPages(totalPages);
         responseObject.setPageNumber(pagNumber);
+        responseObject.setPageSize(pageSize);
         return responseObject;
+    }
+
+    public boolean deleteVehicle(String vehicleNumber) {
+        Optional<Vehicle> vehicle = vehicleRepository.findByVehicleNumber(vehicleNumber);
+        if (vehicle.isPresent()) {
+            vehicleRepository.delete(vehicle.get());
+            return true;
+        }
+        return false;
     }
 }

@@ -9,6 +9,7 @@ import com.example.demo.entities.VehicleType;
 import com.example.demo.repository.LocationRepository;
 import com.example.demo.repository.PolicyHasVehicleTypeRepository;
 import com.example.demo.repository.PolicyRepository;
+import com.example.demo.repository.PricingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,14 +27,16 @@ public class LocationService {
     private final LocationRepository locationRepository;
     private final PolicyHasVehicleTypeRepository policyHasVehicleTypeRepository;
     private final PolicyRepository policyRepository;
+    private final PricingRepository pricingRepository;
 
     @Autowired
     private EntityManager entityManager;
 
-    public LocationService(LocationRepository locationRepository, PolicyHasVehicleTypeRepository policyHasVehicleTypeRepository, PolicyRepository policyRepository) {
+    public LocationService(LocationRepository locationRepository, PolicyHasVehicleTypeRepository policyHasVehicleTypeRepository, PolicyRepository policyRepository, PricingRepository pricingRepository) {
         this.locationRepository = locationRepository;
         this.policyHasVehicleTypeRepository = policyHasVehicleTypeRepository;
         this.policyRepository = policyRepository;
+        this.pricingRepository = pricingRepository;
     }
 
     public Optional<Location> getMeterById(Integer id) {
@@ -41,6 +44,9 @@ public class LocationService {
         if (location.isPresent()) {
             for (Policy policy : location.get().getPolicyList()) {
                 policy.setPolicyHasTblVehicleTypeList(policyHasVehicleTypeRepository.findByPolicyId(policy.getId()));
+                for (PolicyHasTblVehicleType policyHasTblVehicleType : policy.getPolicyHasTblVehicleTypeList()) {
+                    policyHasTblVehicleType.setPricings(pricingRepository.findAllByPolicyHasTblVehicleTypeId(policyHasTblVehicleType.getId()));
+                }
             }
         }
         return location;

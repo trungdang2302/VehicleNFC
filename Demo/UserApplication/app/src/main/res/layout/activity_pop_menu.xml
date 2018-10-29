@@ -98,7 +98,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="0.8"
                     android:gravity="center"
-                    android:text="Profile"
+                    android:text="Thông tin cá nhân"
                     android:textColor="#fff"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -128,7 +128,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="History"
+                    android:text="Lịch sử gửi xe"
                     android:textColor="#fff"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -167,7 +167,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Top-up"
+                    android:text="Nạp tiền"
                     android:textColor="#fff"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -197,7 +197,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="0.8"
                     android:gravity="center"
-                    android:text="Sign out"
+                    android:text="Thoát"
                     android:textColor="#FC7D7D"
                     android:textSize="12sp" />
             </LinearLayout>

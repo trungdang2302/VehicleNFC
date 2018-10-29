@@ -32,7 +32,7 @@ public class PushNotificationService {
     private static final String FIREBASE_SERVER_KEY = "AAAALpE5CE0:APA91bHrRbW6K-dM9-ZdHvr2N2i7fGDNf0o-WDyXOY5NiJNNP0U7z5nusQ_2fmM-tGeMud-0AosXx9yIWPB_lEZIlVKvcFgvNSbaBIu3r4njl0CIhrgcsP9aBqhVKAce5O38j1MeQSkx";
     private static final String FIREBASE_API_URL = "https://fcm.googleapis.com/fcm/send";
 
-    public void sendNotification(String appToken, NotificationEnum notificationEnum, int orderId) {
+    public static void sendNotification(String appToken, NotificationEnum notificationEnum, int orderId) {
         try {
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders httpHeaders = new HttpHeaders();
@@ -59,7 +59,7 @@ public class PushNotificationService {
         }
     }
 
-    public void sendNotificationToSendSms(String serverMachineToken, NotificationEnum notificationEnum, Order order) {
+    public static void sendNotificationToSendSms(String serverMachineToken, NotificationEnum notificationEnum, Order order) {
         try {
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders httpHeaders = new HttpHeaders();
@@ -88,7 +88,7 @@ public class PushNotificationService {
         }
     }
 
-    public void sendPhoneConfirmNotification(String appToken, String phoneNumber, String confirmKey) {
+    public static void sendPhoneConfirmNotification(String appToken, String phoneNumber, String confirmKey) {
         try {
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders httpHeaders = new HttpHeaders();
@@ -98,7 +98,7 @@ public class PushNotificationService {
             JSONObject json = new JSONObject();
 
             msg.put("title", "Send confirm phone sms");
-            msg.put("body", confirmKey);
+            msg.put("body", "Mã xác nhận là: " + confirmKey);
             msg.put("phoneNumber", phoneNumber);
 
             json.put("data", msg);
@@ -114,7 +114,7 @@ public class PushNotificationService {
         }
     }
 
-    public String composeOrderPrice(Order order, String title) {
+    public static String composeOrderPrice(Order order, String title) {
         String body = "";
         if (order != null) {
             if (title.equals(NotificationEnum.CHECK_IN.getTitle())) {
@@ -125,7 +125,7 @@ public class PushNotificationService {
 
                 body += "Bắt đầu đậu xe tại: " + order.getLocationId().getLocation() + "\n";
                 body += "Vào lúc: " + date + "\n";
-                body += "Bảng giá cho loại xe: " + order.getUserId().getVehicle().getVehicleTypeId().getName() + "\n";
+                body += "Bảng giá cho loại xe: " + order.getVehicleType().getName() + "\n";
                 for (OrderPricing orderPricing : order.getOrderPricings()) {
                     body += (orderPricing.getFromHour() == 0) ? "Từ Giờ đầu: " + ((long) orderPricing.getPricePerHour() * 1000) + "đ/h\n"
                             : "Từ giờ thứ " + orderPricing.getFromHour() + ": " + ((long) orderPricing.getPricePerHour() * 1000) + "đ/h\n";
@@ -137,13 +137,37 @@ public class PushNotificationService {
                 String checkInDate = simpleDateFormat.format(new Date(order.getCheckInDate()));
                 String checkOutDate = simpleDateFormat.format(new Date(order.getCheckOutDate()));
 
-                body += "Kết thúc đậu xe tại: " + order.getLocationId().getLocation() + "\n";
-                body += "Từ: " + checkInDate + " đến: " + checkOutDate + "\n";
+                body += "Rời nơi đậu xe: " + order.getLocationId().getLocation() + "\n";
+                body += "Thời gian đậu Từ: " + checkInDate + " đến: " + checkOutDate + "\n";
                 body += "Phí đậu xe: " + (long) (order.getTotal() * 1000) + "đ\n";
             }
         }
         return body;
     }
 
+    public static void sendUserNeedVerifyNotification(String appToken, String phoneNumber) {
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.set("Authorization", "key=" + FIREBASE_SERVER_KEY);
+            httpHeaders.set("Content-Type", "application/json;charset=UTF-8");
+            JSONObject msg = new JSONObject();
+            JSONObject json = new JSONObject();
 
+
+            msg.put("title", "User need verify");
+            msg.put("body", "User need verify");
+            msg.put("phoneNumber", phoneNumber);
+
+            json.put("data", msg);
+
+            json.put("to", "fhRoDKtJR4Q:APA91bFRKKjR2GydlMD0akn71EluhoayB7YXe3a9M5MVat1IRPGo-59onV4VmI-KLj3b-e0zQ2k55brMCxTGJPIcZK2eNslJMnTdq8BNecpqJwsDO5InyL-ALvF0ojQEb_PMtX_xtYsf");
+
+            HttpEntity<String> httpEntity = new HttpEntity<String>(json.toString(), httpHeaders);
+            String response = restTemplate.postForObject(FIREBASE_API_URL, httpEntity, String.class);
+            System.out.println(response);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 }

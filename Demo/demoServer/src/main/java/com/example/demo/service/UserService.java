@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -52,20 +53,35 @@ public class UserService {
         }
     }
 
-    public void createUser(User user, String confirmCode) {
+    @Transactional
+    public void createUser(User user) {
         if (user.getVehicle() != null) {
-            user.getVehicle().setVerified(false);
-            user.setActivated(false);
-            vehicleRepository.save(user.getVehicle());
+            boolean needVerify = false;
+            //TODO check if phoneNumber exist
+
+            Vehicle vehicle = vehicleRepository.findByVehicleNumber(userRepository.findById(user.getId()).get().getVehicleNumber()).get();
+            if (!userRepository.findById(user.getId()).isPresent()
+                    || !vehicle.getVehicleNumber().equals(user.getVehicle().getVehicleNumber())
+                    || !vehicle.getLicensePlateId().equals(user.getVehicle().getLicensePlateId())) {
+                needVerify = true;
+                user.getVehicle().setVerified(false);
+                user.setActivated(false);
+                vehicleRepository.save(user.getVehicle());
+                user.setVehicleNumber(user.getVehicle().getVehicleNumber());
+            }
             user.setVehicleNumber(user.getVehicle().getVehicleNumber());
             userRepository.save(user);
-//            requestNewConfirmCode(user.getPhoneNumber(), confirmCode);
+            if (needVerify) {
+                PushNotificationService.sendUserNeedVerifyNotification(
+                        "fhRoDKtJR4Q:APA91bFRKKjR2GydlMD0akn71EluhoayB7YXe3a9M5MVat1IRPGo-59onV4VmI-KLj3b-e0zQ2k55brMCxTGJPIcZK2eNslJMnTdq8BNecpqJwsDO5InyL-ALvF0ojQEb_PMtX_xtYsf",
+                        user.getPhoneNumber()
+                );
+            }
         }
     }
 
     public void requestNewConfirmCode(String phoneNumber, String confirmCode) {
-        PushNotificationService pushNotificationService = new PushNotificationService();
-        pushNotificationService.sendPhoneConfirmNotification(NFCServerProperties.getSmsHostToken(), phoneNumber, confirmCode);
+        PushNotificationService.sendPhoneConfirmNotification(NFCServerProperties.getSmsHostToken(), phoneNumber, confirmCode);
     }
 
     public Optional<User> getUserByPhone(String phone) {
@@ -128,13 +144,14 @@ public class UserService {
         for (User user : result) {
             user.setVehicle(vehicleRepository.findByVehicleNumber(user.getVehicleNumber()).get());
         }
-        int totalPages = result.size() / pageSize;
+        int totalPages = (int) Math.ceil((double) result.size() / pageSize);
         typedQuery.setFirstResult(pagNumber * pageSize);
         typedQuery.setMaxResults(pageSize);
         List<User> userList = typedQuery.getResultList();
         responseObject.setData(userList);
-        responseObject.setTotalPages(totalPages + 1);
+        responseObject.setTotalPages(totalPages);
         responseObject.setPageNumber(pagNumber);
+        responseObject.setPageSize(pageSize);
         return responseObject;
     }
 
@@ -164,7 +181,7 @@ public class UserService {
                 countQuery.from(User.class)));
         Long count = entityManager.createQuery(countQuery)
                 .getSingleResult();
-        return (long) (count / pageSize) + 1;
+        return (long) Math.ceil((double) count / pageSize);
     }
 
     public Optional<User> login(String phone, String password) {
@@ -217,5 +234,9 @@ public class UserService {
             userRepository.save(user.get());
         }
         return user;
+    }
+
+    public Optional<User> getUserByVehicleNumber(String vehicleNumber) {
+        return userRepository.findByVehicleNumber(vehicleNumber);
     }
 }

@@ -29,7 +29,7 @@ public class ForgetPasswordActivity extends Activity {
         context = this;
         txtPhone = findViewById(R.id.txtPhone);
         lbl_toolbar = findViewById(R.id.lbl_toolbar);
-        lbl_toolbar.setText("Forget Your Password");
+        lbl_toolbar.setText("Quên Mật Khẩu");
         lbl_toolbar.setTypeface(null, Typeface.BOLD);
 
     }

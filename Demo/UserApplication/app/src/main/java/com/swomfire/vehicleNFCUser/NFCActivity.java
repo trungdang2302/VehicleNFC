@@ -151,7 +151,9 @@ public class NFCActivity extends Activity implements NfcAdapter.CreateNdefMessag
         }
 
         totalPrice += lastPrice * ((double) m / 60);
-        lblTotal.setText(UserService.convertMoney(totalPrice));
+        try {
+            lblTotal.setText(UserService.convertMoney(totalPrice));
+        } catch (NullPointerException e) {}
     }
 
     TextView lblTotal;
@@ -172,6 +174,7 @@ public class NFCActivity extends Activity implements NfcAdapter.CreateNdefMessag
     }
 
     private boolean hasCurrentOrder = false;
+    private boolean pause = false;
 
     public void getOrderInfo(String orderId) {
         if (orderId == null) {
@@ -190,15 +193,21 @@ public class NFCActivity extends Activity implements NfcAdapter.CreateNdefMessag
                     if (response.isSuccessful()) {
                         Order result = response.body();
                         if (result != null) {
-                            setContentView(R.layout.activity_checkout);
-                            parkingChorno = findViewById(R.id.chroParking);
-                            setUpChrono(result);
-                            setUpOrderInfo(result);
-                            hasCurrentOrder = true;
+                            if (!hasCurrentOrder) {
+                                setContentView(R.layout.activity_checkout);
+                                parkingChorno = findViewById(R.id.chroParking);
+                                setUpChrono(result);
+                                setUpOrderInfo(result);
+                                hasCurrentOrder = true;
+                            }
                         } else if (result == null && hasCurrentOrder) {
-                            parkingChorno.stop();
+                            Intent intent = getIntent();
+                            finish();
+                            startActivity(intent);
                         }
-                        getOrderInfo(null);
+                        if (!pause) {
+                            getOrderInfo(null);
+                        }
                     }
                 }
 
@@ -262,6 +271,7 @@ public class NFCActivity extends Activity implements NfcAdapter.CreateNdefMessag
     protected void onResume() {
         super.onResume();
         checkInternetConnection();
+        pause = false;
     }
 
     public void checkInternetConnection() {
@@ -280,5 +290,11 @@ public class NFCActivity extends Activity implements NfcAdapter.CreateNdefMessag
         if (i == networkInfo.length) {
             Toast.makeText(getApplicationContext(), "Không có kết nối internet", Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        pause = true;
     }
 }

@@ -184,7 +184,7 @@ public class OrderService {
         }
         totalPrice += lastPrice * ((double) totalMinute / 60);
 
-        order.setDuration(duration.toMilisecond() / 1000);
+        order.setDuration(order.getCheckOutDate() - order.getCheckInDate());
         order.setTotal(round(totalPrice, 0));
         OrderStatus orderStatus = orderStatusRepository.findByName(OrderStatusEnum.Close.getName()).get();
         order.setOrderStatusId(orderStatus);

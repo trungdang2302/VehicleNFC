@@ -128,8 +128,8 @@ public class UserController {
         return "Success";
     }
 
-    @PostMapping("/delete-user/{id}")
-    public String deleteUser(Integer id) {
+    @PostMapping("/delete-user")
+    public String deleteUser(@Param(value = "id") Integer id) {
         userService.deleteUser(id);
         return "Success";
     }
@@ -291,10 +291,10 @@ public class UserController {
     public ResponseEntity<ResponseObject> searchVehicle(@RequestBody SearchCriteria params
             , @RequestParam(defaultValue = "0") Integer page) {
         ResponseObject response = new ResponseObject();
+//        response.setPageNumber(page);
+//        response.setPageSize(PaginationEnum.userPageSize.getNumberOfRows());
+//        response.setTotalPages(vehicleService.getTotalVehicles(PaginationEnum.userPageSize.getNumberOfRows()).intValue());
         response.setData(vehicleService.searchVehicle(params, page, PaginationEnum.userPageSize.getNumberOfRows()));
-        response.setPageNumber(page);
-        response.setPageSize(PaginationEnum.userPageSize.getNumberOfRows());
-        response.setTotalPages(vehicleService.getTotalVehicles(PaginationEnum.userPageSize.getNumberOfRows()).intValue());
 
         return ResponseEntity.status(OK).body(response);
     }

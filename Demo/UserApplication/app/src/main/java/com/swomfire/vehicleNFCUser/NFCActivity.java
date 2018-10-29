@@ -11,6 +11,7 @@ import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcEvent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -120,6 +121,11 @@ public class NFCActivity extends Activity implements NfcAdapter.CreateNdefMessag
         lblTotal = findViewById(R.id.lblTotal);
         double totalPrice = 0;
         List<HourHasPrice> hourHasPrices = new ArrayList<>();
+        if (h < order.getMinHour()) {
+            h = order.getMinHour();
+            m = 0;
+        }
+
         while (h > 0) {
             hourHasPrices.add(new HourHasPrice(h, null));
             h--;
@@ -165,6 +171,8 @@ public class NFCActivity extends Activity implements NfcAdapter.CreateNdefMessag
         parkingChorno.start();
     }
 
+    private boolean hasCurrentOrder = false;
+
     public void getOrderInfo(String orderId) {
         if (orderId == null) {
             //TODO get user info
@@ -172,8 +180,11 @@ public class NFCActivity extends Activity implements NfcAdapter.CreateNdefMessag
 //            if (user == null) {
 //                return;
 //            }
+            SharedPreferences prefs = getSharedPreferences("localData", MODE_PRIVATE);
+            String userId = prefs.getString("userId", "1");
+
             RmaAPIService mService = RmaAPIUtils.getAPIService();
-            mService.getOpenOrderByUserId(Integer.parseInt("2")).enqueue(new Callback<Order>() {
+            mService.getOpenOrderByUserId(Integer.parseInt(userId)).enqueue(new Callback<Order>() {
                 @Override
                 public void onResponse(Call<Order> call, Response<Order> response) {
                     if (response.isSuccessful()) {
@@ -183,7 +194,11 @@ public class NFCActivity extends Activity implements NfcAdapter.CreateNdefMessag
                             parkingChorno = findViewById(R.id.chroParking);
                             setUpChrono(result);
                             setUpOrderInfo(result);
+                            hasCurrentOrder = true;
+                        } else if (result == null && hasCurrentOrder) {
+                            parkingChorno.stop();
                         }
+                        getOrderInfo(null);
                     }
                 }
 

@@ -82,6 +82,9 @@ public class DBHelper extends SQLiteOpenHelper {
         if (order.getUser().getVehicle() != null) {
             contentValues.put(COLUMN_TBL_VEHICAL_NAME, order.getUser().getVehicle().getVehicleTypeId().getName());
             contentValues.put(COLUMN_TBL_VEHICAL_ID, order.getUser().getVehicle().getVehicleNumber());
+        } else {
+            contentValues.put(COLUMN_TBL_VEHICAL_NAME, "");
+            contentValues.put(COLUMN_TBL_VEHICAL_ID, "");
         }
         contentValues.put(COLUMN_TBL_LOCATION_ID, order.getLocation().getLocation());
 

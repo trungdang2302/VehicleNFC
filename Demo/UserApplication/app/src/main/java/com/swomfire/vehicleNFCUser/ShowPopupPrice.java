@@ -3,6 +3,7 @@ package com.swomfire.vehicleNFCUser;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v7.widget.RecyclerView;
@@ -32,7 +33,7 @@ import service.UserService;
 
 public class ShowPopupPrice extends Activity {
 
-    TextView txtTime, txtTotal;
+    TextView txtTime, txtTotal,txtThongBao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,7 @@ public class ShowPopupPrice extends Activity {
         setContentView(R.layout.activity_show_popup_price);
         txtTime = findViewById(R.id.txtTime);
         txtTotal = findViewById(R.id.txtTotal);
+        txtThongBao = findViewById(R.id.txtThongBao);
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -69,10 +71,13 @@ public class ShowPopupPrice extends Activity {
 
                         int m = (int) (result.getDuration() - h * 3600000) / 60000;
 
-                        boolean flag = false;
                         if (h < result.getMinHour()) {
-                            flag = true;
+                            txtThongBao.setVisibility(View.VISIBLE);
+                            txtThongBao.setText("Thời gian đỗ tối thiểu quy đinh là: "+ result.getMinHour() + " giờ");
                             h = result.getMinHour();
+                        } else {
+
+                            txtThongBao.setVisibility(View.GONE);
                         }
 
                         List<HourHasPrice> hourHasPrices = new ArrayList<>();

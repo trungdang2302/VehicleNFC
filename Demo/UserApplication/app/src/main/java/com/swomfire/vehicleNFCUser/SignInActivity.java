@@ -32,7 +32,7 @@ public class SignInActivity extends Activity {
         setContentView(R.layout.activity_singin);
 
         lbl_toolbar = findViewById(R.id.lbl_toolbar);
-        lbl_toolbar.setText("Sign In");
+        lbl_toolbar.setText("Đăng Nhập");
         lbl_toolbar.setTypeface(null, Typeface.BOLD);
 
         context = this;

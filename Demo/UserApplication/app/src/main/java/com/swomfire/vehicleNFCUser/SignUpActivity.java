@@ -31,7 +31,7 @@ public class SignUpActivity extends Activity {
         setContentView(R.layout.activity_signup);
 
         lbl_toolbar = findViewById(R.id.lbl_toolbar);
-        lbl_toolbar.setText("Sign Up");
+        lbl_toolbar.setText("Đăng Kí Tài  Khoản");
         lbl_toolbar.setTypeface(null, Typeface.BOLD);
 
         context = this;

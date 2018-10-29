@@ -28,7 +28,7 @@ public class HistoryDetailActivity extends Activity {
         myDialog = new Dialog(this);
 
         lbl_toolbar = findViewById(R.id.lbl_toolbar);
-        lbl_toolbar.setText("History Detail");
+        lbl_toolbar.setText("Thông Tin Chi Tiết");
         lbl_toolbar.setTypeface(null, Typeface.BOLD);
 
 

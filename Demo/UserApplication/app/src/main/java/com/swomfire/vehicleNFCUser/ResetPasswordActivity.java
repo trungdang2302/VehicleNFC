@@ -26,7 +26,7 @@ public class ResetPasswordActivity extends Activity {
         setContentView(R.layout.activity_reset_password);
 
         lbl_toolbar = findViewById(R.id.lbl_toolbar);
-        lbl_toolbar.setText("Reset Your Password");
+        lbl_toolbar.setText("Đổi mật khẩu");
         lbl_toolbar.setTypeface(null, Typeface.BOLD);
 
         edtNewPass = findViewById(R.id.edtNewPass);

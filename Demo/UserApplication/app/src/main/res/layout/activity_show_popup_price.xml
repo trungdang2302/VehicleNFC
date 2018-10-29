@@ -26,7 +26,7 @@
                 android:text="Đỗ xe từ:"
                 android:textColor="#000000"
                 android:textSize="22dp"
-                android:textStyle="bold|italic" />
+                android:textStyle="bold" />
         </TableRow>
 
         <TableRow
@@ -46,55 +46,38 @@
                 android:textStyle="bold|italic" />
         </TableRow>
 
-        <!--<TableRow
+        <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="20dp"
             android:gravity="center">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyMain"
+            <TextView
+                android:id="@+id/txtTaoLao"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Bảng Giá Chi Tiết"
+                android:textColor="#000000"
+                android:textSize="22dp"
+                android:textStyle="bold" />
+        </TableRow>
 
-        </TableRow>-->
-        <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:orientation="horizontal"-->
-            <!--android:paddingLeft="10dp"-->
-            <!--android:paddingRight="10dp"-->
-            <!--android:weightSum="1">-->
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:gravity="left">
 
-            <!--<TextView-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight=".2"-->
-                <!--android:gravity="center"-->
-                <!--android:text=""-->
-                <!--android:textColor="#000"-->
-                <!--android:textSize="18dp" />-->
-
-            <!--<TextView-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_weight=".35"-->
-                <!--android:gravity="center"-->
-                <!--android:text="Giá/giờ"-->
-                <!--android:textColor="#000"-->
-                <!--android:textSize="18dp"-->
-                <!--android:textStyle="bold|italic" />-->
-
-            <!--<TextView-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_weight=".45"-->
-                <!--android:gravity="center"-->
-                <!--android:text="Tổng cộng"-->
-                <!--android:textColor="#000"-->
-                <!--android:textSize="18dp"-->
-                <!--android:textStyle="bold|italic" />-->
-        <!--</LinearLayout>-->
-
+            <TextView
+                android:id="@+id/txtThongBao"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="left"
+                android:text="Đỗ xe từ:"
+                android:layout_marginLeft="15dp"
+                android:textColor="#000000"
+                android:visibility="visible"
+                android:textSize="18dp" />
+        </TableRow>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/listHistoryPricing"
@@ -102,28 +85,20 @@
             android:layout_height="wrap_content">
 
         </android.support.v7.widget.RecyclerView>
-        <!--<TextView-->
-        <!--android:id="@+id/txtPriceNe"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:textColor="#000000"-->
-        <!--android:paddingLeft="10dp"-->
-        <!--android:gravity="center"-->
-        <!--android:textSize="18dp"-->
-        <!--android:lineSpacingExtra="10dp"-->
-        <!--android:text="Anh trung oi" />-->
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginRight="25dp"
+            android:layout_marginTop="5dp"
             android:gravity="center_vertical|end">
 
             <TextView
                 android:id="@+id/txtTotal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
+                android:gravity="right"
+                android:paddingRight="2dp"
                 android:text="5:00 -> 10:00 "
                 android:textColor="#000000"
                 android:textSize="22dp"

@@ -26,9 +26,27 @@ public class UserService {
         return result;
     }
 
-    public static double convertVNDToUSD(double money) {
-        return money / 23;
+    public static String convertMoneyNoVND(double money) {
+        String base = (long) money * 1000 + "";
+        String[] strings = base.split("");
+        String result = "";
+        int count = 0;
+        for (int i = strings.length - 1; i > 0; i--) {
+            count++;
+            result = strings[i] + result;
+            if (count == 3) {
+                if (i > 1) {
+                    result = "," + result;
+                    count = 0;
+                }
+            }
+        }
+        return result;
     }
+
+    //public static double convertVNDToUSD(double money) {
+    //    return money / 23;
+    //}
 
     public static String convertMoneyUSD(double money) {
         money = round(money, 2);

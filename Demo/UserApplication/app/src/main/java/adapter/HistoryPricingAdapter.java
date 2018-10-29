@@ -29,6 +29,7 @@ public class HistoryPricingAdapter extends RecyclerView.Adapter<HistoryPricingAd
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.hourHasPrices = new ArrayList<>();
+
         for (HourHasPrice hourHasPrice : hourHasPrices) {
             if (this.hourHasPrices.size() < 1) {
                 hourHasPrice.setTotal(hourHasPrice.getPrice());
@@ -63,24 +64,15 @@ public class HistoryPricingAdapter extends RecyclerView.Adapter<HistoryPricingAd
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         HourHasPrice hourHasPrice = hourHasPrices.get(position);
-//        if (position == 0) {
-//            passHour = hourHasPrice.getHour();
-//            fromHour = hourHasPrice.getHour() + " giờ đầu";
-//        } else if (position == hourHasPrices.size() - 1) {
-//            hourHasPrice.setHour(hourHasPrice.getHour() - passHour);
-//            String minutesPass = (minutes != 0) ? " " + minutes + " phút" : "";
-//            fromHour = hourHasPrice.getHour() + " giờ" + minutesPass + " sau";
-//            hourHasPrice.setTotal(hourHasPrice.getTotal() + (((double) minutes / 60) * hourHasPrice.getPrice()));
-//        } else {
-//            fromHour = "giờ " + (passHour + 1) + " đến " + hourHasPrice.getHour();
-//            passHour = hourHasPrice.getHour();
-//        }
+
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 
         long mili = UserService.convertToMilliseconds(hourHasPrice.getHour() - passHour, true);
+
         if (position == hourHasPrices.size() - 1) {
             mili += UserService.convertToMilliseconds(minutes, false);
         }
+
         String toHour = "";
         if (!UserService.compareTwoDate(checkInDate, checkInDate + mili)) {
             SimpleDateFormat extra = new SimpleDateFormat("HH:mm dd/MM");
@@ -88,14 +80,24 @@ public class HistoryPricingAdapter extends RecyclerView.Adapter<HistoryPricingAd
         } else {
             toHour = sdf.format(checkInDate + mili);
         }
-//        String fromHour = (orderPricing.getFromHour() == 0) ? "Giờ đầu" : "Từ " + orderPricing.getFromHour() + " giờ";
+
         holder.txtFrom.setText(sdf.format(checkInDate));
-        holder.txtTo.setText(toHour);
-        holder.txtTotal.setText(UserService.convertMoney(hourHasPrice.getPrice()) + " x " + (hourHasPrice.getHour() - passHour));
+        holder.txtTo.setText(toHour+": ");
+
+        if (position != hourHasPrices.size() - 1) {
+            holder.txtTotal.setText(UserService.convertMoneyNoVND(hourHasPrice.getPrice()) + " vnđ x " + (hourHasPrice.getHour() - passHour) + " giờ");
+            holder.txtEnd.setText(UserService.convertMoney(hourHasPrice.getPrice() * (hourHasPrice.getHour() - passHour)));
+        } else {
+            double min = minutes;
+            min = min/60;
+            min = (int)(min * 100 + 0.5) / 100.0;
+
+            holder.txtTotal.setText(UserService.convertMoneyNoVND(hourHasPrice.getPrice()) + " vnđ x " + (hourHasPrice.getHour()  - passHour + min + " giờ"));
+            holder.txtEnd.setText(UserService.convertMoney(hourHasPrice.getPrice() * (hourHasPrice.getHour()+min - passHour)));
+        }
+
         checkInDate += mili;
         passHour = hourHasPrice.getHour();
-
-//        holder.txtFee.setText(UserService.convertMoney(hourHasPrice.g()));
     }
 
     @Override
@@ -105,13 +107,16 @@ public class HistoryPricingAdapter extends RecyclerView.Adapter<HistoryPricingAd
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView txtFrom, txtTo, txtTotal;
+        private TextView txtFrom, txtTo, txtTotal, txtEnd, txtThongBao;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             txtFrom = itemView.findViewById(R.id.txtFrom);
             txtTo = itemView.findViewById(R.id.txtTo);
             txtTotal = itemView.findViewById(R.id.txtTotal);
+            txtEnd = itemView.findViewById(R.id.txtEnd);
+            txtThongBao = itemView.findViewById(R.id.txtThongBao);
+
         }
     }
 

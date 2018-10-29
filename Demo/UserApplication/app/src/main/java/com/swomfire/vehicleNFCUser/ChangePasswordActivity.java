@@ -34,7 +34,7 @@ public class ChangePasswordActivity extends Activity {
         edtNewPass = findViewById(R.id.edtNewPass);
 
         lbl_toolbar = findViewById(R.id.lbl_toolbar);
-        lbl_toolbar.setText("Change Password");
+        lbl_toolbar.setText("Đổi Mật Khẩu");
         lbl_toolbar.setTypeface(null, Typeface.BOLD);
 
     }

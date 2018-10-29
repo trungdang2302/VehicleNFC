@@ -32,7 +32,6 @@ function loadData(res) {
         row = (content[i].verified) ? '<tr>' : '<tr class="not-verified">';
         var vehicleType = (content[i].vehicleTypeId != null) ? content[i].vehicleTypeId.name : "Empty";
         var ownerPhone = (content[i].owner != null) ? content[i].owner.phoneNumber : "Empty";
-
         row += cellBuilder((i + (res.pageNumber * res.pageSize) + 1), "text-center");
         row += cellBuilder(content[i].vehicleNumber, "text-right");
         row += cellBuilder(content[i].licensePlateId, "text-right");
@@ -44,7 +43,9 @@ function loadData(res) {
 
         var verify = (!content[i].verified) ? "<a href=\"#\" onclick=\"loadVehicleInfo('" + content[i].vehicleNumber + "','main-content-verify-form'," + setUpFormData + ",'vehicle-list')\" class=\"btn btn-success btnVerify\">Verify</a>" : "";
         var edit = "<a href=\"#\" onclick=\"loadVehicleInfo('" + content[i].vehicleNumber + "','main-content-save-form'," + setUpSaveFormData + ",'save-vehicle-list')\" class=\"btn btn-primary btnAction\"><i class=\"lnr lnr-pencil\"></i></a>";
-        var deleteStr = "<a href=\"#\" onclick=\"deleteVehicle('" + content[i].vehicleNumber + "')\" class=\"btn btn-danger btnAction\"><i class=\"lnr lnr-trash\"></i></a>";
+        var disable = (content[i].owner != null) ? "disabled" : "onclick=\"openDeleteModal('" + content[i].vehicleNumber + "')\" ";
+        var deleteStr = "<a " + disable +
+            " href=\"#\" class=\"btn btn-danger btnAction\"><i class=\"lnr lnr-trash\"></i></a>";
         row += cellBuilder(deleteStr + edit + verify);
         row += '</tr>';
         $('#user-table tbody').append(row);
@@ -55,7 +56,7 @@ function loadData(res) {
     console.log("Total Page: " + res.totalPages);
     var currentPage;
     var li = "";
-    for (currentPage = 0; currentPage <= res.totalPages - 1; currentPage++) {
+    for (currentPage = 0; currentPage < res.totalPages; currentPage++) {
         if (currentPage === pageNumber) {
             li = '<li class="nav-item active">\n' +
                 '<a href="#" class="nav-link" onclick="searchUser(' + currentPage + ')">' + (currentPage + 1) + '</a>\n' +
@@ -195,6 +196,7 @@ function setUpFormData(vehicle) {
 
 function setUpSaveFormData(vehicle) {
     $('#save-VehicleNumber').val(vehicle.vehicleNumber);
+    $('#save-VehicleNumber').prop('disabled', true);
     $('#save-licenseId').val(vehicle.licensePlateId);
     $('#save-brand').val(vehicle.brand);
     $('#save-size').val(vehicle.size);
@@ -249,7 +251,7 @@ $('#verify-vehicle-form').on('submit', function (e) {
 });
 
 $('#save-vehicle-form').on('submit', function (e) {
-
+    $('#save-VehicleNumber').prop('disabled', false);
     $.ajax({
         type: 'post',
         url: 'save-vehicle',
@@ -266,31 +268,34 @@ $('#save-vehicle-form').on('submit', function (e) {
 function closeForm() {
     $('#verify-vehicle-form').trigger("reset");
     $('#save-vehicle-form').trigger("reset");
+    $('#save-VehicleNumber').prop('disabled', false);
     $('#main-content-vehicle-list').show();
     $('#main-content-verify-form').hide();
     $('#main-content-save-form').hide();
 }
 
-function openSaveForm(vehicleNumber) {
-    if (typeof (vehicleNumber) !== 'undefined') {
+function openSaveForm() {
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: '/vehicle-type/get-all',
+        success: function (data) {
+            setUpVehicleType(data, "save-vehicle-list")
+        }, error: function () {
+            alert("Can't load data")
+        }
+    });
 
-    }
     $('#main-content-vehicle-list').hide();
     $('#main-content-save-form').show();
 }
 
+function openDeleteModal(vehicleNumber) {
+    $('#deleteModal').modal(focus);
+    $('#delete-vehicleNumber').val(vehicleNumber);
+}
+
 function deleteVehicle(vehicleNumber) {
-    // var data = "'vehicleNumber':" + vehicleNumber;
-    // $.ajax({
-    //     type: 'post',
-    //     url: 'delete-vehicle',
-    //     vehicleNumber: vehicleNumber,
-    //     success: function (data) {
-    //         if (data) {
-    //             location.reload();
-    //         }
-    //     }
-    // });
     $.post("delete-vehicle",
         {
             vehicleNumber: vehicleNumber,
@@ -301,3 +306,4 @@ function deleteVehicle(vehicleNumber) {
             }
         }));
 }
+

@@ -8,6 +8,7 @@ import com.example.demo.repository.*;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.management.Notification;
 import javax.persistence.EntityManager;
@@ -60,6 +61,7 @@ public class OrderService {
         return order;
     }
 
+    @Transactional
     public Optional<Order> createOrder(User checkInUser, Location location) {
         String userToken = checkInUser.getDeviceToken();
         checkInUser = userRepository.findById(checkInUser.getId()).get();
@@ -142,6 +144,7 @@ public class OrderService {
         return null;
     }
 
+    @Transactional
     public Optional<Order> checkOutOrder(Order order, String userToken, User user) {
         order.setCheckOutDate(new Date().getTime());
         TimeDuration duration = TimeService.compareTwoDates(order.getCheckInDate(), order.getCheckOutDate());
@@ -186,6 +189,8 @@ public class OrderService {
         OrderStatus orderStatus = orderStatusRepository.findByName(OrderStatusEnum.Close.getName()).get();
         order.setOrderStatusId(orderStatus);
         orderRepository.save(order);
+        user.setMoney(user.getMoney() - totalPrice);
+        userRepository.save(user);
         sendNotification(user, order, userToken, orderPricings, NotificationEnum.CHECK_OUT);
 
         return Optional.of(order);

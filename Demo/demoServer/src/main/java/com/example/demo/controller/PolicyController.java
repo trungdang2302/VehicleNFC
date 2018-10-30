@@ -34,7 +34,6 @@ public class PolicyController {
     @GetMapping("/edit")
     public ModelAndView index(ModelAndView mav
                             , @RequestParam("policyId") Integer policyId
-                            , @RequestParam("vehicleTypeId") Integer vehicleTypeId
                             , @RequestParam("locationId") Integer locaitonId) {
         mav.setViewName("policy-edit");
         return mav;
@@ -66,11 +65,30 @@ public class PolicyController {
             Policy policy = deletePolicyObject.getPolicy();
             List<Integer> policyHasVehicleTypeIdList = deletePolicyObject.getPolicyHasVehicleTypeId();
             List<VehicleType> vehicleTypeList  = deletePolicyObject.getVehicleTypes();
-            policyService.deletePolicy(locationId, policy, policyHasVehicleTypeIdList, vehicleTypeList);
+            policyService.deletePolicy(locationId, policy, policyHasVehicleTypeIdList);
             return ResponseEntity.status(HttpStatus.OK).body("Success");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
+
+    @PostMapping(value = "/delete-by-location-policy")
+    public ResponseEntity deleteByLocationIdAndId(@RequestParam("locationId") Integer locationId
+                                                , @RequestParam("policyId") Integer policyId) {
+        policyService.deleteByIdAndLocationId(locationId, policyId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping(value = "/policies")
+    public ResponseEntity getAllPolicies() {
+       List<Policy> policyList =policyService.getAllPolicies();
+       if (policyList.isEmpty()) {
+           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not load polices");
+       } else {
+           return ResponseEntity.status(HttpStatus.OK).body(policyList);
+       }
+    }
+
+
 }

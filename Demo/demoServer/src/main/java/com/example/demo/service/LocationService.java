@@ -9,6 +9,7 @@ import com.example.demo.entities.VehicleType;
 import com.example.demo.repository.LocationRepository;
 import com.example.demo.repository.PolicyHasVehicleTypeRepository;
 import com.example.demo.repository.PolicyRepository;
+import com.example.demo.view.AddLocationObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -70,6 +72,29 @@ public class LocationService {
         return responseObject;
     }
 
+    @Transactional
+    public void addPolicy(AddLocationObject addLocationObject) {
+
+        Optional<Policy> policy = policyRepository.findById(addLocationObject.getPolicyId());
+        List<Location> locationList = addLocationObject.getLocationArr();
+        if (!locationList.isEmpty() && policy.isPresent()) {
+            Policy policyDB = policy.get();
+            for (Location location: locationList) {
+                if (location.getIsDelete().equalsIgnoreCase("true")) {
+                    locationRepository.deleteLocationPolicyByPolicyIdAndLocationId(policyDB.getId(), location.getId());
+                } else {
+                    List<Policy> policyList = new ArrayList<>();
+                    policyList.add(policyDB);
+                    Location temp = locationRepository.findByIdAndPolicyList(location.getId(), policyList);
+                    if (temp == null) {
+                        locationRepository.insertLocationAndPolicy(location.getId(), policyDB.getId());
+                    }
+                }
+            }
+        }
+
+    }
+
     public List<VehicleType> getLocationHasVehicleTypes(Integer locationId) {
         Optional<Location> location = locationRepository.findById(locationId);
         List<VehicleType> vehicleTypeList = new ArrayList<>();
@@ -92,5 +117,15 @@ public class LocationService {
 
         }
         return vehicleTypeList;
+    }
+
+    public List<Location> getLocationsByPolicyId(Integer policyId) {
+        Optional<Policy> policyOpt = policyRepository.findById(policyId);
+        if (policyOpt.isPresent()) {
+            List<Policy> policyList = new ArrayList<>();
+            policyList.add(policyOpt.get());
+            return locationRepository.findByPolicyList(policyList);
+        }
+        return null;
     }
 }

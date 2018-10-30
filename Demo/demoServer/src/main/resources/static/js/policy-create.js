@@ -37,17 +37,6 @@ $(document).ready(function () {
         }
     });
 
-    // $(".vehicles").change(function() {
-    //     if(this.checked) {
-    //         var vehicleType = {
-    //             id: this.value,
-    //             name: $(this).next('label').text()
-    //             isDelete: true
-    //         }
-    //     } else {
-    //
-    //     }
-    // });
 
     savePolicyVehicle(locationId);
     deletePolicy(locationId);
@@ -154,6 +143,8 @@ function savePolicyVehicle(locationId) {
                 console.log(data);
                 $('#policyId').val(data.id);
                 $('.pricing-container').empty();
+                $('.button-wrapper').show();
+                $('.pricing-container').show();
                 policyId = data.id;
                 createPricingTabs(data.id);
                 $('#vehicleTypeArr').empty();
@@ -200,6 +191,7 @@ function createPricingTabs(policyId) {
             for (let i = 0; i <data.length; i++) {
                 tables += createTable(data[i].vehicleTypeId.id, data[i].id);
                 policyHasVehicleTypeId.push(data[i].id);
+                loadPricingTable(data[i].vehicleTypeId.id);
             }
             tabs += tables;
         }, error: function (data) {
@@ -208,9 +200,9 @@ function createPricingTabs(policyId) {
     });
 }
 function createTable(vehicleTypeId, policyHasVehicleTypeId) {
-    var btnAddPricing = '<button class="btn btn-primary" type="button" value="Add Pricing" onclick="addPricing('+ policyHasVehicleTypeId +', ' + vehicleTypeId + ')" id="btn-add-pricing">Add Pricing\n' +
+    var btnAddPricing = '<button class="btn btn-primary" type="button" value="Add Pricing" onclick="addPricing(' + policyHasVehicleTypeId + ', ' + vehicleTypeId + ')" id="btn-add-pricing">Add Pricing\n' +
         '                                </button>';
-    var table =  ' <table class="table table-hover" id="pricing-vehicle-'+vehicleTypeId+'">\n' +
+    var table = ' <table class="table table-hover" id="pricing-vehicle-' + vehicleTypeId + '">\n' +
         '                                    <thead>\n' +
         '                                    <tr>\n' +
         '                                        <th>From Hour:</th>\n' +
@@ -224,10 +216,11 @@ function createTable(vehicleTypeId, policyHasVehicleTypeId) {
         '                                </table>';
 
     var tableData = btnAddPricing + table;
-    $('#vehicle-'+vehicleTypeId).append(btnAddPricing);
-    $('#vehicle-'+vehicleTypeId).append(table);
+    $('#vehicle-' + vehicleTypeId).append(btnAddPricing);
+    $('#vehicle-' + vehicleTypeId).append(table);
     return table;
 }
+
 function loadVehicleTypes() {
     $.ajax({
         type: "GET",
@@ -408,6 +401,7 @@ function loadPricingTable(vehicleTypeId) {
     // console.log("loadingTable - policyHasVehicleType: "+policyHasVehicleType);
     // console.log("loadingTable - vehicleTypeId: "+vehicleTypeId);
     // console.log("loadingTable - vehicleTypeId: "+vehicleTypeId);
+    if (pricings != null) {
         for (let i = 0; i < pricings.length; i++) {
             let row = '<tr>';
             row += '<td>' + pricings[i].fromHour + '</td>';
@@ -419,6 +413,8 @@ function loadPricingTable(vehicleTypeId) {
             row += '</tr>';
             $('#pricing-vehicle-'+vehicleTypeId +' tbody').append(row);
         }
+    }
+
 }
 
 function deleteModal(pricingId, vehicleTypeId) {
@@ -515,5 +511,15 @@ function convertDate(dateTypeLong) {
             [dateStr.getHours(),
                 dateStr.getMinutes(),
                 dateStr.getSeconds()].join(':');
+    return dformat;
+}
+function convertTime(dateTypeLong) {
+    if (dateTypeLong === null){
+        return "Empty";
+    }
+    var dateStr = new Date(dateTypeLong),
+        dformat =
+            [dateStr.getHours(),
+                dateStr.getMinutes()].join(':');
     return dformat;
 }

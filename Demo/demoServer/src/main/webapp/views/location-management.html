@@ -22,90 +22,88 @@
 <div class="main-content">
     <div class="container-fluid">
         <div class="panel panel-headline">
-            <h3 class="panel-title"> Manage Policy</h3>
-            <div class="panel-body"></div>
-            <table class="table table-hover" id="location-table">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Location</th>
-                    <th>Description</th>
-                    <th>Status</th>
-                    <th colspan="2">Policy Action</th>
-                </tr>
-                </thead>
-                <tbody>
+            <div class="panel-body" id="location-container">
+                <table class="table table-hover" id="location-table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Location</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th colspan="2">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
 
-                </tbody>
-            </table>
-            <div class="row">
-                <ul class="nav nav-pills" id="pagination"></ul>
+                    </tbody>
+                </table>
+                <div class="row">
+                    <ul class="nav nav-pills" id="pagination"></ul>
+                </div>
             </div>
-            <div class="myForm">
-                <form action="" id="create-policy" method="POST">
-                    <div class="modal fade" id="createPolicy" tabindex="-1" role="dialog"
-                         aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="savePricingModal"><strong>Save Pricing</strong></h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="form-group">
-                                        <div class="left-form-group">
-                                            <label class="col-form-label">Location:</label>
-                                            <input type="text" class="form-control" id="location">
-                                        </div>
-                                        <div class="right-form-group">
-                                            <label class="col-form-label">Status</label>
-                                            <input type="text" class="form-control" id="location">
-                                        </div>
-
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-form-label">Vehicle Type:</label>
-                                        <fieldset id="vehicleTypeArr">
-
-                                        </fieldset>
-                                        <!--<input type="text" class="form-group" id="vehicleType">-->
-                                    </div>
-
-                                    <div class="from-group clockpickerFrom" style="width:48%; float: left; margin-right: 2%;">
-                                        <label for="allowedParkingFrom" class="col-form-label">Allowed Parking From:</label>
-                                        <input type="text" class="form-control" id="ParkingFrom">
-                                        <span class="input-group-addon">
-                                 <span class="glyphicon glyphicon-time"></span>
-                                </span>
-                                    </div>
-                                    <input type="hidden" id="allowedParkingFrom">
-                                    <div class="from-group clockpickerTo" style="width:48%; float: left; margin-left: 2%;">
-                                        <label for="allowedParkingTo" class="col-form-label">Allowed Parking To:</label>
-                                        <input type="text" class="form-control" id="ParkingTo">
-                                        <span class="input-group-addon">
-                                 <span class="glyphicon glyphicon-time"></span>
-                                </span>
-                                    </div>
-                                    <input type="hidden" id="allowedParkingTo">
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
-                                    </button>
-                                    <input type="submit" class="btn btn-primary" value="Save"/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-
         </div>
     </div>
 </div>
 
+    <div class="myForm">
+        <form action="" id="create-policy" method="POST">
+            <div class="modal fade" id="createPolicy" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="savePricingModal"><strong>Save Pricing</strong></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <div class="left-form-group">
+                                    <label class="col-form-label">Location:</label>
+                                    <input type="text" class="form-control" id="location">
+                                </div>
+                                <div class="right-form-group">
+                                    <label class="col-form-label">Status</label>
+                                    <input type="text" class="form-control" id="location">
+                                </div>
 
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label">Vehicle Type:</label>
+                                <fieldset id="vehicleTypeArr">
+
+                                </fieldset>
+                                <!--<input type="text" class="form-group" id="vehicleType">-->
+                            </div>
+
+                            <div class="from-group clockpickerFrom" style="width:48%; float: left; margin-right: 2%;">
+                                <label for="allowedParkingFrom" class="col-form-label">Allowed Parking From:</label>
+                                <input type="text" class="form-control" id="ParkingFrom">
+                                <span class="input-group-addon">
+                                 <span class="glyphicon glyphicon-time"></span>
+                                </span>
+                            </div>
+                            <input type="hidden" id="allowedParkingFrom">
+                            <div class="from-group clockpickerTo" style="width:48%; float: left; margin-left: 2%;">
+                                <label for="allowedParkingTo" class="col-form-label">Allowed Parking To:</label>
+                                <input type="text" class="form-control" id="ParkingTo">
+                                <span class="input-group-addon">
+                                 <span class="glyphicon glyphicon-time"></span>
+                                </span>
+                            </div>
+                            <input type="hidden" id="allowedParkingTo">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                            </button>
+                            <input type="submit" class="btn btn-primary" value="Save"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 
 <!-- Modal -->
 <div class="modal fade" id="policyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"

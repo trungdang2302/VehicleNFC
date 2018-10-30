@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/vendor/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/assets/vendor/linearicons/style.css">
+    <!-- MAIN CSS -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/css/location-policies.css">
+    <!-- GOOGLE FONTS -->
+    <link href="https://fonts.googleapis.com/css?fsamily=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
+    <!-- ICONS -->
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/apple-icon.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicon.png">
+</head>
+<body>
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="panel panel-headline">
+            <div class="panel-body">
+                <div class="form-group" style="width: 100%; float: left;">
+                    <button class="btn btn-primary" onclick="goBack()" style="float: left;">Go Back</button>
+                    <script>
+                        function goBack() {
+                            window.history.back();
+                        }
+                    </script>
+                </div>
+
+                <div class="form-group" style="width:48%; float: left;">
+                    <label for="location" class="col-form-label">Location:</label>
+                    <p class="form-control" id="location"></p>
+                </div>
+                <input type="hidden" id="locationId" value="">
+                <div class="form-group" style="width: 48%; float: right;">
+                    <label for="status" class="col-form-label">Status:</label>
+                    <p class="form-control" id="status"></p>
+                </div>
+                <div class="row">
+                    <table class="table table" id="location-policies">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Allowed Parking</th>
+                                <th>Vehicle Allowed</th>
+                                <th colspan="3">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="modal fade" id="addLocationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="exampleModalLabel">Add Policy To Locaitons</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="location-container">
+                        <h3>Locations</h3>
+                        <div class="control-group-location">
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btn-save-locations" value="Save">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<script src="/assets/vendor/jquery/jquery.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="/js/location-policies.js"></script>
+<script src="/assets/scripts/klorofil-common.js"></script>
+</body>
+</html>

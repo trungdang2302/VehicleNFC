@@ -1,6 +1,6 @@
 package com.example.demo.entity;
 
-import com.example.demo.entities.Vehicle;
+import com.example.demo.entity.Vehicle;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

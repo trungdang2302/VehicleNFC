@@ -1,13 +1,11 @@
 package com.example.demo.service;
 
 import com.example.demo.Config.ResponseObject;
-import com.example.demo.entities.Location;
+import com.example.demo.entity.Location;
 
-import com.example.demo.entities.Policy;
-import com.example.demo.entities.PolicyHasTblVehicleType;
-import com.example.demo.entities.VehicleType;
+import com.example.demo.entity.Policy;
+import com.example.demo.entity.VehicleType;
 import com.example.demo.repository.LocationRepository;
-import com.example.demo.repository.PolicyHasVehicleTypeRepository;
 import com.example.demo.repository.PolicyRepository;
 import com.example.demo.view.AddLocationObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,25 +24,24 @@ import java.util.Optional;
 @Service
 public class LocationService {
     private final LocationRepository locationRepository;
-    private final PolicyHasVehicleTypeRepository policyHasVehicleTypeRepository;
     private final PolicyRepository policyRepository;
 
     @Autowired
     private EntityManager entityManager;
 
-    public LocationService(LocationRepository locationRepository, PolicyHasVehicleTypeRepository policyHasVehicleTypeRepository, PolicyRepository policyRepository) {
+    public LocationService(LocationRepository locationRepository, PolicyRepository policyRepository) {
         this.locationRepository = locationRepository;
-        this.policyHasVehicleTypeRepository = policyHasVehicleTypeRepository;
         this.policyRepository = policyRepository;
     }
 
     public Optional<Location> getMeterById(Integer id) {
         Optional<Location> location = locationRepository.findById(id);
-        if (location.isPresent()) {
-            for (Policy policy : location.get().getPolicyList()) {
-                policy.setPolicyHasTblVehicleTypeList(policyHasVehicleTypeRepository.findByPolicyId(policy.getId()));
-            }
-        }
+        //Todo
+//        if (location.isPresent()) {
+//            for (Policy policy : location.get().getPolicyList()) {
+//                policy.setPolicyHasTblVehicleTypeList(policyHasVehicleTypeRepository.findByPolicyId(policy.getId()));
+//            }
+//        }
         return location;
     }
 
@@ -98,24 +95,25 @@ public class LocationService {
     public List<VehicleType> getLocationHasVehicleTypes(Integer locationId) {
         Optional<Location> location = locationRepository.findById(locationId);
         List<VehicleType> vehicleTypeList = new ArrayList<>();
-        if (location.isPresent()) {
-            List<Policy> policyList = location.get().getPolicyList();
-            if (policyList != null) {
-                for (Policy policy : policyList) {
-                    List<PolicyHasTblVehicleType> policyHasTblVehicleTypes = policyHasVehicleTypeRepository.findByPolicyId(policy.getId());
-                    if (policyHasTblVehicleTypes != null) {
-                        for (PolicyHasTblVehicleType policyHasTblVehicleType : policyHasTblVehicleTypes) {
-                            VehicleType vehicleType = policyHasTblVehicleType.getVehicleTypeId();
-                            if (!vehicleTypeList.contains(vehicleType)) {
-                                vehicleTypeList.add(vehicleType);
-                            }
-                        }
-                    }
-
-                }
-            }
-
-        }
+        //Todo
+//        if (location.isPresent()) {
+//            List<Policy> policyList = location.get().getPolicyList();
+//            if (policyList != null) {
+//                for (Policy policy : policyList) {
+//                    List<PolicyHasTblVehicleType> policyHasTblVehicleTypes = policyHasVehicleTypeRepository.findByPolicyId(policy.getId());
+//                    if (policyHasTblVehicleTypes != null) {
+//                        for (PolicyHasTblVehicleType policyHasTblVehicleType : policyHasTblVehicleTypes) {
+//                            VehicleType vehicleType = policyHasTblVehicleType.getVehicleTypeId();
+//                            if (!vehicleTypeList.contains(vehicleType)) {
+//                                vehicleTypeList.add(vehicleType);
+//                            }
+//                        }
+//                    }
+//
+//                }
+//            }
+//
+//        }
         return vehicleTypeList;
     }
 

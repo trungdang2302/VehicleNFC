@@ -20,9 +20,12 @@ public class PolicyInstance implements Serializable {
     @NotNull
     @Column(name = "allowed_parking_to", nullable = false)
     private long allowedParkingTo;
-    @OneToMany(mappedBy = "policyInstanceList")
-    private List<Location> locationList;
-
+    @JoinColumn(name = "tbl_location_id", referencedColumnName = "id")
+    @ManyToOne
+    private Location locationId;
+    @JoinColumn(name = "tbl_policy_id", referencedColumnName = "id")
+    @ManyToOne
+    private Policy policyId;
     public PolicyInstance() {
     }
 
@@ -54,12 +57,19 @@ public class PolicyInstance implements Serializable {
         this.allowedParkingTo = allowedParkingTo;
     }
 
-    public List<Location> getLocationList() {
-        return locationList;
+    public Location getLocationId() {
+        return locationId;
     }
 
-    public void setLocationList(List<Location> locationList) {
-        this.locationList = locationList;
+    public void setLocationId(Location locationId) {
+        this.locationId = locationId;
     }
 
+    public Policy getPolicyId() {
+        return policyId;
+    }
+
+    public void setPolicyId(Policy policyId) {
+        this.policyId = policyId;
+    }
 }

@@ -5,8 +5,8 @@ import com.example.demo.Config.NotificationEnum;
 import com.example.demo.Config.ResponseObject;
 import com.example.demo.Config.SearchCriteria;
 import com.example.demo.entities.Location;
-import com.example.demo.entities.Order;
-import com.example.demo.entities.User;
+import com.example.demo.entity.Order;
+import com.example.demo.entity.User;
 import com.example.demo.service.OrderService;
 import com.example.demo.service.PushNotificationService;
 import com.example.demo.view.RefundObject;
@@ -48,11 +48,11 @@ public class OrderController {
     }
 
 
-//    @GetMapping(value = {"get-order"})
-//    public ResponseEntity<Optional<List<Order>>> getAllOrder(){
-////        return ResponseEntity.status(HttpStatus.OK).body(orderService.getOrderById(id));
-//        return null;
-//    }
+    @GetMapping(value = {"get-order"})
+    public ResponseEntity<Optional<List<Order>>> getAllOrder(){
+//        return ResponseEntity.status(HttpStatus.OK).body(orderService.getOrderById(id));
+        return null;
+    }
 
     @GetMapping(value = "/get-orders")
     public ResponseEntity<?> getAllOrders(@RequestParam(defaultValue = "0") Integer page) {

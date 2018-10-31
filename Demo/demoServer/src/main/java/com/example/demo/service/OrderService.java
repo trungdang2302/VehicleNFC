@@ -1,8 +1,8 @@
 package com.example.demo.service;
 
 import com.example.demo.Config.*;
-import com.example.demo.entities.*;
-import com.example.demo.entities.Order;
+import com.example.demo.entity.*;
+import com.example.demo.entity.Order;
 import com.example.demo.model.HourHasPrice;
 import com.example.demo.repository.*;
 import org.aspectj.weaver.ast.Or;
@@ -23,24 +23,22 @@ public class OrderService {
     private final UserRepository userRepository;
     private final LocationRepository locationRepository;
     private final OrderPricingRepository orderPricingRepository;
-    private final PolicyHasVehicleTypeRepository policyHasVehicleTypeRepository;
     private final PricingRepository pricingRepository;
     private final VehicleRepository vehicleRepository;
 
-    public OrderService(OrderRepository orderRepository, OrderStatusRepository orderStatusRepository, UserRepository userRepository, LocationRepository locationRepository, OrderPricingRepository orderPricingRepository, PolicyHasVehicleTypeRepository policyHasVehicleTypeRepository, PricingRepository pricingRepository, VehicleRepository vehicleRepository) {
+    public OrderService(OrderRepository orderRepository, OrderStatusRepository orderStatusRepository, UserRepository userRepository, LocationRepository locationRepository, OrderPricingRepository orderPricingRepository, PricingRepository pricingRepository, VehicleRepository vehicleRepository) {
         this.orderRepository = orderRepository;
         this.orderStatusRepository = orderStatusRepository;
         this.userRepository = userRepository;
         this.locationRepository = locationRepository;
         this.orderPricingRepository = orderPricingRepository;
-        this.policyHasVehicleTypeRepository = policyHasVehicleTypeRepository;
         this.pricingRepository = pricingRepository;
         this.vehicleRepository = vehicleRepository;
     }
 
     public Optional<Order> getOrderById(Integer id) {
         Order order = orderRepository.findById(id).get();
-        order.setOrderPricings(orderPricingRepository.findByOrderId(order.getId()));
+//        order.setOrderPricings(orderPricingRepository.findByOrderId(order.getId()));
         if (order.getCheckOutDate() != null) {
             TimeDuration duration = TimeService.compareTwoDates(order.getCheckInDate(), order.getCheckOutDate());
 
@@ -103,7 +101,8 @@ public class OrderService {
         Optional<Order> order = orderRepository.findFirstByUserIdAndOrderStatusId(userRepository.findById(id).get()
                 , orderStatusRepository.findByName(OrderStatusEnum.Open.getName()).get());
         if (order.isPresent()) {
-            order.get().setOrderPricings(orderPricingRepository.findByOrderId(order.get().getId()));
+            //Todo
+//            order.get().setOrderPricings(orderPricingRepository.findByOrderId(order.get().getId()));
         }
         return order;
     }
@@ -129,8 +128,8 @@ public class OrderService {
 
         order = new Order();
         order.setOrderStatusId(orderStatus);
-
-        order.setVehicleType(checkInUser.getVehicle().getVehicleTypeId());
+        //Todo
+//        order.setVehicleType(checkInUser.getVehicle().getVehicleTypeId());
         order.setUserId(checkInUser);
         order.setLocationId(locationRepository.findById(location.getId()).get());
 
@@ -138,55 +137,57 @@ public class OrderService {
 
         //TODO kiểm tra thời điểm hiện tại để chọn policy
 //        Policy policy = order.getLocationId().getPolicyList().get(0);
-        List<Pricing> pricings = getPricingList(order, checkInUser);
-        if (pricings == null) {
-            return null;
-        }
+        //TODO
+//        List<Pricing> pricings = getPricingList(order, checkInUser);
+//        if (pricings == null) {
+//            return null;
+//        }
         orderRepository.save(order);
-
-        List<OrderPricing> orderPricings = OrderPricing.convertListPricingToOrderPricing(pricings);
-        for (OrderPricing orderPricing : orderPricings
-                ) {
-            orderPricing.setOrderId(order.getId());
-            orderPricingRepository.save(orderPricing);
-        }
+            //Todo
+//        List<OrderPricing> orderPricings = OrderPricing.convertListPricingToOrderPricing(pricings);
+//        for (OrderPricing orderPricing : orderPricings
+//                ) {
+//            orderPricing.setOrderId(order.getId());
+//            orderPricingRepository.save(orderPricing);
+//        }
 
         //TODO kiểm tra user đó xài gì để gửi SMS hay Noti
-        sendNotification(checkInUser, order, userToken, orderPricings, NotificationEnum.CHECK_IN);
+//        sendNotification(checkInUser, order, userToken, orderPricings, NotificationEnum.CHECK_IN);
 
         return Optional.of(order);
     }
 
-    public List<Pricing> getPricingList(Order order, User user) {
-        List<Policy> policies = order.getLocationId().getPolicyList();
-        List<Policy> matchPolicies = new ArrayList<>();
-        for (Policy policy : policies) {
-            if (policy.getAllowedParkingFrom() < order.getCheckInDate()
-                    && policy.getAllowedParkingTo() > order.getCheckInDate()) {
-                matchPolicies.add(policy);
-            }
-        }
-        Policy choosedPolicy = null;
-        PolicyHasTblVehicleType policyHasTblVehicleType = null;
-        for (Policy policy : matchPolicies) {
-            while (choosedPolicy == null) {
-                policyHasTblVehicleType = policyHasVehicleTypeRepository
-                        .findByPolicyIdAndVehicleTypeId(policy.getId(), user.getVehicle().getVehicleTypeId()).get();
-                if (policyHasTblVehicleType != null) {
-                    choosedPolicy = policy;
-                    break;
-                }
-            }
-        }
-        if (policyHasTblVehicleType != null) {
-            order.setAllowedParkingFrom(choosedPolicy.getAllowedParkingFrom());
-            order.setAllowedParkingTo(choosedPolicy.getAllowedParkingTo());
-            order.setMinHour(policyHasTblVehicleType.getMinHour());
-            List<Pricing> pricings = pricingRepository.findAllByPolicyHasTblVehicleTypeId(policyHasTblVehicleType.getId());
-            return pricings;
-        }
-        return null;
-    }
+    //Todo
+//    public List<Pricing> getPricingList(Order order, User user) {
+//        List<Policy> policies = order.getLocationId().getPolicyList();
+//        List<Policy> matchPolicies = new ArrayList<>();
+//        for (Policy policy : policies) {
+//            if (policy.getAllowedParkingFrom() < order.getCheckInDate()
+//                    && policy.getAllowedParkingTo() > order.getCheckInDate()) {
+//                matchPolicies.add(policy);
+//            }
+//        }
+//        Policy choosedPolicy = null;
+//        PolicyHasTblVehicleType policyHasTblVehicleType = null;
+//        for (Policy policy : matchPolicies) {
+//            while (choosedPolicy == null) {
+//                policyHasTblVehicleType = policyHasVehicleTypeRepository
+//                        .findByPolicyIdAndVehicleTypeId(policy.getId(), user.getVehicle().getVehicleTypeId()).get();
+//                if (policyHasTblVehicleType != null) {
+//                    choosedPolicy = policy;
+//                    break;
+//                }
+//            }
+//        }
+//        if (policyHasTblVehicleType != null) {
+//            order.setAllowedParkingFrom(choosedPolicy.getAllowedParkingFrom());
+//            order.setAllowedParkingTo(choosedPolicy.getAllowedParkingTo());
+//            order.setMinHour(policyHasTblVehicleType.getMinHour());
+//            List<Pricing> pricings = pricingRepository.findAllByPolicyHasTblVehicleTypeId(policyHasTblVehicleType.getId());
+//            return pricings;
+//        }
+//        return null;
+//    }
 
     public Optional<Order> checkOutOrder(Order order, String userToken, User user) {
         order.setCheckOutDate(new Date().getTime());
@@ -232,22 +233,24 @@ public class OrderService {
         OrderStatus orderStatus = orderStatusRepository.findByName(OrderStatusEnum.Close.getName()).get();
         order.setOrderStatusId(orderStatus);
         orderRepository.save(order);
-        sendNotification(user, order, userToken, orderPricings, NotificationEnum.CHECK_OUT);
+        // Todo
+//        sendNotification(user, order, userToken, orderPricings, NotificationEnum.CHECK_OUT);
 
         return Optional.of(order);
     }
 
-    public void sendNotification(User user, Order order, String userToken, List<OrderPricing> orderPricings, NotificationEnum notification) {
-        if (user.getSmsNoti()) {
-            PushNotificationService pushNotificationService = new PushNotificationService();
-            order.setOrderPricings(orderPricings);
-            pushNotificationService.sendNotificationToSendSms(NFCServerProperties.getSmsHostToken(), notification, order);
-        } else {
-            PushNotificationService pushNotificationService = new PushNotificationService();
-            order.setOrderPricings(orderPricings);
-            pushNotificationService.sendNotification(userToken, notification, order.getId());
-        }
-    }
+    //Todo
+//    public void sendNotification(User user, Order order, String userToken, List<OrderPricing> orderPricings, NotificationEnum notification) {
+//        if (user.getSmsNoti()) {
+//            PushNotificationService pushNotificationService = new PushNotificationService();
+//            order.setOrderPricings(orderPricings);
+//            pushNotificationService.sendNotificationToSendSms(NFCServerProperties.getSmsHostToken(), notification, order);
+//        } else {
+//            PushNotificationService pushNotificationService = new PushNotificationService();
+//            order.setOrderPricings(orderPricings);
+//            pushNotificationService.sendNotification(userToken, notification, order.getId());
+//        }
+//    }
 
     @Autowired
     private EntityManager entityManager;
@@ -375,10 +378,11 @@ public class OrderService {
         OrderStatus orderStatus = orderStatusRepository.findByName(OrderStatusEnum.Refund.getName()).get();
         Order orderDB = orderRepository.findById(order.getId()).get();
         orderDB.setOrderStatusId(orderStatus);
-        if (orderDB.getRefund() != null) {
-            lastRefund = orderDB.getRefund();
-        }
-        orderDB.setRefund(refundMoney);
+        //Todo
+//        if (orderDB.getRefund() != null) {
+//            lastRefund = orderDB.getRefund();s
+//        }
+//        orderDB.setRefund(refundMoney);
         orderRepository.save(orderDB);
 
         User userDB = userRepository.findById(user.getId()).get();

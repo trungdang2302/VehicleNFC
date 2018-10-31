@@ -24,6 +24,8 @@ public class Policy implements Serializable {
             @JoinColumn(name = "tbl_vehicle_type_id", referencedColumnName = "id")})
     @ManyToMany
     private List<VehicleType> vehicleTypeList;
+    @OneToMany(mappedBy = "policyId")
+    private List<PolicyInstance> policyInstanceList;
 
     public Policy() {
     }

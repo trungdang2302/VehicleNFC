@@ -1,7 +1,7 @@
 package com.example.demo.repository;
 
-import com.example.demo.entities.Location;
-import com.example.demo.entities.Policy;
+import com.example.demo.entity.Location;
+import com.example.demo.entity.Policy;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

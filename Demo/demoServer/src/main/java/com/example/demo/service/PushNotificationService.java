@@ -54,6 +54,7 @@ public class PushNotificationService {
             HttpEntity<String> httpEntity = new HttpEntity<String>(json.toString(), httpHeaders);
             String response = restTemplate.postForObject(FIREBASE_API_URL, httpEntity, String.class);
             System.out.println(response);
+            System.err.println("Send noti to: " + appToken);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -127,8 +128,8 @@ public class PushNotificationService {
                 body += "Vào lúc: " + date + "\n";
                 body += "Bảng giá cho loại xe: " + order.getVehicleType().getName() + "\n";
                 for (OrderPricing orderPricing : order.getOrderPricings()) {
-                    body += (orderPricing.getFromHour() == 0) ? "Từ Giờ đầu: " + ((long) orderPricing.getPricePerHour() * 1000) + "đ/h\n"
-                            : "Từ giờ thứ " + orderPricing.getFromHour() + ": " + ((long) orderPricing.getPricePerHour() * 1000) + "đ/h\n";
+                    body += (orderPricing.getFromHour() == 0) ? "Từ Giờ đầu: " + convertMoneyNoVND(orderPricing.getPricePerHour()) + "VNĐ/h\n"
+                            : "Từ giờ thứ " + orderPricing.getFromHour() + ": " + convertMoneyNoVND(orderPricing.getPricePerHour()) + "VNĐ/h\n";
                 }
             } else if (title.equals(NotificationEnum.CHECK_OUT.getTitle())) {
                 String pattern = "HH:mm dd-MM-yyyy";
@@ -139,7 +140,7 @@ public class PushNotificationService {
 
                 body += "Rời nơi đậu xe: " + order.getLocationId().getLocation() + "\n";
                 body += "Thời gian đậu Từ: " + checkInDate + " đến: " + checkOutDate + "\n";
-                body += "Phí đậu xe: " + (long) (order.getTotal() * 1000) + "đ\n";
+                body += "Phí đậu xe: " + convertMoneyNoVND(order.getTotal()) + "VNĐ\n";
             }
         }
         return body;
@@ -169,5 +170,23 @@ public class PushNotificationService {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public static String convertMoneyNoVND(double money) {
+        String base = (long) money * 1000 + "";
+        String[] strings = base.split("");
+        String result = "";
+        int count = 0;
+        for (int i = strings.length - 1; i > 0; i--) {
+            count++;
+            result = strings[i] + result;
+            if (count == 3) {
+                if (i > 1) {
+                    result = "," + result;
+                    count = 0;
+                }
+            }
+        }
+        return result;
     }
 }

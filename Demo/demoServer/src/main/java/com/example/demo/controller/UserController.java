@@ -304,9 +304,22 @@ public class UserController {
         return ResponseEntity.status(OK).body(vehicleService.getVehicle(vehicleNumber));
     }
 
-
     @PostMapping(value = "/delete-vehicle")
     public ResponseEntity<Boolean> deleteVehicle(@Param(value = "vehicleNumber") String vehicleNumber) {
         return ResponseEntity.status(OK).body(vehicleService.deleteVehicle(vehicleNumber));
     }
+
+    @GetMapping(value = "/register-token")
+    public ResponseEntity<Boolean> registerToken(@RequestParam(value = "token") String token
+            , @RequestParam(value = "PhoneNumber") String phoneNumber) {
+        Map<String, String> registerTokenList = (Map<String, String>) servletContext.getAttribute("registerTokenList");
+        if (registerTokenList == null) {
+            registerTokenList = new HashMap<>();
+        }
+        registerTokenList.put(phoneNumber, token);
+        System.err.println("Token: "+ phoneNumber+", " +token);
+        servletContext.setAttribute("registerTokenList", registerTokenList);
+        return ResponseEntity.status(OK).body(true);
+    }
+
 }

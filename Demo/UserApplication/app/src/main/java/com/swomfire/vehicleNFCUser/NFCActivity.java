@@ -75,18 +75,20 @@ public class NFCActivity extends Activity implements NfcAdapter.CreateNdefMessag
 
         context = this;
         token = FirebaseInstanceId.getInstance().getToken();
-
+        SharedPreferences prefs = getSharedPreferences("localData", MODE_PRIVATE);
+        String phoneNumber = prefs.getString("phoneNumberSignIn", "1");
+        sendTokenToServer(token,phoneNumber);
         FirebaseMessaging.getInstance().setAutoInitEnabled(true);
 
 
         NfcAdapter mAdapter = NfcAdapter.getDefaultAdapter(this);
         if (mAdapter == null) {
-            Toast.makeText(this, "Sorry this device does not have NFC.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Thiết bị không hỗ trợ NFC.", Toast.LENGTH_LONG).show();
             return;
         }
 
         if (!mAdapter.isEnabled()) {
-            Toast.makeText(this, "Please enable NFC via Settings.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Vui lòng bật chức năng NFC trong cài đặt.", Toast.LENGTH_LONG).show();
         }
 
         mAdapter.setNdefPushMessageCallback(this, this);
@@ -296,5 +298,27 @@ public class NFCActivity extends Activity implements NfcAdapter.CreateNdefMessag
     protected void onPause() {
         super.onPause();
         pause = true;
+    }
+
+    public void sendTokenToServer(String token, String phoneNumber){
+        RmaAPIService mService = RmaAPIUtils.getAPIService();
+        mService.sendDeviceTokenToServer(token,phoneNumber).enqueue(new Callback<Boolean>() {
+            @Override
+            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                if (response.isSuccessful()) {
+//                    Order result = response.body();
+//                    if (result != null) {
+//                        setUpChrono(result);
+//                        setUpOrderInfo(result);
+//                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Boolean> call, Throwable t) {
+                Toast toast = Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
     }
 }

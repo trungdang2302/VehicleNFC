@@ -9,18 +9,23 @@ import com.example.demo.entities.Order;
 import com.example.demo.entities.User;
 import com.example.demo.service.OrderService;
 import com.example.demo.service.PushNotificationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.ServletContext;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
 @RestController
 @RequestMapping(value = "/order")
 public class OrderController {
+    @Autowired
+    private ServletContext servletContext;
 
     private final OrderService orderService;
 
@@ -29,20 +34,21 @@ public class OrderController {
     }
 
     @GetMapping(value = {"/get-order/{id}"})
-    public ResponseEntity<Optional<Order>> getTransactionById(@PathVariable("id") Integer id){
+    public ResponseEntity<Optional<Order>> getTransactionById(@PathVariable("id") Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(orderService.getOrderById(id));
     }
 
     @GetMapping(value = {"/open-order/{userId}"})
-    public ResponseEntity<Optional<Order>> getOpenOrderByUserId(@PathVariable("userId") Integer id){
-        Optional<Order> order =orderService.getOpenOrderByUserId(id);
+    public ResponseEntity<Optional<Order>> getOpenOrderByUserId(@PathVariable("userId") Integer id) {
+        Optional<Order> order = orderService.getOpenOrderByUserId(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(order);
     }
 
     @PostMapping(value = "/create")
     public ResponseEntity<Optional<Order>> create(@RequestBody Order order) {
-        Optional<Order> transaction1 = orderService.createOrder(order.getUserId(),order.getLocationId());
+        Map<String, String> registerTokenList = (Map<String, String>) servletContext.getAttribute("registerTokenList");
+        Optional<Order> transaction1 = orderService.createOrder(order.getUserId(), order.getLocationId(), registerTokenList);
         return ResponseEntity.status(HttpStatus.CREATED).body(transaction1);
     }
 
@@ -56,12 +62,13 @@ public class OrderController {
     @GetMapping(value = "/get-orders")
     public ResponseEntity<?> getAllOrders(@RequestParam(defaultValue = "1") Integer page) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(orderService.getOrders(page,AppConstant.ORDER_PAGESIZE));
+            return ResponseEntity.status(HttpStatus.OK).body(orderService.getOrders(page, AppConstant.ORDER_PAGESIZE));
         } catch (Exception e) {
             e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not Found Orders");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not Found Orders");
         }
     }
+
     @GetMapping(value = "/index")
     public ModelAndView index(ModelAndView mav) {
         mav.setViewName("order");
@@ -71,8 +78,8 @@ public class OrderController {
     @PostMapping(value = "/filter-order")
     public ResponseEntity<?> filterOrder(@RequestBody SearchCriteria params
             , @RequestParam(defaultValue = "0") Integer page) {
-        try{
-            return  ResponseEntity.status(HttpStatus.OK).body(orderService.filterOrders(params,page,AppConstant.ORDER_PAGESIZE));
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(orderService.filterOrders(params, page, AppConstant.ORDER_PAGESIZE));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -81,7 +88,7 @@ public class OrderController {
 
     @GetMapping(value = "/orders")
     public ResponseEntity getOrdersByUserId(@RequestParam(value = "userId") Integer userId) {
-        try{
+        try {
             return ResponseEntity.status(HttpStatus.OK).body(orderService.findOrdersByUserId(userId));
         } catch (NullPointerException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

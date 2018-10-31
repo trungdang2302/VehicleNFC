@@ -5,6 +5,7 @@ import com.example.demo.entities.*;
 import com.example.demo.entities.Order;
 import com.example.demo.model.HourHasPrice;
 import com.example.demo.repository.*;
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,8 +63,7 @@ public class OrderService {
     }
 
     @Transactional
-    public Optional<Order> createOrder(User checkInUser, Location location) {
-        String userToken = checkInUser.getDeviceToken();
+    public Optional<Order> createOrder(User checkInUser, Location location, Map<String, String> userTokenList) {
         checkInUser = userRepository.findById(checkInUser.getId()).get();
         location = locationRepository.findById(location.getId()).get();
         OrderStatus orderStatus = orderStatusRepository.findByName(OrderStatusEnum.Open.getName()).get();
@@ -76,7 +76,7 @@ public class OrderService {
         }
 
         if (order != null) {
-            checkOutOrder(order, userToken, checkInUser);
+            checkOutOrder(order, userTokenList, checkInUser);
 
             return Optional.of(order);
         }
@@ -107,7 +107,7 @@ public class OrderService {
         }
 
         //TODO kiểm tra user đó xài gì để gửi SMS hay Noti
-        sendNotification(checkInUser, order, userToken, orderPricings, NotificationEnum.CHECK_IN);
+        sendNotification(checkInUser, order, userTokenList, orderPricings, NotificationEnum.CHECK_IN);
 
         return Optional.of(order);
     }
@@ -145,7 +145,7 @@ public class OrderService {
     }
 
     @Transactional
-    public Optional<Order> checkOutOrder(Order order, String userToken, User user) {
+    public Optional<Order> checkOutOrder(Order order, Map<String, String> userToken, User user) {
         order.setCheckOutDate(new Date().getTime());
         TimeDuration duration = TimeService.compareTwoDates(order.getCheckInDate(), order.getCheckOutDate());
         //TODO kiểm tra có bị lố giờ để phạt tiền thêm
@@ -196,13 +196,15 @@ public class OrderService {
         return Optional.of(order);
     }
 
-    public void sendNotification(User user, Order order, String userToken, List<OrderPricing> orderPricings, NotificationEnum notification) {
+    public void sendNotification(User user, Order order, Map<String, String> userToken, List<OrderPricing> orderPricings, NotificationEnum notification) {
         if (user.getSmsNoti()) {
             order.setOrderPricings(orderPricings);
             PushNotificationService.sendNotificationToSendSms(NFCServerProperties.getSmsHostToken(), notification, order);
         } else {
             order.setOrderPricings(orderPricings);
-            PushNotificationService.sendNotification(userToken, notification, order.getId());
+            if (userToken != null) {
+                PushNotificationService.sendNotification(userToken.get(user.getPhoneNumber()), notification, order.getId());
+            }
         }
     }
 

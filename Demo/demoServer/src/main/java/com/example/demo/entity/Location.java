@@ -23,12 +23,14 @@ public class Location implements Serializable {
     private String description;
     @Column(name = "is_activated")
     private Boolean isActivated;
-    @JoinTable(name = "tbl_location_has_tbl_policy_instance", joinColumns = {
-            @JoinColumn(name = "tbl_location_id", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
-            @JoinColumn(name = "tbl_policy_instance_id", referencedColumnName = "id", nullable = false)})
-    @ManyToMany
-    private List<PolicyInstance> tblPolicyInstanceList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tblLocationId")
+//    @JoinTable(name = "tbl_location_has_tbl_policy_instance", joinColumns = {
+//            @JoinColumn(name = "tbl_location_id", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
+//            @JoinColumn(name = "tbl_policy_instance_id", referencedColumnName = "id", nullable = false)})
+//    @ManyToMany
+    @Transient
+    private List<PolicyInstance> policyInstanceList;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tblLocationId")
+    @Transient
     private List<Order> orderList;
     @Transient
     private String isDelete;
@@ -66,14 +68,6 @@ public class Location implements Serializable {
 
     public void setActivated(Boolean activated) {
         isActivated = activated;
-    }
-
-    public List<PolicyInstance> getTblPolicyInstanceList() {
-        return tblPolicyInstanceList;
-    }
-
-    public void setTblPolicyInstanceList(List<PolicyInstance> tblPolicyInstanceList) {
-        this.tblPolicyInstanceList = tblPolicyInstanceList;
     }
 
     public List<Order> getorderList() {

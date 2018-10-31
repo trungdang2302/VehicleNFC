@@ -1,10 +1,9 @@
 package com.example.demo.service;
 
 import com.example.demo.entities.*;
-import com.example.demo.repository.LocationRepository;
-import com.example.demo.repository.PolicyHasVehicleTypeRepository;
-import com.example.demo.repository.PolicyRepository;
-import com.example.demo.repository.PricingRepository;
+import com.example.demo.entity.PolicyInstance;
+import com.example.demo.repository.*;
+import com.example.demo.view.Policies;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
@@ -20,12 +19,14 @@ public class PolicyService {
     private final PolicyHasVehicleTypeRepository policyHasVehicleTypeRepository;
     private final LocationRepository locationRepository;
     private final PricingRepository pricingRepository;
+    private final PolicyInstanceRepository policyInstanceRepository;
 
-    public PolicyService(PolicyRepository policyRepository, PolicyHasVehicleTypeRepository policyHasVehicleTypeRepository, LocationRepository locationRepository, PricingRepository pricingRepository) {
+    public PolicyService(PolicyRepository policyRepository, PolicyHasVehicleTypeRepository policyHasVehicleTypeRepository, LocationRepository locationRepository, PricingRepository pricingRepository, PolicyInstanceRepository policyInstanceRepository) {
         this.policyRepository = policyRepository;
         this.policyHasVehicleTypeRepository = policyHasVehicleTypeRepository;
         this.locationRepository = locationRepository;
         this.pricingRepository = pricingRepository;
+        this.policyInstanceRepository = policyInstanceRepository;
     }
 
     public Optional<Policy> getPolicyById(Integer policyId) {

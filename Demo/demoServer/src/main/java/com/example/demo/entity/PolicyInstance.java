@@ -20,19 +20,10 @@ public class PolicyInstance implements Serializable {
     @NotNull
     @Column(name = "allowed_parking_to", nullable = false)
     private long allowedParkingTo;
-    @ManyToMany(mappedBy = "tblPolicyInstanceList")
+    @OneToMany(mappedBy = "policyInstanceList")
     private List<Location> locationList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tblPolicyInstanceId")
-    private List<PolicyInstanceHasTblVehicleType> policyInstanceHasTblVehicleTypeList;
 
     public PolicyInstance() {
-    }
-
-    public PolicyInstance(@NotNull long allowedParkingFrom, @NotNull long allowedParkingTo, List<Location> locationList, List<PolicyInstanceHasTblVehicleType> policyInstanceHasTblVehicleTypeList) {
-        this.allowedParkingFrom = allowedParkingFrom;
-        this.allowedParkingTo = allowedParkingTo;
-        this.locationList = locationList;
-        this.policyInstanceHasTblVehicleTypeList = policyInstanceHasTblVehicleTypeList;
     }
 
     public static long getSerialVersionUID() {
@@ -71,11 +62,4 @@ public class PolicyInstance implements Serializable {
         this.locationList = locationList;
     }
 
-    public List<PolicyInstanceHasTblVehicleType> getPolicyInstanceHasTblVehicleTypeList() {
-        return policyInstanceHasTblVehicleTypeList;
-    }
-
-    public void setPolicyInstanceHasTblVehicleTypeList(List<PolicyInstanceHasTblVehicleType> policyInstanceHasTblVehicleTypeList) {
-        this.policyInstanceHasTblVehicleTypeList = policyInstanceHasTblVehicleTypeList;
-    }
 }

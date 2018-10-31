@@ -3,8 +3,8 @@ package com.example.demo.service;
 import com.example.demo.Config.NFCServerProperties;
 import com.example.demo.Config.ResponseObject;
 import com.example.demo.Config.SearchCriteria;
-import com.example.demo.entities.User;
-import com.example.demo.entities.Vehicle;
+import com.example.demo.entity.User;
+import com.example.demo.entity.Vehicle;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.net.ConnectException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -58,9 +59,11 @@ public class UserService {
         if (user.getVehicle() != null) {
             boolean needVerify = false;
             //TODO check if phoneNumber exist
-
-            Vehicle vehicle = vehicleRepository.findByVehicleNumber(userRepository.findById(user.getId()).get().getVehicleNumber()).get();
-            if (!userRepository.findById(user.getId()).isPresent()
+            Vehicle vehicle = null;
+            if (user.getId() != null) {
+                vehicle = vehicleRepository.findByVehicleNumber(userRepository.findById(user.getId()).get().getVehicleNumber()).get();
+            }
+            if (user.getId() == null || !userRepository.findById(user.getId()).isPresent()
                     || !vehicle.getVehicleNumber().equals(user.getVehicle().getVehicleNumber())
                     || !vehicle.getLicensePlateId().equals(user.getVehicle().getLicensePlateId())) {
                 needVerify = true;
@@ -72,10 +75,14 @@ public class UserService {
             user.setVehicleNumber(user.getVehicle().getVehicleNumber());
             userRepository.save(user);
             if (needVerify) {
-                PushNotificationService.sendUserNeedVerifyNotification(
-                        "fhRoDKtJR4Q:APA91bFRKKjR2GydlMD0akn71EluhoayB7YXe3a9M5MVat1IRPGo-59onV4VmI-KLj3b-e0zQ2k55brMCxTGJPIcZK2eNslJMnTdq8BNecpqJwsDO5InyL-ALvF0ojQEb_PMtX_xtYsf",
-                        user.getPhoneNumber()
-                );
+                try {
+                    PushNotificationService.sendUserNeedVerifyNotification(
+                            "fhRoDKtJR4Q:APA91bFRKKjR2GydlMD0akn71EluhoayB7YXe3a9M5MVat1IRPGo-59onV4VmI-KLj3b-e0zQ2k55brMCxTGJPIcZK2eNslJMnTdq8BNecpqJwsDO5InyL-ALvF0ojQEb_PMtX_xtYsf",
+                            user.getPhoneNumber()
+                    );
+                } catch (Exception e) {
+                    System.err.println("Cannot connect to firebase");
+                }
             }
         }
     }

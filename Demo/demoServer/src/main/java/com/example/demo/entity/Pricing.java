@@ -1,8 +1,9 @@
-package com.example.demo.entities;
+package com.example.demo.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "tbl_pricing")
@@ -10,24 +11,21 @@ public class Pricing implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "from_hour", nullable = false)
+    @Column(name = "from_hour")
     private int fromHour;
-
     @Basic(optional = false)
     @NotNull
-    @Column(name = "price_per_hour", nullable = false)
+    @Column(name = "price_per_hour")
     private double pricePerHour;
     @Column(name = "late_fee_per_hour")
     private Integer lateFeePerHour;
-//    @JoinColumn(name = "tbl_policy_has_tbl_vehicle_type_id", referencedColumnName = "id", nullable = false)
-//    @ManyToOne(optional = false)
-@Column(name = "tbl_policy_has_tbl_vehicle_type_id")
-//    @Transient
-    private Integer policyHasTblVehicleTypeId;
+
+    public Pricing() {
+    }
 
     public Integer getId() {
         return id;
@@ -61,19 +59,4 @@ public class Pricing implements Serializable {
         this.lateFeePerHour = lateFeePerHour;
     }
 
-//    public PolicyHasTblVehicleType getPolicyHasTblVehicleTypeId() {
-//        return policyHasTblVehicleTypeId;
-//    }
-//
-//    public void setPolicyHasTblVehicleTypeId(PolicyHasTblVehicleType policyHasTblVehicleTypeId) {
-//        this.policyHasTblVehicleTypeId = policyHasTblVehicleTypeId;
-//    }
-
-    public Integer getPolicyHasTblVehicleTypeId() {
-        return policyHasTblVehicleTypeId;
-    }
-
-    public void setPolicyHasTblVehicleTypeId(Integer policyHasTblVehicleTypeId) {
-        this.policyHasTblVehicleTypeId = policyHasTblVehicleTypeId;
-    }
 }

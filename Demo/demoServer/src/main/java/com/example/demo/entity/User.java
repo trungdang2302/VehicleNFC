@@ -1,5 +1,4 @@
-package com.example.demo.entities;
-
+package com.example.demo.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -9,7 +8,6 @@ import java.io.Serializable;
 @Entity
 @Table(name = "tbl_user")
 public class User implements Serializable {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -26,7 +24,7 @@ public class User implements Serializable {
     @Column(name = "password")
     private String password;
     @Basic(optional = false)
-    @NotNull
+//    @NotNull
     @Column(name = "money")
     private double money;
     @Size(max = 45)
@@ -50,11 +48,8 @@ public class User implements Serializable {
     @Basic(optional = false)
     @Column(name = "is_activated")
     private Boolean isActivated;
-
-
     @Transient
     private String deviceToken;
-
     @Transient
     private String confirmCode;
 
@@ -117,12 +112,12 @@ public class User implements Serializable {
         this.vehicleNumber = vehicleNumber;
     }
 
-    public String getDeviceToken() {
-        return deviceToken;
+    public Vehicle getVehicle() {
+        return vehicle;
     }
 
-    public void setDeviceToken(String deviceToken) {
-        this.deviceToken = deviceToken;
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
     }
 
     public Boolean getSmsNoti() {
@@ -133,6 +128,22 @@ public class User implements Serializable {
         this.smsNoti = smsNoti;
     }
 
+    public Boolean getActivated() {
+        return isActivated;
+    }
+
+    public void setActivated(Boolean activated) {
+        isActivated = activated;
+    }
+
+    public String getDeviceToken() {
+        return deviceToken;
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
+    }
+
     public String getConfirmCode() {
         return confirmCode;
     }
@@ -140,23 +151,4 @@ public class User implements Serializable {
     public void setConfirmCode(String confirmCode) {
         this.confirmCode = confirmCode;
     }
-
-    public Boolean getActivated() {
-        return isActivated;
-    }
-
-    public Vehicle getVehicle() {
-        return vehicle;
-    }
-
-    public void setVehicle(Vehicle vehicle) {
-        this.vehicle = vehicle;
-    }
-
-    public void setActivated(Boolean activated) {
-        isActivated = activated;
-    }
-
-
-
 }

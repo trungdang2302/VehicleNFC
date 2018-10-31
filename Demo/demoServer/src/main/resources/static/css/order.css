@@ -34,8 +34,9 @@
     margin-left: 10px;
     align-items: center;
     justify-content: space-between;
+    width: 80%;
     /*position: relative;*/
-    width: 50%;
+
 }
 #searchValue {
     /*display: inline;*/

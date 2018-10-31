@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.entities.VehicleType;
+import com.example.demo.entity.VehicleType;
 import com.example.demo.service.VehicleTypeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

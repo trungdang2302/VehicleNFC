@@ -1,4 +1,4 @@
-package com.example.demo.entities;
+package com.example.demo.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -12,23 +12,21 @@ public class OrderPricing implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "from_hour", nullable = false)
+    @Column(name = "from_hour")
     private int fromHour;
-
     @Basic(optional = false)
     @NotNull
-    @Column(name = "price_per_hour", nullable = false)
+    @Column(name = "price_per_hour")
     private double pricePerHour;
     @Column(name = "late_fee_per_hour")
     private Integer lateFeePerHour;
-
-    @NotNull
-    @Column(name = "tbl_order_id", nullable = false)
-    private Integer OrderId;
+    @JoinColumn(name = "tbl_order_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Order orderId;
 
     public OrderPricing() {
     }
@@ -65,9 +63,18 @@ public class OrderPricing implements Serializable {
         this.lateFeePerHour = lateFeePerHour;
     }
 
+    public Order getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Order orderId) {
+        this.orderId = orderId;
+    }
+
+
     public static List<OrderPricing> convertListPricingToOrderPricing(List<Pricing> pricings) {
         List<OrderPricing> orderPricings = null;
-        if (pricings!=null) {
+        if (pricings != null) {
             orderPricings = new ArrayList<>();
             for (Pricing pricing : pricings
                     ) {
@@ -85,13 +92,5 @@ public class OrderPricing implements Serializable {
         orderPricing.setPricePerHour(pricing.getPricePerHour());
 
         return orderPricing;
-    }
-
-    public Integer getOrderId() {
-        return OrderId;
-    }
-
-    public void setOrderId(Integer orderId) {
-        OrderId = orderId;
     }
 }

@@ -1,11 +1,10 @@
-package com.example.demo.entities;
+package com.example.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.example.demo.model.HourHasPrice;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.List;
 
 @Entity
@@ -30,28 +29,25 @@ public class Order implements Serializable {
     private Long allowedParkingFrom;
     @Column(name = "allowed_parking_to")
     private Long allowedParkingTo;
-    @Basic(optional = false)
     @Column(name = "min_hour")
     private Integer minHour;
-
+    @JoinColumn(name = "tbl_order_status_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private OrderStatus orderStatusId;
+    @JoinColumn(name = "tbl_user_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private User userId;
     @JoinColumn(name = "tbl_location_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Location locationId;
-
-    @JoinColumn(name = "tbl_order_status_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "tbl_vehicle_type_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private OrderStatus orderStatusId;
-
-    @JoinColumn(name = "tbl_user_id", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false)
-    private User userId;
-
-    @JoinColumn(name = "tbl_vehicle_type_id", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false)
-    private VehicleType vehicleType;
-
+    private VehicleType vehicleTypeId;
+    //    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tblOrderId")
     @Transient
-    private List<OrderPricing> orderPricings;
+    private List<OrderPricing> orderPricingList;
+    @Transient
+    private List<HourHasPrice> hourHasPrices;
 
     public Order() {
     }
@@ -112,12 +108,12 @@ public class Order implements Serializable {
         this.allowedParkingTo = allowedParkingTo;
     }
 
-    public Location getLocationId() {
-        return locationId;
+    public Integer getMinHour() {
+        return minHour;
     }
 
-    public void setLocationId(Location locationId) {
-        this.locationId = locationId;
+    public void setMinHour(Integer minHour) {
+        this.minHour = minHour;
     }
 
     public OrderStatus getOrderStatusId() {
@@ -136,28 +132,37 @@ public class Order implements Serializable {
         this.userId = userId;
     }
 
-
-    public List<OrderPricing> getOrderPricings() {
-        return orderPricings;
+    public Location getLocationId() {
+        return locationId;
     }
 
-    public void setOrderPricings(List<OrderPricing> orderPricings) {
-        this.orderPricings = orderPricings;
+    public void setLocationId(Location locationId) {
+        this.locationId = locationId;
     }
 
-    public Integer getMinHour() {
-        return minHour;
+    public VehicleType getVehicleTypeId() {
+        return vehicleTypeId;
     }
 
-    public void setMinHour(Integer minHour) {
-        this.minHour = minHour;
+    public void setVehicleTypeId(VehicleType vehicleTypeId) {
+        this.vehicleTypeId = vehicleTypeId;
     }
 
-    public VehicleType getVehicleType() {
-        return vehicleType;
+    public List<OrderPricing> getOrderPricingList() {
+        return orderPricingList;
     }
 
-    public void setVehicleType(VehicleType vehicleType) {
-        this.vehicleType = vehicleType;
+    public void setOrderPricingList(List<OrderPricing> orderPricingList) {
+        this.orderPricingList = orderPricingList;
     }
+
+    public List<HourHasPrice> getHourHasPrices() {
+        return hourHasPrices;
+    }
+
+    public void setHourHasPrices(List<HourHasPrice> hourHasPrices) {
+        this.hourHasPrices = hourHasPrices;
+    }
+
+
 }

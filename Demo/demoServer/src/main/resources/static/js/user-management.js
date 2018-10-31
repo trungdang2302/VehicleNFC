@@ -49,9 +49,9 @@ function submitDeleteUserForm() {
         e.preventDefault();
         $.ajax({
             type: deleteFrm.attr('method'),
-            // url: deleteFrm.attr('action')+'/'+id,
-            url: 'http://localhost:8080/gundam/delete-gundam/' + id,
-            // data: deleteFrm.serialize(),
+            url: deleteFrm.attr('action')+'/'+id,
+            // url: 'http://localhost:8080/gundam/delete-gundam/' + id,
+            data: deleteFrm.serialize(),
             success: function (data) {
                 console.log(data);
                 console.log("Delete user successfully!");
@@ -140,12 +140,12 @@ function loadCreateModal() {
 
 function deleteModal(id) {
     // var url = "delete-user/" + id;
-    $('.delBtn').on('click', function (event) {
-        event.preventDefault();
+    // $('.delBtn').on('click', function (event) {
+    //     event.preventDefault();
         $('#deleteModal #id').val(id);
 
         $('#deleteModal').modal();
-    });
+    // });
 }
 
 function emptyTable() {

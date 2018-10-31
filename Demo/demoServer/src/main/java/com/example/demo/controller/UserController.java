@@ -3,9 +3,8 @@ package com.example.demo.controller;
 import com.example.demo.Config.PaginationEnum;
 import com.example.demo.Config.ResponseObject;
 import com.example.demo.Config.SearchCriteria;
-import com.example.demo.entities.User;
-import com.example.demo.entities.Vehicle;
-import com.example.demo.entities.VehicleType;
+import com.example.demo.entity.User;
+import com.example.demo.entity.Vehicle;
 import com.example.demo.service.PushNotificationService;
 import com.example.demo.service.UserService;
 import com.example.demo.service.VehicleService;
@@ -51,7 +50,9 @@ public class UserController {
     @GetMapping(value = {"/get-user/{id}"})
     public ResponseEntity<Optional<User>> getUserById(@PathVariable("id") Integer id) {
         System.out.println("getting user info...");
-        return status(OK).body(userService.getUserById(id));
+        //Todo
+        return null;
+//        return status(OK).body(userService.getUserById(id));
     }
 
     @PostMapping(value = "/create-user")

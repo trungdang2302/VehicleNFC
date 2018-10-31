@@ -1,6 +1,5 @@
-package com.example.demo.entities;
+package com.example.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -23,11 +22,14 @@ public class Location implements Serializable {
     private String description;
     @Column(name = "is_activated")
     private Boolean isActivated;
-    @JoinTable(name = "tbl_location_has_tbl_policy", joinColumns = {
-            @JoinColumn(name = "tbl_location_id", referencedColumnName = "id")}, inverseJoinColumns = {
-            @JoinColumn(name = "tbl_policy_id", referencedColumnName = "id")})
-    @ManyToMany
-    private List<Policy> policyList;
+
+    @Transient
+    private List<PolicyInstance> policyInstanceList;
+    //    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tblLocationId")
+    @Transient
+    private List<Order> orderList;
+    @Transient
+    private String isDelete;
 
     public Location() {
     }
@@ -64,11 +66,29 @@ public class Location implements Serializable {
         isActivated = activated;
     }
 
-    public List<Policy> getPolicyList() {
-        return policyList;
+    public List<Order> getorderList() {
+        return orderList;
     }
 
-    public void setPolicyList(List<Policy> policyList) {
-        this.policyList = policyList;
+    public void setTblOrderList(List<Order> orderList) {
+        this.orderList = orderList;
+    }
+
+    public String getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(String isDelete) {
+        this.isDelete = isDelete;
+    }
+
+    public List<PolicyInstance> getPolicyInstanceList() {
+        return policyInstanceList;
+    }
+
+    public void setPolicyInstanceList(List<PolicyInstance> policyInstanceList) {
+        this.policyInstanceList = policyInstanceList;
     }
 }
+
+

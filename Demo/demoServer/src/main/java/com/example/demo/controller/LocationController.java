@@ -1,14 +1,11 @@
 package com.example.demo.controller;
 
 import com.example.demo.Config.ResponseObject;
-import com.example.demo.entities.Location;
 import com.example.demo.service.LocationService;
+import com.example.demo.view.AddLocationObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 @RestController
@@ -46,5 +43,22 @@ public class LocationController {
     @GetMapping("/location-has-vehicles/{id}")
     public ResponseEntity getLocationHasVehicles(@PathVariable("id") Integer locationId) {
         return ResponseEntity.status(HttpStatus.OK).body(locationService.getLocationHasVehicleTypes(locationId));
+    }
+
+    @GetMapping("/policies/{id}")
+    public ModelAndView getPoliciesOfLocation(@PathVariable("id") Integer id, ModelAndView mav) {
+        mav.setViewName("location-policies");
+        return mav;
+    }
+
+    @PostMapping("/add-policy")
+    public ResponseEntity addPolicyToLocation(@RequestBody AddLocationObject addLocationObject) {
+        locationService.addPolicy(addLocationObject);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/locations")
+    public ResponseEntity getLocationsByPolicy(@RequestParam("policyId") Integer policyId) {
+        return ResponseEntity.status(HttpStatus.OK).body(locationService.getLocationsByPolicyId(policyId));
     }
 }

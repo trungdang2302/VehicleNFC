@@ -1,28 +1,16 @@
 package com.example.demo.service;
 
 import com.example.demo.Config.NotificationEnum;
-import com.example.demo.entities.Order;
-import com.example.demo.entities.OrderPricing;
-import javassist.tools.web.BadHttpRequest;
+import com.example.demo.entity.Order;
+import com.example.demo.entity.OrderPricing;
 import org.json.JSONException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.EOFException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import java.util.Date;;
 
 import org.json.JSONObject;
 
@@ -126,8 +114,8 @@ public class PushNotificationService {
 
                 body += "Bắt đầu đậu xe tại: " + order.getLocationId().getLocation() + "\n";
                 body += "Vào lúc: " + date + "\n";
-                body += "Bảng giá cho loại xe: " + order.getVehicleType().getName() + "\n";
-                for (OrderPricing orderPricing : order.getOrderPricings()) {
+                body += "Bảng giá cho loại xe: " + order.getVehicleTypeId().getName() + "\n";
+                for (OrderPricing orderPricing : order.getOrderPricingList()) {
                     body += (orderPricing.getFromHour() == 0) ? "Từ Giờ đầu: " + convertMoneyNoVND(orderPricing.getPricePerHour()) + "VNĐ/h\n"
                             : "Từ giờ thứ " + orderPricing.getFromHour() + ": " + convertMoneyNoVND(orderPricing.getPricePerHour()) + "VNĐ/h\n";
                 }

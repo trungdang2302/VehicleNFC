@@ -4,12 +4,12 @@ import com.example.demo.Config.AppConstant;
 import com.example.demo.Config.NotificationEnum;
 import com.example.demo.Config.ResponseObject;
 import com.example.demo.Config.SearchCriteria;
-import com.example.demo.entities.Location;
-import com.example.demo.entities.Order;
-import com.example.demo.entities.User;
+import com.example.demo.entity.Order;
+import com.example.demo.entity.User;
 import com.example.demo.service.OrderService;
 import com.example.demo.service.PushNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.view.RefundObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,14 +53,14 @@ public class OrderController {
     }
 
 
-//    @GetMapping(value = {"get-order"})
-//    public ResponseEntity<Optional<List<Order>>> getAllOrder(){
-////        return ResponseEntity.status(HttpStatus.OK).body(orderService.getOrderById(id));
-//        return null;
-//    }
+    @GetMapping(value = {"get-order"})
+    public ResponseEntity<Optional<List<Order>>> getAllOrder(){
+//        return ResponseEntity.status(HttpStatus.OK).body(orderService.getOrderById(id));
+        return null;
+    }
 
     @GetMapping(value = "/get-orders")
-    public ResponseEntity<?> getAllOrders(@RequestParam(defaultValue = "1") Integer page) {
+    public ResponseEntity<?> getAllOrders(@RequestParam(defaultValue = "0") Integer page) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(orderService.getOrders(page, AppConstant.ORDER_PAGESIZE));
         } catch (Exception e) {
@@ -76,7 +76,7 @@ public class OrderController {
     }
 
     @PostMapping(value = "/filter-order")
-    public ResponseEntity<?> filterOrder(@RequestBody SearchCriteria params
+    public ResponseEntity<?> filterOrder(@RequestBody List<SearchCriteria> params
             , @RequestParam(defaultValue = "0") Integer page) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(orderService.filterOrders(params, page, AppConstant.ORDER_PAGESIZE));
@@ -94,4 +94,14 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+
+    @PostMapping(value = "/refund")
+    public ResponseEntity refundOrder(@RequestBody RefundObject refundObject) {
+        Order order = refundObject.getOrder();
+        User user = refundObject.getUser();
+        Double refundMoney = (Double) refundObject.getRefundMoney();
+        orderService.refundOrder(order, user, refundMoney);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
 }

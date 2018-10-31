@@ -2,11 +2,8 @@ package com.example.demo.service;
 
 import com.example.demo.Config.ResponseObject;
 import com.example.demo.Config.SearchCriteria;
-import com.example.demo.entities.Location;
-import com.example.demo.entities.Policy;
-import com.example.demo.entities.User;
-import com.example.demo.entities.Vehicle;
-import com.example.demo.repository.LocationRepository;
+import com.example.demo.entity.User;
+import com.example.demo.entity.Vehicle;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;

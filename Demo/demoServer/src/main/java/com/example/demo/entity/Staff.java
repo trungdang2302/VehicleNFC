@@ -1,4 +1,4 @@
-package com.example.demo.entities;
+package com.example.demo.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -6,8 +6,9 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "tbl_staft")
+@Table(name = "tbl_staff")
 public class Staff implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @NotNull
@@ -21,6 +22,10 @@ public class Staff implements Serializable {
     private Boolean isDeactivated;
 
     public Staff() {
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
     public String getUsername() {

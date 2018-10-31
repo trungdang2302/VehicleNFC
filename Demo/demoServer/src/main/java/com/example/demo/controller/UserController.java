@@ -50,9 +50,7 @@ public class UserController {
     @GetMapping(value = {"/get-user/{id}"})
     public ResponseEntity<Optional<User>> getUserById(@PathVariable("id") Integer id) {
         System.out.println("getting user info...");
-        //Todo
-        return null;
-//        return status(OK).body(userService.getUserById(id));
+        return status(OK).body(userService.getUserById(id));
     }
 
     @PostMapping(value = "/create-user")

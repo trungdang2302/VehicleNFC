@@ -24,8 +24,9 @@ public class OrderService {
     private final PricingRepository pricingRepository;
     private final VehicleRepository vehicleRepository;
     private final PolicyInstanceHasVehicleTypeRepository policyInstanceHasVehicleTypeRepository;
+    private final LocationService locationService;
 
-    public OrderService(OrderRepository orderRepository, OrderStatusRepository orderStatusRepository, UserRepository userRepository, LocationRepository locationRepository, OrderPricingRepository orderPricingRepository, PricingRepository pricingRepository, VehicleRepository vehicleRepository, PolicyInstanceHasVehicleTypeRepository policyInstanceHasVehicleTypeRepository) {
+    public OrderService(OrderRepository orderRepository, OrderStatusRepository orderStatusRepository, UserRepository userRepository, LocationRepository locationRepository, OrderPricingRepository orderPricingRepository, PricingRepository pricingRepository, VehicleRepository vehicleRepository, PolicyInstanceHasVehicleTypeRepository policyInstanceHasVehicleTypeRepository, LocationService locationService) {
         this.orderRepository = orderRepository;
         this.orderStatusRepository = orderStatusRepository;
         this.userRepository = userRepository;
@@ -34,6 +35,7 @@ public class OrderService {
         this.pricingRepository = pricingRepository;
         this.vehicleRepository = vehicleRepository;
         this.policyInstanceHasVehicleTypeRepository = policyInstanceHasVehicleTypeRepository;
+        this.locationService = locationService;
     }
 
     public Optional<Order> getOrderById(Integer id) {
@@ -99,21 +101,25 @@ public class OrderService {
     }
 
     public Optional<Order> getOpenOrderByUserId(Integer id) {
-        Optional<Order> order = orderRepository.findFirstByUserIdAndOrderStatusId(userRepository.findById(id).get()
-                , orderStatusRepository.findByName(OrderStatusEnum.Open.getName()).get());
-        if (order.isPresent()) {
-            order.get().getUserId().setVehicle(
-                    vehicleRepository.findByVehicleNumber(order.get().getUserId().getVehicleNumber()).get()
-            );
-            order.get().setOrderPricingList(orderPricingRepository.findByOrderId(order.get().getId()));
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            Optional<Order> order = orderRepository.findFirstByUserIdAndOrderStatusId(user.get()
+                    , orderStatusRepository.findByName(OrderStatusEnum.Open.getName()).get());
+            if (order.isPresent()) {
+                order.get().getUserId().setVehicle(
+                        vehicleRepository.findByVehicleNumber(order.get().getUserId().getVehicleNumber()).get()
+                );
+                order.get().setOrderPricingList(orderPricingRepository.findByOrderId(order.get().getId()));
+            }
+            return order;
         }
-        return order;
+        return null;
     }
 
     @Transactional
     public Optional<Order> createOrder(User checkInUser, Location location, Map<String, String> userTokenList) {
         checkInUser = userRepository.findById(checkInUser.getId()).get();
-        location = locationRepository.findById(location.getId()).get();
+        location = locationService.getMeterById((location.getId())).get();
         OrderStatus orderStatus = orderStatusRepository.findByName(OrderStatusEnum.Open.getName()).get();
 
         Order order = null;
@@ -148,11 +154,10 @@ public class OrderService {
             return null;
         }
         orderRepository.save(order);
-        //Todo
         List<OrderPricing> orderPricings = OrderPricing.convertListPricingToOrderPricing(pricings);
         for (OrderPricing orderPricing : orderPricings
                 ) {
-            orderPricing.setOrderId(order);
+            orderPricing.setOrderId(order.getId());
             orderPricingRepository.save(orderPricing);
         }
 
@@ -187,9 +192,8 @@ public class OrderService {
             order.setAllowedParkingFrom(choosedPolicy.getAllowedParkingFrom());
             order.setAllowedParkingTo(choosedPolicy.getAllowedParkingTo());
             order.setMinHour(policyHasTblVehicleType.getMinHour());
-//            List<Pricing> pricings = pricingRepository.findAllByPolicyHasTblVehicleTypeId(policyHasTblVehicleType.getId());
-//            return pricings;
-            return null;
+            List<Pricing> pricings = policyHasTblVehicleType.getPricingList();
+            return pricings;
         }
         return null;
     }

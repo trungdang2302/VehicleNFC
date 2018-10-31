@@ -24,9 +24,10 @@ public class OrderPricing implements Serializable {
     private double pricePerHour;
     @Column(name = "late_fee_per_hour")
     private Integer lateFeePerHour;
-    @JoinColumn(name = "tbl_order_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Order orderId;
+
+    @Basic
+    @Column(name = "tbl_order_id")
+    private Integer orderId;
 
     public OrderPricing() {
     }
@@ -63,14 +64,13 @@ public class OrderPricing implements Serializable {
         this.lateFeePerHour = lateFeePerHour;
     }
 
-    public Order getOrderId() {
+    public Integer getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Order orderId) {
+    public void setOrderId(Integer orderId) {
         this.orderId = orderId;
     }
-
 
     public static List<OrderPricing> convertListPricingToOrderPricing(List<Pricing> pricings) {
         List<OrderPricing> orderPricings = null;

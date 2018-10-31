@@ -38,11 +38,14 @@ public class PushNotificationService {
 
             json.put("to", appToken);
 
-
-            HttpEntity<String> httpEntity = new HttpEntity<String>(json.toString(), httpHeaders);
-            String response = restTemplate.postForObject(FIREBASE_API_URL, httpEntity, String.class);
-            System.out.println(response);
-            System.err.println("Send noti to: " + appToken);
+            try {
+                HttpEntity<String> httpEntity = new HttpEntity<String>(json.toString(), httpHeaders);
+                String response = restTemplate.postForObject(FIREBASE_API_URL, httpEntity, String.class);
+                System.out.println(response);
+                System.err.println("Send noti to: " + appToken);
+            } catch (Exception e) {
+                System.err.println("Can not send notification");
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

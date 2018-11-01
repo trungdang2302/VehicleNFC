@@ -63,6 +63,7 @@ public class OrderService {
 
                 List<OrderPricing> orderPricings = orderPricingRepository.findByOrderId(order.get().getId());
                 double lastPrice = 0;
+                order.get().setOrderPricingList(orderPricings);
                 for (OrderPricing orderPricing : orderPricings) {
                     if (orderPricing.getPricePerHour() > lastPrice) {
                         lastPrice = orderPricing.getPricePerHour();

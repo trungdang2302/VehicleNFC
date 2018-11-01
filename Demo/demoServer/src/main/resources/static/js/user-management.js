@@ -20,25 +20,25 @@ $(document).ready(function (e) {
     submitDeleteUserForm();
     submitCreateUserForm();
     // save user form
-    var frm = $('#save-user-form');
-    frm.submit(function (e) {
-        e.preventDefault();
-
-        $.ajax({
-            type: frm.attr('method'),
-            url: frm.attr('action'),
-            data: frm.serialize(),
-            success: function (data) {
-                console.log("Save successfully.");
-                $('.myForm #exampleModal').modal('hide');
-                console.log(data);
-                location.reload(true);
-            }, error: function (data) {
-                console.log("Could not save user");
-                console.log(data);
-            }
-        });
-    });
+    // var frm = $('#save-user-form');
+    // frm.submit(function (e) {
+    //     e.preventDefault();
+    //
+    //     $.ajax({
+    //         type: frm.attr('method'),
+    //         url: frm.attr('action'),
+    //         data: frm.serialize(),
+    //         success: function (data) {
+    //             console.log("Save successfully.");
+    //             $('.myForm #exampleModal').modal('hide');
+    //             console.log(data);
+    //             location.reload(true);
+    //         }, error: function (data) {
+    //             console.log("Could not save user");
+    //             console.log(data);
+    //         }
+    //     });
+    // });
 });
 
 function submitDeleteUserForm() {
@@ -49,7 +49,7 @@ function submitDeleteUserForm() {
         e.preventDefault();
         $.ajax({
             type: deleteFrm.attr('method'),
-            url: deleteFrm.attr('action')+'/'+id,
+            url: deleteFrm.attr('action') + '/' + id,
             // url: 'http://localhost:8080/gundam/delete-gundam/' + id,
             data: deleteFrm.serialize(),
             success: function (data) {
@@ -142,9 +142,9 @@ function deleteModal(id) {
     // var url = "delete-user/" + id;
     // $('.delBtn').on('click', function (event) {
     //     event.preventDefault();
-        $('#deleteModal #id').val(id);
+    $('#deleteModal #id').val(id);
 
-        $('#deleteModal').modal();
+    $('#deleteModal').modal();
     // });
 }
 
@@ -367,6 +367,7 @@ $('#save-user-form').on('submit', function (e) {
     if ($('#id').val() === '') {
         $('#id').removeAttr('value');
     }
+    e.preventDefault();
     $.ajax({
         type: 'post',
         url: 'create-user',
@@ -374,12 +375,11 @@ $('#save-user-form').on('submit', function (e) {
         dataType: "json",
         data: buildUserJSON(),
         success: function (data) {
-            if (data) {
-                location.reload();
-            }
+            location.reload();
+        }, error: function (data) {
+            console.log(data);
         }
     });
-    e.preventDefault();
 });
 
 function buildUserJSON() {

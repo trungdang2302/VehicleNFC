@@ -1,7 +1,8 @@
 package com.example.demo.view;
 
-import com.example.demo.entities.Policy;
-import com.example.demo.entities.VehicleType;
+
+import com.example.demo.component.policy.Policy;
+import com.example.demo.component.vehicleType.VehicleType;
 
 import java.io.Serializable;
 import java.util.List;

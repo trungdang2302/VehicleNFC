@@ -1,28 +1,16 @@
 package com.example.demo.service;
 
-import com.example.demo.Config.NotificationEnum;
-import com.example.demo.entities.Order;
-import com.example.demo.entities.OrderPricing;
-import javassist.tools.web.BadHttpRequest;
+import com.example.demo.component.order.Order;
+import com.example.demo.component.order.OrderPricing;
+import com.example.demo.config.NotificationEnum;
 import org.json.JSONException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.EOFException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import java.util.Date;;
 
 import org.json.JSONObject;
 
@@ -50,10 +38,14 @@ public class PushNotificationService {
 
             json.put("to", appToken);
 
-
-            HttpEntity<String> httpEntity = new HttpEntity<String>(json.toString(), httpHeaders);
-            String response = restTemplate.postForObject(FIREBASE_API_URL, httpEntity, String.class);
-            System.out.println(response);
+            try {
+                HttpEntity<String> httpEntity = new HttpEntity<String>(json.toString(), httpHeaders);
+                String response = restTemplate.postForObject(FIREBASE_API_URL, httpEntity, String.class);
+                System.out.println(response);
+                System.err.println("Send noti to: " + appToken);
+            } catch (Exception e) {
+                System.err.println("Can not send notification");
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -125,10 +117,10 @@ public class PushNotificationService {
 
                 body += "Bắt đầu đậu xe tại: " + order.getLocationId().getLocation() + "\n";
                 body += "Vào lúc: " + date + "\n";
-                body += "Bảng giá cho loại xe: " + order.getVehicleType().getName() + "\n";
-                for (OrderPricing orderPricing : order.getOrderPricings()) {
-                    body += (orderPricing.getFromHour() == 0) ? "Từ Giờ đầu: " + ((long) orderPricing.getPricePerHour() * 1000) + "đ/h\n"
-                            : "Từ giờ thứ " + orderPricing.getFromHour() + ": " + ((long) orderPricing.getPricePerHour() * 1000) + "đ/h\n";
+                body += "Bảng giá cho loại xe: " + order.getVehicleTypeId().getName() + "\n";
+                for (OrderPricing orderPricing : order.getOrderPricingList()) {
+                    body += (orderPricing.getFromHour() == 0) ? "Từ Giờ đầu: " + convertMoneyNoVND(orderPricing.getPricePerHour()) + "VNĐ/h\n"
+                            : "Từ giờ thứ " + orderPricing.getFromHour() + ": " + convertMoneyNoVND(orderPricing.getPricePerHour()) + "VNĐ/h\n";
                 }
             } else if (title.equals(NotificationEnum.CHECK_OUT.getTitle())) {
                 String pattern = "HH:mm dd-MM-yyyy";
@@ -139,7 +131,7 @@ public class PushNotificationService {
 
                 body += "Rời nơi đậu xe: " + order.getLocationId().getLocation() + "\n";
                 body += "Thời gian đậu Từ: " + checkInDate + " đến: " + checkOutDate + "\n";
-                body += "Phí đậu xe: " + (long) (order.getTotal() * 1000) + "đ\n";
+                body += "Phí đậu xe: " + convertMoneyNoVND(order.getTotal()) + "VNĐ\n";
             }
         }
         return body;
@@ -169,5 +161,23 @@ public class PushNotificationService {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public static String convertMoneyNoVND(double money) {
+        String base = (long) money * 1000 + "";
+        String[] strings = base.split("");
+        String result = "";
+        int count = 0;
+        for (int i = strings.length - 1; i > 0; i--) {
+            count++;
+            result = strings[i] + result;
+            if (count == 3) {
+                if (i > 1) {
+                    result = "," + result;
+                    count = 0;
+                }
+            }
+        }
+        return result;
     }
 }

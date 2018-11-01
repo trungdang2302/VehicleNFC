@@ -6,8 +6,10 @@ $(document).ready(function (e) {
         success: function (data) {
             console.log(data);
             loadData(data);
-        }, error: function () {
-            alert("Can't load data")
+        }, error: function (data) {
+            console.log("Could not load data");
+            console.log(data);
+            // alert("Can't load data")
         }
 
     });
@@ -38,7 +40,7 @@ function loadData(res) {
         row += '<td>' + content[i].location + '</td>';
         row += '<td>' + content[i].description + '</td>';
         row += '<td>' + status + '</td>';
-        row += '<td><a href="#" onclick="viewPolicy(' + content[i].id + ')" class="btn btn-primary viewBtn">View</a></td>';
+        row += '<td><a href="#" onclick="viewPolicy(' + content[i].id + ')" class="btn btn-primary viewBtn">View Policies</a></td>';
         row += '<td><a href="#" onclick="createPolicy(' + content[i].id + ')" class="btn btn-primary viewBtn">Create Policy</a></td>';
         row += '</tr>';
         $('#location-table tbody').append(row);
@@ -88,27 +90,27 @@ function createPolicy(locationId) {
     //
     // $('#createPolicy').modal();
 
-
 }
 
 function viewPolicy(id) {
+    window.location.href = "http://localhost:8080/location/policies/"+id;
     // alert(id);
-    $.ajax({
-        type: "GET",
-        dataType: "json",
-        url: 'http://localhost:8080/location/get/' + id,
-        success: function (data) {
-            console.log(data);
-            emptyTable();
-            emptyLi();
-            loadPolicyTable(data);
-
-        }, error: function () {
-            alert("Can't load data")
-        }
-
-    });
-    $('#policyModal').modal();
+    // $.ajax({
+    //     type: "GET",
+    //     dataType: "json",
+    //     url: 'http://localhost:8080/location/get/' + id,
+    //     success: function (data) {
+    //         console.log(data);
+    //         emptyTable();
+    //         emptyLi();
+    //         loadPolicyTable(data);
+    //
+    //     }, error: function () {
+    //         alert("Can't load data")
+    //     }
+    //
+    // });
+    // $('#policyModal').modal();
 }
 
 function loadPolicyTable(data) {

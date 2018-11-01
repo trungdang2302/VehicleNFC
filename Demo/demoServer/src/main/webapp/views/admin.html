@@ -22,7 +22,7 @@
     <link rel="icon" type="image/png" sizes="96x96" href="/assets/img/logo.png">
 </head>
 
-<body>
+<body class="main-body">
 <!-- WRAPPER -->
 <div id="wrapper">
     <!-- NAVBAR -->
@@ -32,7 +32,7 @@
             <!--class="img-responsive logo">-->
             <!--<p>Parking With NFC</p>-->
         </div>
-        <div class="container-fluid">
+        <div class="container-fluid header-bar">
             <div id="navbar-menu">
                 <ul class="nav navbar-nav" id="content-title-holder">
                     <p id="content-title">Content title</p>
@@ -45,7 +45,7 @@
                         </a>
                         <ul class="dropdown-menu notifications" id="noti-container">
                             <!--<li><a href="#" class="notification-item"><span class="dot bg-danger"></span>You have 9-->
-                                <!--unfinished tasks</a></li>-->
+                            <!--unfinished tasks</a></li>-->
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -89,14 +89,11 @@
                             <span class="title">Parking With NFC</span>
                         </div>
                     </li>
-                    <!--<li><a onclick="switchContentFragment('/user/get-user',this)" class="active pointer menu"><i-->
-                    <!--class="lnr lnr-pie-chart"></i> <span class="title">Dashboard</span></a>-->
-                    <!--</li>-->
-                    <li><a onclick="switchContentFragment('/user/vehicle','Vehicle Management',this)"
+                    <li><a onclick="switchContentFragment('/vehicle/index','Vehicle Management',this)"
                            class="active pointer menu"><i
                             class="lnr lnr-car"></i> <span class="title">Vehicles</span></a></li>
                     <li>
-                    <li><a onclick="switchContentFragment('/user/lookup-vehicle','Look up Vehicle',this)"
+                    <li><a onclick="switchContentFragment('/vehicle/lookup-vehicle','Look up Vehicle',this)"
                            class="pointer menu"><i
                             class="lnr lnr-magnifier"></i> <span class="title">Look up Vehicles</span></a></li>
                     <li>
@@ -106,7 +103,8 @@
                     <li><a onclick="switchContentFragment('/location/index','Location Management',this)"
                            class="pointer menu"><i
                             class="lnr lnr-map-marker"></i> <span class="title">Locations</span></a></li>
-                    <li><a onclick="switchContentFragment('ac','Policy Management',this)" class="pointer menu"><i
+
+                    <li><a onclick="switchContentFragment('/policy/create',this)" class="pointer menu"><i
                             class="lnr lnr-book"></i>
                         <span class="title">Policies</span></a>
                     </li>
@@ -660,7 +658,7 @@
         }
 
     });
-    switchContentFragment('/user/vehicle', 'Vehicle Management', null);
+    switchContentFragment('/vehicle/index', 'Vehicle Management', null);
 </script>
 </body>
 

@@ -87,4 +87,7 @@ public interface RmaAPIService {
 
     @GET
     Call<JsonObject> getUSD(@Url String url);
+
+    @GET("/user/register-token")
+    Call<Boolean> sendDeviceTokenToServer(@Query("token") String token, @Query("PhoneNumber") String phoneNumber);
 }

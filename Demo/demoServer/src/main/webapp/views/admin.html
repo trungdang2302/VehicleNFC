@@ -40,6 +40,14 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span>Staff</span> <i class="icon-submenu lnr lnr-chevron-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#"><i class="lnr lnr-user"></i> <span>Change Password</span></a></li>
+                            <li><a href="#"><i class="lnr lnr-exit"></i> <span>Logout</span></a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
                         <a href="#" class="dropdown-toggle icon-menu" data-toggle="dropdown" onclick="checkNotiBox()">
                             <i class="lnr lnr-alarm"></i>
                             <span id="bell-noti" class="badge bg-danger">0</span>
@@ -48,30 +56,6 @@
 
                         </ul>
                     </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
-                                class="lnr lnr-question-circle"></i> <span>Help</span> <i
-                                class="icon-submenu lnr lnr-chevron-down"></i></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Basic Use</a></li>
-                            <li><a href="#">Working With Data</a></li>
-                            <li><a href="#">Security</a></li>
-                            <li><a href="#">Troubleshooting</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <span>Samuel</span> <i class="icon-submenu lnr lnr-chevron-down"></i></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#"><i class="lnr lnr-user"></i> <span>My Profile</span></a></li>
-                            <li><a href="#"><i class="lnr lnr-envelope"></i> <span>Message</span></a></li>
-                            <li><a href="#"><i class="lnr lnr-cog"></i> <span>Settings</span></a></li>
-                            <li><a href="#"><i class="lnr lnr-exit"></i> <span>Logout</span></a></li>
-                        </ul>
-                    </li>
-                    <!-- <li>
-                        <a class="update-pro" href="https://www.themeineed.com/downloads/klorofil-pro-bootstrap-admin-dashboard-template/?utm_source=klorofil&utm_medium=template&utm_campaign=KlorofilPro" title="Upgrade to Pro" target="_blank"><i class="fa fa-rocket"></i> <span>UPGRADE TO PRO</span></a>
-                    </li> -->
                 </ul>
             </div>
         </div>
@@ -95,7 +79,7 @@
                             class="lnr lnr-car"></i> <span class="title">Vehicles</span><i
                             class="lnr lnr-chevron-left float-right menu-icon" id="vehicleHolderIcon"></i></a>
                     </li>
-                    <li><a onclick="switchContentFragment('/vehicle/index',$('#vehicleHolder'))"
+                    <li><a onclick="switchContentFragment('/vehicle/get-verify',$('#vehicleHolder'))"
                            class="pointer sub-menu vehicleHolder"><i class="far fa-check-square"></i><span
                             class="title">Verify Vehicles</span></a></li>
                     <li><a onclick="switchContentFragment('/vehicle/index',$('#vehicleHolder'))"

@@ -33,11 +33,12 @@ function loadData(res) {
         row += cellBuilder(content[i].size, "text-right");
         row += cellBuilder(convertDate(content[i].expireDate), "text-right");
         row += cellBuilder(ownerPhone, "text-right");
-        var edit = "<a href=\"#\" onclick=\"loadVehicleInfo('" + content[i].vehicleNumber + "','main-content-save-form'," + setUpSaveFormData + ",'save-vehicle-list')\" class=\"btn btn-primary btnAction\"><i class=\"lnr lnr-pencil\"></i></a>";
+
+        var verify = (!content[i].verified) ? "<a href=\"#\" onclick=\"loadVehicleInfo('" + content[i].vehicleNumber + "','main-content-verify-form'," + setUpFormData + ",'vehicle-list')\" class=\"btn btn-primary btnAction\"><i class=\"far fa-check-square\"></i></a>" : "";
         var disable = (content[i].owner != null) ? "disabled" : "onclick=\"openDeleteModal('" + content[i].vehicleNumber + "')\" ";
         var deleteStr = "<a " + disable +
             " href=\"#\" class=\"btn btn-danger btnAction-remove\"><i class=\"lnr lnr-trash\"></i></a>";
-        row += cellBuilder(deleteStr + edit);
+        row += cellBuilder(deleteStr + verify);
         row += '</tr>';
         $('#user-table tbody').append(row);
     }
@@ -103,7 +104,7 @@ function searchVehicle(pageNumber) {
 
     console.log("Search By: " + vehicleType);
     console.log("SearchValue: " + searchValue);
-    var verifyObject = createSearchObject("isVerified", "=", true);
+    var verifyObject = createSearchObject("isVerified", "=", false);
     var filterObject = createSearchObject(vehicleType, ":", searchValue);
     listFilterObject.push(filterObject);
     listFilterObject.push(verifyObject);

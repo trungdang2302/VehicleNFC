@@ -4,6 +4,7 @@ import com.example.demo.config.ResponseObject;
 import com.example.demo.config.SearchCriteria;
 import com.example.demo.component.user.User;
 import com.example.demo.component.user.UserRepository;
+import com.example.demo.view.Owner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,12 +39,12 @@ public class VehicleService {
         typedQuery.setFirstResult(pagNumber * pageSize);
         typedQuery.setMaxResults(pageSize);
         List<Vehicle> vehicleList = typedQuery.getResultList();
-//        for (Vehicle vehicle : vehicleList) {
-//            Optional<User> owner = userRepository.findByVehicle(vehicle);
-//            if (owner.isPresent()) {
-//                vehicle.setOwner(owner.get());
-//            }
-//        }
+        for (Vehicle vehicle : vehicleList) {
+            Optional<User> owner = userRepository.findByVehicle(vehicle);
+            if (owner.isPresent()) {
+                vehicle.setOwner(Owner.covertUserToOwner(owner.get()));
+            }
+        }
         return vehicleList;
     }
 
@@ -92,7 +93,7 @@ public class VehicleService {
         return (long) Math.ceil((double) count / pageSize);
     }
 
-    public ResponseObject searchVehicle(SearchCriteria param, int pagNumber, int pageSize) {
+    public ResponseObject searchVehicle(List<SearchCriteria> params, int pagNumber, int pageSize) {
         ResponseObject responseObject = new ResponseObject();
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Vehicle> query = builder.createQuery(Vehicle.class);
@@ -100,19 +101,21 @@ public class VehicleService {
 
         Predicate predicate = builder.conjunction();
 
-        if (param.getOperation().equalsIgnoreCase(">")) {
-            predicate = builder.and(predicate,
-                    builder.greaterThanOrEqualTo(r.get(param.getKey()),
-                            param.getValue().toString()));
-        } else if (param.getOperation().equalsIgnoreCase("<")) {
-            predicate = builder.and(predicate,
-                    builder.lessThanOrEqualTo(r.get(param.getKey()),
-                            param.getValue().toString()));
-        } else if (param.getOperation().equalsIgnoreCase(":")) {
-            if (r.get(param.getKey()).getJavaType() == String.class) {
+        for (SearchCriteria param : params) {
+            if (param.getOperation().equalsIgnoreCase(">")) {
                 predicate = builder.and(predicate,
-                        builder.like(r.get(param.getKey()),
-                                "%" + param.getValue() + "%"));
+                        builder.greaterThanOrEqualTo(r.get(param.getKey()),
+                                param.getValue().toString()));
+            } else if (param.getOperation().equalsIgnoreCase("<")) {
+                predicate = builder.and(predicate,
+                        builder.lessThanOrEqualTo(r.get(param.getKey()),
+                                param.getValue().toString()));
+            } else if (param.getOperation().equalsIgnoreCase(":")) {
+                if (r.get(param.getKey()).getJavaType() == String.class) {
+                    predicate = builder.and(predicate,
+                            builder.like(r.get(param.getKey()),
+                                    "%" + param.getValue() + "%"));
+                }
             } else {
                 predicate = builder.and(predicate,
                         builder.equal(r.get(param.getKey()), param.getValue()));
@@ -124,7 +127,7 @@ public class VehicleService {
         for (Vehicle vehicle : result) {
             Optional<User> owner = userRepository.findByVehicle(vehicle);
             if (owner.isPresent()) {
-                vehicle.setOwner(owner.get());
+                vehicle.setOwner(Owner.covertUserToOwner(owner.get()));
             }
         }
         int totalPages = (int) Math.ceil((double) result.size() / pageSize);

@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletContext;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -43,6 +44,12 @@ public class VehicleController {
     @GetMapping("/index")
     public ModelAndView vehiclePage(ModelAndView mav) {
         mav.setViewName("vehicle");
+        return mav;
+    }
+
+    @GetMapping("/get-verify")
+    public ModelAndView verify(ModelAndView mav) {
+        mav.setViewName("vehicle-verify");
         return mav;
     }
 
@@ -99,7 +106,7 @@ public class VehicleController {
     }
 
     @PostMapping("/search-vehicle")
-    public ResponseEntity<ResponseObject> searchVehicle(@RequestBody SearchCriteria params
+    public ResponseEntity<ResponseObject> searchVehicle(@RequestBody List<SearchCriteria> params
             , @RequestParam(defaultValue = "0") Integer page) {
         ResponseObject response = new ResponseObject();
         response.setData(vehicleService.searchVehicle(params, page, PaginationEnum.userPageSize.getNumberOfRows()));

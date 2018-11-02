@@ -102,9 +102,6 @@ public class VehicleController {
     public ResponseEntity<ResponseObject> searchVehicle(@RequestBody SearchCriteria params
             , @RequestParam(defaultValue = "0") Integer page) {
         ResponseObject response = new ResponseObject();
-//        response.setPageNumber(page);
-//        response.setPageSize(PaginationEnum.userPageSize.getNumberOfRows());
-//        response.setTotalPages(vehicleService.getTotalVehicles(PaginationEnum.userPageSize.getNumberOfRows()).intValue());
         response.setData(vehicleService.searchVehicle(params, page, PaginationEnum.userPageSize.getNumberOfRows()));
 
         return ResponseEntity.status(OK).body(response);

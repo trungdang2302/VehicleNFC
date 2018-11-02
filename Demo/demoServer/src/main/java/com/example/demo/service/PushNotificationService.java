@@ -103,6 +103,8 @@ public class PushNotificationService {
             System.out.println(response);
         } catch (JSONException e) {
             e.printStackTrace();
+        }catch (Exception e){
+            System.err.println("Cannot send notification");
         }
     }
 

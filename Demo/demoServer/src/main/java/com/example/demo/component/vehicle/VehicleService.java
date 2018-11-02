@@ -38,12 +38,12 @@ public class VehicleService {
         typedQuery.setFirstResult(pagNumber * pageSize);
         typedQuery.setMaxResults(pageSize);
         List<Vehicle> vehicleList = typedQuery.getResultList();
-        for (Vehicle vehicle : vehicleList) {
-            Optional<User> owner = userRepository.findByVehicleNumber(vehicle.getVehicleNumber());
-            if (owner.isPresent()) {
-                vehicle.setOwner(owner.get());
-            }
-        }
+//        for (Vehicle vehicle : vehicleList) {
+//            Optional<User> owner = userRepository.findByVehicle(vehicle);
+//            if (owner.isPresent()) {
+//                vehicle.setOwner(owner.get());
+//            }
+//        }
         return vehicleList;
     }
 
@@ -122,7 +122,7 @@ public class VehicleService {
         TypedQuery<Vehicle> typedQuery = entityManager.createQuery(query);
         List<Vehicle> result = typedQuery.getResultList();
         for (Vehicle vehicle : result) {
-            Optional<User> owner = userRepository.findByVehicleNumber(vehicle.getVehicleNumber());
+            Optional<User> owner = userRepository.findByVehicle(vehicle);
             if (owner.isPresent()) {
                 vehicle.setOwner(owner.get());
             }

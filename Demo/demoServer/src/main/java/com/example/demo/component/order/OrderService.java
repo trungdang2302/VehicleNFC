@@ -115,9 +115,9 @@ public class OrderService {
             Optional<Order> order = orderRepository.findFirstByUserIdAndOrderStatusId(user.get()
                     , orderStatusRepository.findByName(OrderStatusEnum.Open.getName()).get());
             if (order.isPresent()) {
-                order.get().getUserId().setVehicle(
-                        vehicleRepository.findByVehicleNumber(order.get().getUserId().getVehicleNumber()).get()
-                );
+//                order.get().getUserId().setVehicle(
+//                        vehicleRepository.findByVehicleNumber(order.get().getUserId().getVehicleNumber()).get()
+//                );
                 order.get().setOrderPricingList(orderPricingRepository.findByOrderId(order.get().getId()));
             }
             return order;
@@ -147,7 +147,8 @@ public class OrderService {
         order = new Order();
         order.setOrderStatusId(orderStatus);
 
-        Vehicle vehicle = vehicleRepository.findByVehicleNumber(checkInUser.getVehicleNumber()).get();
+//        Vehicle vehicle = vehicleRepository.findByVehicleNumber(checkInUser.getVehicleNumber()).get();
+        Vehicle vehicle = checkInUser.getVehicle();
         order.setVehicleTypeId(vehicle.getVehicleTypeId());
 
         order.setUserId(checkInUser);
@@ -188,7 +189,8 @@ public class OrderService {
         PolicyInstanceHasTblVehicleType policyHasTblVehicleType = null;
         for (PolicyInstance policy : matchPolicies) {
             while (choosedPolicy == null) {
-                Vehicle vehicle = vehicleRepository.findByVehicleNumber(user.getVehicleNumber()).get();
+//                Vehicle vehicle = vehicleRepository.findByVehicleNumber(user.getVehicleNumber()).get();
+                Vehicle vehicle = user.getVehicle();
                 policyHasTblVehicleType = policyInstanceHasVehicleTypeRepository
                         .findByPolicyInstanceIdAndVehicleTypeId(policy.getId(), vehicle.getVehicleTypeId()).get();
                 if (policyHasTblVehicleType != null) {
@@ -291,7 +293,7 @@ public class OrderService {
         List<Order> result = new ArrayList<>();
         for (Order order : orders) {
             User user = order.getUserId();
-            user.setVehicle(vehicleRepository.findByVehicleNumber(user.getVehicleNumber()).get());
+//            user.setVehicle(vehicleRepository.findByVehicleNumber(user.getVehicleNumber()).get());
             order.setUserId(user);
             result.add(order);
         }
@@ -359,8 +361,6 @@ public class OrderService {
                         Predicate vehiclePredicate = builder.equal(join.get("vehicleNumber"), param.getValue());
                         predicate = builder.and(predicate, vehiclePredicate);
                     }
-
-
                 } else {
                     predicate = builder.and(predicate,
                             builder.equal(r.get(param.getKey()), param.getValue()));
@@ -378,7 +378,7 @@ public class OrderService {
 //        List<Order> result = new ArrayList<>();
         for (Order order : orderList) {
             User user = order.getUserId();
-            user.setVehicle(vehicleRepository.findByVehicleNumber(user.getVehicleNumber()).get());
+//            user.setVehicle(vehicleRepository.findByVehicleNumber(user.getVehicleNumber()).get());
             order.setUserId(user);
 //            result.add(order);
         }
@@ -392,9 +392,9 @@ public class OrderService {
         List<Order> orders = orderRepository.findByUserIdOrderByCheckInDateDesc(userRepository.findById(userId).get());
 
         for (Order order : orders) {
-            order.getUserId().setVehicle(
-                    vehicleRepository.findByVehicleNumber(order.getUserId().getVehicleNumber()).get()
-            );
+//            order.getUserId().setVehicle(
+//                    vehicleRepository.findByVehicleNumber(order.getUserId().getVehicle()).get()
+//            );
             order.setOrderPricingList(orderPricingRepository.findByOrderId(order.getId()));
         }
         return orders;

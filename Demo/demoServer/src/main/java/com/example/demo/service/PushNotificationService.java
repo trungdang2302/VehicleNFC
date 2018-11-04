@@ -117,7 +117,7 @@ public class PushNotificationService {
 
                 String date = simpleDateFormat.format(new Date(order.getCheckInDate()));
 
-                body += "Bắt đầu đậu xe tại: " + order.getLocationId().getLocation() + "\n";
+                body += "Quý khách đậu xe tại: " + order.getLocationId().getLocation() + "\n";
                 body += "Vào lúc: " + date + "\n";
                 body += "Bảng giá cho loại xe: " + order.getVehicleTypeId().getName() + "\n";
                 for (OrderPricing orderPricing : order.getOrderPricingList()) {
@@ -131,7 +131,7 @@ public class PushNotificationService {
                 String checkInDate = simpleDateFormat.format(new Date(order.getCheckInDate()));
                 String checkOutDate = simpleDateFormat.format(new Date(order.getCheckOutDate()));
 
-                body += "Rời nơi đậu xe: " + order.getLocationId().getLocation() + "\n";
+                body += "Quý khách rời nơi đậu xe: " + order.getLocationId().getLocation() + "\n";
                 body += "Thời gian đậu Từ: " + checkInDate + " đến: " + checkOutDate + "\n";
                 body += "Phí đậu xe: " + convertMoneyNoVND(order.getTotal()) + "VNĐ\n";
             }

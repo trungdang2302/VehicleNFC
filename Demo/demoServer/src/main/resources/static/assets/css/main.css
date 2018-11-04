@@ -2738,9 +2738,17 @@ ul.activity-timeline > li:last-child:after {
     font-size: 17px;
 }
 
-.content-name{
+.content-name {
     font-size: 24px;
     border-bottom: 2px solid;
     padding: 6px;
     font-weight: bold;
+}
+
+#search-filter {
+    width: 43%;
+    border-radius: 5px 0 0 5px;
+    background: #40495f;
+    color: white;
+    font-size: 16px;
 }

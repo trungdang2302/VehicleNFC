@@ -180,8 +180,7 @@ public class OrderService {
         List<PolicyInstance> policies = order.getLocationId().getPolicyInstanceList();
         List<PolicyInstance> matchPolicies = new ArrayList<>();
         for (PolicyInstance policy : policies) {
-            if (policy.getAllowedParkingFrom() < order.getCheckInDate()
-                    && policy.getAllowedParkingTo() > order.getCheckInDate()) {
+            if (!isOutOfTheLine(order.getCheckInDate(), policy.getAllowedParkingFrom(), policy.getAllowedParkingTo())) {
                 matchPolicies.add(policy);
             }
         }
@@ -212,42 +211,27 @@ public class OrderService {
     @Transactional
     public Optional<Order> checkOutOrder(Order order, Map<String, String> userToken, User user) {
         order.setCheckOutDate(new Date().getTime());
-        TimeDuration duration = TimeService.compareTwoDates(order.getCheckInDate(), order.getCheckOutDate());
-        //TODO kiểm tra có bị lố giờ để phạt tiền thêm
-        //code here
-
-        double totalPrice = 0;
-        int totalHour = duration.getHour();
-        int totalMinute = duration.getMinute();
-        List<HourHasPrice> hourHasPrices = new ArrayList<>();
-
-        if (totalHour < order.getMinHour()) {
-            totalHour = order.getMinHour();
-            totalMinute = 0;
-        }
-
-        while (totalHour > 0) {
-            hourHasPrices.add(new HourHasPrice(totalHour, null));
-            totalHour--;
-        }
 
         List<OrderPricing> orderPricings = orderPricingRepository.findByOrderId(order.getId());
-        double lastPrice = 0;
-        for (OrderPricing orderPricing : orderPricings) {
-            if (orderPricing.getPricePerHour() > lastPrice) {
-                lastPrice = orderPricing.getPricePerHour();
-            }
-            for (HourHasPrice hourHasPrice : hourHasPrices) {
-                if (orderPricing.getFromHour() < hourHasPrice.getHour()) {
-                    hourHasPrice.setPrice(orderPricing.getPricePerHour());
+        List<HourHasPrice> hourHasPrices = composeHourPrice(order.getCheckOutDate() - order.getCheckInDate()
+                , order.getCheckInDate(), order.getAllowedParkingFrom(), order.getAllowedParkingTo(), order.getMinHour(), orderPricings);
+
+        double totalPrice = 0;
+        for (HourHasPrice hourHasPrice : hourHasPrices) {
+            if (hourHasPrice.isFullHour()) {
+                if (!hourHasPrice.isLate()) {
+                    totalPrice += hourHasPrice.getPrice();
+                } else {
+                    totalPrice += hourHasPrice.getFine();
+                }
+            } else {
+                if (!hourHasPrice.isLate()) {
+                    totalPrice += hourHasPrice.getPrice() * ((double) hourHasPrice.getMinutes() / 60);
+                } else {
+                    totalPrice += hourHasPrice.getFine() * ((double) hourHasPrice.getMinutes() / 60);
                 }
             }
         }
-
-        for (HourHasPrice hourHasPrice : hourHasPrices) {
-            totalPrice += hourHasPrice.getPrice();
-        }
-        totalPrice += lastPrice * ((double) totalMinute / 60);
 
         order.setDuration(order.getCheckOutDate() - order.getCheckInDate());
         order.setTotal(round(totalPrice, 0));
@@ -265,11 +249,13 @@ public class OrderService {
     public void sendNotification(User user, Order
             order, Map<String, String> userToken, List<OrderPricing> orderPricings, NotificationEnum notification) {
         order.setOrderPricingList(orderPricings);
-        if (user.getSmsNoti()) {
-            PushNotificationService.sendNotificationToSendSms(NFCServerProperties.getSmsHostToken(), notification, order);
-        } else {
-            if (userToken != null) {
-                PushNotificationService.sendNotification(userToken.get(user.getPhoneNumber()), notification, order.getId());
+        if (user.getSmsNoti() != null) {
+            if (user.getSmsNoti()) {
+                PushNotificationService.sendNotificationToSendSms(NFCServerProperties.getSmsHostToken(), notification, order);
+            } else {
+                if (userToken != null) {
+                    PushNotificationService.sendNotification(userToken.get(user.getPhoneNumber()), notification, order.getId());
+                }
             }
         }
     }
@@ -427,4 +413,70 @@ public class OrderService {
         long tmp = Math.round(value);
         return (double) tmp / factor;
     }
+
+    public static List<HourHasPrice> composeHourPrice(long duration, long startTime
+            , long limitFromTime, long limitToTime, int minHour, List<OrderPricing> pricings) {
+        int totalHour = (int) (duration / 3600000);
+        int totalMinute = (int) (duration - totalHour * 3600000) / 60000;
+        List<HourHasPrice> hourHasPrices = new ArrayList<>();
+        startTime += duration;
+        if (totalHour < minHour) {
+            totalHour = minHour;
+            totalMinute = 0;
+        }
+
+        while (totalHour > 0) {
+            if (totalMinute != 0) {
+                HourHasPrice notFull = new HourHasPrice(totalHour, null);
+                notFull.setFullHour(false);
+                notFull.setMinutes(totalMinute);
+                notFull.setLate(isOutOfTheLine(startTime, limitFromTime, limitToTime));
+                hourHasPrices.add(notFull);
+                startTime -= totalMinute * 60000;
+                totalMinute = 0;
+            }
+            HourHasPrice hourHasPrice = new HourHasPrice(totalHour, null);
+            hourHasPrice.setLate(isOutOfTheLine(startTime, limitFromTime, limitToTime));
+            hourHasPrices.add(hourHasPrice);
+            startTime -= 3600000;
+            totalHour--;
+        }
+
+        for (OrderPricing orderPricing : pricings) {
+            for (HourHasPrice hourHasPrice : hourHasPrices) {
+                if (orderPricing.getFromHour() < hourHasPrice.getHour()) {
+                    hourHasPrice.setPrice(orderPricing.getPricePerHour());
+                    if (hourHasPrice.isLate()) {
+                        hourHasPrice.setFine(orderPricing.getLateFeePerHour());
+                    }
+                }
+            }
+        }
+
+        return hourHasPrices;
+    }
+
+    public static boolean isOutOfTheLine(long current, long limitFrom, long limitTo) {
+        Calendar cur = Calendar.getInstance(), from = Calendar.getInstance(), to = Calendar.getInstance();
+        cur.setTimeInMillis(current);
+        from.setTimeInMillis(limitFrom);
+        to.setTimeInMillis(limitTo);
+//        String a = cur.get(Calendar.HOUR_OF_DAY)+":"+cur.get(Calendar.MINUTE);
+//        String b = from.get(Calendar.HOUR_OF_DAY)+":"+from.get(Calendar.MINUTE);
+//        String c = to.get(Calendar.HOUR_OF_DAY)+":"+to.get(Calendar.MINUTE);
+        if (cur.get(Calendar.HOUR_OF_DAY) < from.get(Calendar.HOUR_OF_DAY)
+                || cur.get(Calendar.HOUR_OF_DAY) > to.get(Calendar.HOUR_OF_DAY)) {
+            return true;
+        }
+        if (cur.get(Calendar.HOUR_OF_DAY) == from.get(Calendar.HOUR_OF_DAY)
+                || cur.get(Calendar.HOUR_OF_DAY) == to.get(Calendar.HOUR_OF_DAY)) {
+            if (cur.get(Calendar.MINUTE) < from.get(Calendar.MINUTE)
+                    || cur.get(Calendar.MINUTE) > to.get(Calendar.MINUTE)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
+
+

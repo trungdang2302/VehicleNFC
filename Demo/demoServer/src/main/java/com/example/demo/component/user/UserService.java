@@ -211,12 +211,13 @@ public class UserService {
         return user;
     }
 
-    public void updateUserSmsNoti(User user) {
-        User userDB = userRepository.findByPhoneNumber(user.getPhoneNumber()).get();
-        if (userDB != null) {
-            userDB.setSmsNoti(user.getSmsNoti());
-            userRepository.save(userDB);
+    public Optional<User> updateUserSmsNoti(User user) {
+        Optional<User> userDB = userRepository.findByPhoneNumber(user.getPhoneNumber());
+        if (userDB.isPresent()) {
+            userDB.get().setSmsNoti(user.getSmsNoti());
+            userRepository.save(userDB.get());
         }
+        return userDB;
     }
 
     public void activateUser(String phoneNumber) {
@@ -261,5 +262,9 @@ public class UserService {
             return userRepository.findByVehicle(vehicle.get());
         }
         return null;
+    }
+
+    public Optional<User> saveUser(User user){
+        return Optional.of(userRepository.save(user));
     }
 }

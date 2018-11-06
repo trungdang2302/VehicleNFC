@@ -21,8 +21,8 @@ public class PolicyInstanceHasTblVehicleType implements Serializable {
     @OneToMany
     private List<Pricing> pricingList;
 
-    @Basic(optional = false)
-    @Column(name = "tbl_policy_instance_id", nullable = false)
+    @Basic
+    @Column(name = "tbl_policy_instance_id", insertable = false, updatable = false)
     private Integer policyInstanceId;
     @JoinColumn(name = "tbl_vehicle_type_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)

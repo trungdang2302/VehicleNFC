@@ -8,6 +8,7 @@ import com.example.demo.component.user.User;
 import com.example.demo.service.PushNotificationService;
 import com.example.demo.component.user.UserService;
 import com.example.demo.service.UtilityService;
+import com.example.demo.view.Owner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
@@ -122,5 +123,27 @@ public class VehicleController {
     @PostMapping(value = "/delete-vehicle")
     public ResponseEntity<Boolean> deleteVehicle(@Param(value = "vehicleNumber") String vehicleNumber) {
         return ResponseEntity.status(OK).body(vehicleService.deleteVehicle(vehicleNumber));
+    }
+
+    @PostMapping(value = "/replace-vehicle")
+    public ResponseEntity<Boolean> replaceVehicle(@Param(value = "phoneNumber") String phoneNumber
+            , @Param(value = "vehicleNumber") String vehicleNumber
+            , @Param(value = "licenseId") String licenseId) {
+        Optional<User> user = userService.getUserByPhone(phoneNumber);
+        if (user.isPresent()) {
+            Optional<User> owner = userService.getUserByVehicleNumber(vehicleNumber);
+            if (!owner.isPresent()) {
+                Vehicle vehicle = new Vehicle();
+                vehicle.setVehicleNumber(vehicleNumber);
+                vehicle.setLicensePlateId(licenseId);
+                Optional<Vehicle> savedVehicle = vehicleService.saveVehicle(vehicle);
+                if (savedVehicle.isPresent()) {
+                    user.get().setVehicle(savedVehicle.get());
+                    userService.saveUser(user.get());
+                    return ResponseEntity.status(OK).body(true);
+                }
+            }
+        }
+        return ResponseEntity.status(OK).body(false);
     }
 }

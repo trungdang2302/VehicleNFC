@@ -112,9 +112,8 @@ public class UserController {
     }
 
     @PostMapping("/update-user-sms")
-    public String updateUserSms(@RequestBody User user) {
-        userService.updateUserSmsNoti(user);
-        return "Success";
+    public ResponseEntity<Optional<User>> updateUserSms(@RequestBody User user) {
+        return status(OK).body(userService.updateUserSmsNoti(user));
     }
 
     @PostMapping("/delete-user")

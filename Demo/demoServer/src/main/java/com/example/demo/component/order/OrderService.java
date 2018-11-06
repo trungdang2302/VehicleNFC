@@ -49,6 +49,7 @@ public class OrderService {
     public Optional<Order> getOrderById(Integer id) {
         Optional<Order> order = orderRepository.findById(id);
         if (order.isPresent()) {
+            order.get().setLocation(locationRepository.findById(order.get().getLocationId()).get());
             if (order.get().getCheckOutDate() != null) {
                 TimeDuration duration = TimeService.compareTwoDates(order.get().getCheckInDate(), order.get().getCheckOutDate());
 
@@ -115,9 +116,7 @@ public class OrderService {
             Optional<Order> order = orderRepository.findFirstByUserIdAndOrderStatusId(user.get()
                     , orderStatusRepository.findByName(OrderStatusEnum.Open.getName()).get());
             if (order.isPresent()) {
-//                order.get().getUserId().setVehicle(
-//                        vehicleRepository.findByVehicleNumber(order.get().getUserId().getVehicleNumber()).get()
-//                );
+                order.get().setLocation(locationRepository.findById(order.get().getLocationId()).get());
                 order.get().setOrderPricingList(orderPricingRepository.findByOrderId(order.get().getId()));
             }
             return order;
@@ -134,17 +133,18 @@ public class OrderService {
         Order order = null;
         try {
             order = orderRepository.findByUserIdAndLocationIdAndOrderStatusId(checkInUser,
-                    location, orderStatus).get();
+                    location.getId(), orderStatus).get();
         } catch (NoSuchElementException e) {
         }
 
         if (order != null) {
+            order.setLocation(location);
             checkOutOrder(order, userTokenList, checkInUser);
-
             return Optional.of(order);
         }
 
         order = new Order();
+        order.setLocation(location);
         order.setOrderStatusId(orderStatus);
 
 //        Vehicle vehicle = vehicleRepository.findByVehicleNumber(checkInUser.getVehicleNumber()).get();
@@ -152,13 +152,11 @@ public class OrderService {
         order.setVehicleTypeId(vehicle.getVehicleTypeId());
 
         order.setUserId(checkInUser);
-        order.setLocationId(locationRepository.findById(location.getId()).get());
+        order.setLocationId(locationRepository.findById(location.getId()).get().getId());
 
         order.setCheckInDate(new Date().getTime());
 
         //TODO kiểm tra thời điểm hiện tại để chọn policy
-        PolicyInstance policy = order.getLocationId().getPolicyInstanceList().get(0);
-
         List<Pricing> pricings = getPricingList(order, checkInUser);
         if (pricings == null) {
             return null;
@@ -177,7 +175,7 @@ public class OrderService {
     }
 
     public List<Pricing> getPricingList(Order order, User user) {
-        List<PolicyInstance> policies = order.getLocationId().getPolicyInstanceList();
+        List<PolicyInstance> policies = order.getLocation().getPolicyInstanceList();
         List<PolicyInstance> matchPolicies = new ArrayList<>();
         for (PolicyInstance policy : policies) {
             if (!isOutOfTheLine(order.getCheckInDate(), policy.getAllowedParkingFrom(), policy.getAllowedParkingTo())) {
@@ -188,22 +186,24 @@ public class OrderService {
         PolicyInstanceHasTblVehicleType policyHasTblVehicleType = null;
         for (PolicyInstance policy : matchPolicies) {
             while (choosedPolicy == null) {
-//                Vehicle vehicle = vehicleRepository.findByVehicleNumber(user.getVehicleNumber()).get();
                 Vehicle vehicle = user.getVehicle();
-                policyHasTblVehicleType = policyInstanceHasVehicleTypeRepository
-                        .findByPolicyInstanceIdAndVehicleTypeId(policy.getId(), vehicle.getVehicleTypeId()).get();
-                if (policyHasTblVehicleType != null) {
-                    choosedPolicy = policy;
+//                policyHasTblVehicleType = policyInstanceHasVehicleTypeRepository
+//                        .findByPolicyInstanceIdAndVehicleTypeId(policy.getId(), vehicle.getVehicleTypeId()).get();
+                List<PolicyInstanceHasTblVehicleType> policyInstanceHasTblVehicleTypes =
+                        policy.getPolicyInstanceHasTblVehicleTypes();
+                if (vehicle == null) {
                     break;
                 }
+                for (PolicyInstanceHasTblVehicleType policyInstanceHasTblVehicleType : policyInstanceHasTblVehicleTypes) {
+                    if (policyInstanceHasTblVehicleType.getVehicleTypeId().getId() == user.getVehicle().getVehicleTypeId().getId()) {
+                        order.setAllowedParkingFrom(policy.getAllowedParkingFrom());
+                        order.setAllowedParkingTo(policy.getAllowedParkingTo());
+                        order.setMinHour(policyInstanceHasTblVehicleType.getMinHour());
+                        List<Pricing> pricings = policyInstanceHasTblVehicleType.getPricingList();
+                        return pricings;
+                    }
+                }
             }
-        }
-        if (policyHasTblVehicleType != null) {
-            order.setAllowedParkingFrom(choosedPolicy.getAllowedParkingFrom());
-            order.setAllowedParkingTo(choosedPolicy.getAllowedParkingTo());
-            order.setMinHour(policyHasTblVehicleType.getMinHour());
-            List<Pricing> pricings = policyHasTblVehicleType.getPricingList();
-            return pricings;
         }
         return null;
     }
@@ -212,24 +212,18 @@ public class OrderService {
     public Optional<Order> checkOutOrder(Order order, Map<String, String> userToken, User user) {
         order.setCheckOutDate(new Date().getTime());
 
-        List<OrderPricing> orderPricings = orderPricingRepository.findByOrderId(order.getId());
-        List<HourHasPrice> hourHasPrices = composeHourPrice(order.getCheckOutDate() - order.getCheckInDate()
+//        List<OrderPricing> orderPricings = orderPricingRepository.findByOrderId(order.getId());
+        List<OrderPricing> orderPricings = order.getOrderPricingList();
+        List<HourHasPrice> hourHasPrices = composeHourPrice(new Date().getTime() - order.getCheckInDate()
                 , order.getCheckInDate(), order.getAllowedParkingFrom(), order.getAllowedParkingTo(), order.getMinHour(), orderPricings);
 
         double totalPrice = 0;
         for (HourHasPrice hourHasPrice : hourHasPrices) {
+            double money = (hourHasPrice.isLate()) ? hourHasPrice.getFine() : hourHasPrice.getPrice();
             if (hourHasPrice.isFullHour()) {
-                if (!hourHasPrice.isLate()) {
-                    totalPrice += hourHasPrice.getPrice();
-                } else {
-                    totalPrice += hourHasPrice.getFine();
-                }
+                totalPrice += money;
             } else {
-                if (!hourHasPrice.isLate()) {
-                    totalPrice += hourHasPrice.getPrice() * ((double) hourHasPrice.getMinutes() / 60);
-                } else {
-                    totalPrice += hourHasPrice.getFine() * ((double) hourHasPrice.getMinutes() / 60);
-                }
+                totalPrice += Math.ceil(money * ((double) hourHasPrice.getMinutes() / 60));
             }
         }
 
@@ -419,30 +413,39 @@ public class OrderService {
         int totalHour = (int) (duration / 3600000);
         int totalMinute = (int) (duration - totalHour * 3600000) / 60000;
         List<HourHasPrice> hourHasPrices = new ArrayList<>();
-        startTime += duration;
+//        startTime += duration;
         if (totalHour < minHour) {
             totalHour = minHour;
             totalMinute = 0;
         }
 
-        while (totalHour > 0) {
-            if (totalMinute != 0) {
-                HourHasPrice notFull = new HourHasPrice(totalHour, null);
+        boolean foreverLate = false;
+        for (int i = 1; i <= totalHour; i++) {
+            if (i == totalHour && totalMinute != 0) {
+                startTime += totalMinute * 60000;
+                HourHasPrice notFull = new HourHasPrice(i, null);
                 notFull.setFullHour(false);
                 notFull.setMinutes(totalMinute);
-                notFull.setLate(isOutOfTheLine(startTime, limitFromTime, limitToTime));
+                if (isOutOfTheLine(startTime, limitFromTime, limitToTime)) {
+                    foreverLate = true;
+                }
+                notFull.setLate(foreverLate);
                 hourHasPrices.add(notFull);
-                startTime -= totalMinute * 60000;
                 totalMinute = 0;
             }
-            HourHasPrice hourHasPrice = new HourHasPrice(totalHour, null);
-            hourHasPrice.setLate(isOutOfTheLine(startTime, limitFromTime, limitToTime));
+            startTime += 3600000;
+            HourHasPrice hourHasPrice = new HourHasPrice(i, null);
+            if (isOutOfTheLine(startTime, limitFromTime, limitToTime)) {
+                foreverLate = true;
+            }
+            hourHasPrice.setLate(foreverLate);
             hourHasPrices.add(hourHasPrice);
-            startTime -= 3600000;
-            totalHour--;
         }
 
-        for (OrderPricing orderPricing : pricings) {
+        for (
+                OrderPricing orderPricing : pricings)
+
+        {
             for (HourHasPrice hourHasPrice : hourHasPrices) {
                 if (orderPricing.getFromHour() < hourHasPrice.getHour()) {
                     hourHasPrice.setPrice(orderPricing.getPricePerHour());
@@ -455,7 +458,6 @@ public class OrderService {
 
         return hourHasPrices;
     }
-
     public static boolean isOutOfTheLine(long current, long limitFrom, long limitTo) {
         Calendar cur = Calendar.getInstance(), from = Calendar.getInstance(), to = Calendar.getInstance();
         cur.setTimeInMillis(current);

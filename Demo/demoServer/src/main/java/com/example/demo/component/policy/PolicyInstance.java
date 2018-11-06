@@ -31,7 +31,10 @@ public class PolicyInstance implements Serializable {
     @ManyToOne
     private Policy policyId;
 
-    @Transient
+    @JoinColumn(name = "tbl_policy_instance_id", nullable = false, insertable = true,
+            updatable = false)
+    @OneToMany
+//    @Transient
     private List<PolicyInstanceHasTblVehicleType> policyInstanceHasTblVehicleTypes;
 
     public PolicyInstance() {

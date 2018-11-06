@@ -21,8 +21,12 @@ public class Pricing implements Serializable {
     @NotNull
     @Column(name = "price_per_hour")
     private double pricePerHour;
+
     @Column(name = "late_fee_per_hour")
-    private Integer lateFeePerHour;
+    private double lateFeePerHour;
+
+    @Column(name = "tbl_policy_has_tbl_vehicle_type_id")
+    private int policyHasVehicleTypeId;
 
     public Pricing() {
     }
@@ -51,12 +55,23 @@ public class Pricing implements Serializable {
         this.pricePerHour = pricePerHour;
     }
 
-    public Integer getLateFeePerHour() {
+    public double getLateFeePerHour() {
         return lateFeePerHour;
+    }
+
+    public void setLateFeePerHour(double lateFeePerHour) {
+        this.lateFeePerHour = lateFeePerHour;
     }
 
     public void setLateFeePerHour(Integer lateFeePerHour) {
         this.lateFeePerHour = lateFeePerHour;
     }
 
+    public int getPolicyHasVehicleTypeId() {
+        return policyHasVehicleTypeId;
+    }
+
+    public void setPolicyHasVehicleTypeId(int policyHasVehicleTypeId) {
+        this.policyHasVehicleTypeId = policyHasVehicleTypeId;
+    }
 }

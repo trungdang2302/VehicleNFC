@@ -2,7 +2,7 @@ package com.example.demo.component.location;
 
 
 import com.example.demo.component.order.Order;
-import com.example.demo.component.policy.PolicyInstance;
+import com.example.demo.component.policy.PolicyHasTblVehicleType;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -30,10 +30,12 @@ public class Location implements Serializable {
     @JoinColumn(name = "tbl_location_id")
     @OneToMany
 //    @Transient
-    private List<PolicyInstance> policyInstanceList;
+    private List<PolicyHasTblVehicleType> policyHasTblVehicleTypes;
     //    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tblLocationId")
+
     @Transient
     private List<Order> orderList;
+
     @Transient
     private String isDelete;
 
@@ -72,14 +74,6 @@ public class Location implements Serializable {
         isActivated = activated;
     }
 
-    public List<Order> getorderList() {
-        return orderList;
-    }
-
-    public void setTblOrderList(List<Order> orderList) {
-        this.orderList = orderList;
-    }
-
     public String getIsDelete() {
         return isDelete;
     }
@@ -88,12 +82,20 @@ public class Location implements Serializable {
         this.isDelete = isDelete;
     }
 
-    public List<PolicyInstance> getPolicyInstanceList() {
-        return policyInstanceList;
+    public List<PolicyHasTblVehicleType> getPolicyHasTblVehicleTypes() {
+        return policyHasTblVehicleTypes;
     }
 
-    public void setPolicyInstanceList(List<PolicyInstance> policyInstanceList) {
-        this.policyInstanceList = policyInstanceList;
+    public void setPolicyHasTblVehicleTypes(List<PolicyHasTblVehicleType> policyHasTblVehicleTypes) {
+        this.policyHasTblVehicleTypes = policyHasTblVehicleTypes;
+    }
+
+    public List<Order> getOrderList() {
+        return orderList;
+    }
+
+    public void setOrderList(List<Order> orderList) {
+        this.orderList = orderList;
     }
 }
 

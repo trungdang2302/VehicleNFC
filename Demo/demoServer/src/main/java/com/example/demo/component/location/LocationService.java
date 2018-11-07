@@ -23,31 +23,29 @@ public class LocationService {
     private final LocationRepository locationRepository;
     private final PolicyRepository policyRepository;
     private final PricingRepository pricingRepository;
-    private final PolicyInstanceHasVehicleTypeRepository policyInstanceHasVehicleTypeRepository;
-    private final PolicyInstanceRepository policyInstanceRepository;
+    private final PolicyHasVehicleTypeRepository policyHasVehicleTypeRepository;
 
     @Autowired
     private EntityManager entityManager;
 
-    public LocationService(LocationRepository locationRepository, PolicyRepository policyRepository, PricingRepository pricingRepository, PolicyInstanceHasVehicleTypeRepository policyInstanceHasVehicleTypeRepository, PolicyInstanceRepository policyInstanceRepository) {
+    public LocationService(LocationRepository locationRepository, PolicyRepository policyRepository, PricingRepository pricingRepository, PolicyHasVehicleTypeRepository policyHasVehicleTypeRepository) {
         this.locationRepository = locationRepository;
         this.policyRepository = policyRepository;
         this.pricingRepository = pricingRepository;
-        this.policyInstanceHasVehicleTypeRepository = policyInstanceHasVehicleTypeRepository;
-        this.policyInstanceRepository = policyInstanceRepository;
+        this.policyHasVehicleTypeRepository = policyHasVehicleTypeRepository;
     }
 
     public Optional<Location> getMeterById(Integer id) {
         Optional<Location> location = locationRepository.findById(id);
-        if (location.isPresent()) {
-            List<PolicyInstance> policyInstances = policyInstanceRepository.findAllByLocationId(location.get().getId());
-            for (PolicyInstance policy : policyInstances) {
-                List<PolicyInstanceHasTblVehicleType> policyInstanceHasTblVehicleTypes =
-                        policyInstanceHasVehicleTypeRepository.findAllByPolicyInstanceId(policy.getId());
-                policy.setPolicyInstanceHasTblVehicleTypes(policyInstanceHasTblVehicleTypes);
-            }
-            location.get().setPolicyInstanceList(policyInstances);
-        }
+//        if (location.isPresent()) {
+//            List<PolicyHasTblVehicleType> policyInstances = policyHasVehicleTypeRepository.findAllByLocationId(location.get().getId());
+//            for (PolicyHasTblVehicleType policy : policyInstances) {
+//                List<PolicyHasTblVehicleType> policyInstanceHasTblVehicleTypes =
+//                        policyInstanceHasVehicleTypeRepository.findAllByPolicyInstanceId(policy.getId());
+//                policy.setPolicyInstanceHasTblVehicleTypes(policyInstanceHasTblVehicleTypes);
+//            }
+//            location.get().setPolicyInstanceList(policyInstances);
+//        }
         return location;
     }
 

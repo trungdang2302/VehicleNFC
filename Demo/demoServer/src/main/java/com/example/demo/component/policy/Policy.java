@@ -23,13 +23,6 @@ public class Policy implements Serializable {
     @NotNull
     @Column(name = "allowed_parking_to")
     private long allowedParkingTo;
-    @JoinTable(name = "tbl_policy_has_tbl_vehicle_type", joinColumns = {
-            @JoinColumn(name = "tbl_policy_id", referencedColumnName = "id")}, inverseJoinColumns = {
-            @JoinColumn(name = "tbl_vehicle_type_id", referencedColumnName = "id")})
-    @ManyToMany
-    private List<VehicleType> vehicleTypeList;
-    @OneToMany(mappedBy = "policyId")
-    private List<PolicyInstance> policyInstanceList;
 
     public Policy() {
     }
@@ -58,11 +51,4 @@ public class Policy implements Serializable {
         this.allowedParkingTo = allowedParkingTo;
     }
 
-    public List<VehicleType> getVehicleTypeList() {
-        return vehicleTypeList;
-    }
-
-    public void setVehicleTypeList(List<VehicleType> vehicleTypeList) {
-        this.vehicleTypeList = vehicleTypeList;
-    }
 }

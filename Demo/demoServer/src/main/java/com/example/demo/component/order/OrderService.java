@@ -31,10 +31,9 @@ public class OrderService {
     private final OrderPricingRepository orderPricingRepository;
     private final PricingRepository pricingRepository;
     private final VehicleRepository vehicleRepository;
-    private final PolicyInstanceHasVehicleTypeRepository policyInstanceHasVehicleTypeRepository;
     private final LocationService locationService;
 
-    public OrderService(OrderRepository orderRepository, OrderStatusRepository orderStatusRepository, UserRepository userRepository, LocationRepository locationRepository, OrderPricingRepository orderPricingRepository, PricingRepository pricingRepository, VehicleRepository vehicleRepository, PolicyInstanceHasVehicleTypeRepository policyInstanceHasVehicleTypeRepository, LocationService locationService) {
+    public OrderService(OrderRepository orderRepository, OrderStatusRepository orderStatusRepository, UserRepository userRepository, LocationRepository locationRepository, OrderPricingRepository orderPricingRepository, PricingRepository pricingRepository, VehicleRepository vehicleRepository, LocationService locationService) {
         this.orderRepository = orderRepository;
         this.orderStatusRepository = orderStatusRepository;
         this.userRepository = userRepository;
@@ -42,7 +41,6 @@ public class OrderService {
         this.orderPricingRepository = orderPricingRepository;
         this.pricingRepository = pricingRepository;
         this.vehicleRepository = vehicleRepository;
-        this.policyInstanceHasVehicleTypeRepository = policyInstanceHasVehicleTypeRepository;
         this.locationService = locationService;
     }
 
@@ -175,33 +173,15 @@ public class OrderService {
     }
 
     public List<Pricing> getPricingList(Order order, User user) {
-        List<PolicyInstance> policies = order.getLocation().getPolicyInstanceList();
-        List<PolicyInstance> matchPolicies = new ArrayList<>();
-        for (PolicyInstance policy : policies) {
-            if (!isOutOfTheLine(order.getCheckInDate(), policy.getAllowedParkingFrom(), policy.getAllowedParkingTo())) {
-                matchPolicies.add(policy);
-            }
-        }
-        PolicyInstance choosedPolicy = null;
-        PolicyInstanceHasTblVehicleType policyHasTblVehicleType = null;
-        for (PolicyInstance policy : matchPolicies) {
-            while (choosedPolicy == null) {
-                Vehicle vehicle = user.getVehicle();
-//                policyHasTblVehicleType = policyInstanceHasVehicleTypeRepository
-//                        .findByPolicyInstanceIdAndVehicleTypeId(policy.getId(), vehicle.getVehicleTypeId()).get();
-                List<PolicyInstanceHasTblVehicleType> policyInstanceHasTblVehicleTypes =
-                        policy.getPolicyInstanceHasTblVehicleTypes();
-                if (vehicle == null) {
-                    break;
-                }
-                for (PolicyInstanceHasTblVehicleType policyInstanceHasTblVehicleType : policyInstanceHasTblVehicleTypes) {
-                    if (policyInstanceHasTblVehicleType.getVehicleTypeId().getId() == user.getVehicle().getVehicleTypeId().getId()) {
-                        order.setAllowedParkingFrom(policy.getAllowedParkingFrom());
-                        order.setAllowedParkingTo(policy.getAllowedParkingTo());
-                        order.setMinHour(policyInstanceHasTblVehicleType.getMinHour());
-                        List<Pricing> pricings = policyInstanceHasTblVehicleType.getPricingList();
-                        return pricings;
-                    }
+        List<PolicyHasTblVehicleType> policies = order.getLocation().getPolicyHasTblVehicleTypes();
+        for (PolicyHasTblVehicleType policy : policies) {
+            if (!isOutOfTheLine(order.getCheckInDate(), policy.getPolicy().getAllowedParkingFrom(), policy.getPolicy().getAllowedParkingTo())) {
+                if (policy.getVehicleTypeId().getId() == user.getVehicle().getVehicleTypeId().getId()) {
+                    order.setAllowedParkingFrom(policy.getPolicy().getAllowedParkingFrom());
+                    order.setAllowedParkingTo(policy.getPolicy().getAllowedParkingTo());
+                    order.setMinHour(policy.getMinHour());
+                    List<Pricing> pricings = policy.getPricings();
+                    return pricings;
                 }
             }
         }
@@ -458,6 +438,7 @@ public class OrderService {
 
         return hourHasPrices;
     }
+
     public static boolean isOutOfTheLine(long current, long limitFrom, long limitTo) {
         Calendar cur = Calendar.getInstance(), from = Calendar.getInstance(), to = Calendar.getInstance();
         cur.setTimeInMillis(current);

@@ -16,7 +16,10 @@ public interface PolicyHasVehicleTypeRepository extends JpaRepository<PolicyHasT
 
     Optional<PolicyHasTblVehicleType> findByPolicyIdAndVehicleTypeId(Integer policyId, VehicleType vehicleType);
 
-    List<PolicyHasTblVehicleType> findByPolicyIdIn(List<Policy> policyList);
+    //
+//    List<PolicyHasTblVehicleType> findByPolicyIdIn(List<Policy> policyList);
+//
+    List<PolicyHasTblVehicleType> findAllByLocationId(Integer locationId);
 
     @Modifying
     @Query(

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/popup"
+
+    android:padding="15dp"
+    tools:context=".PricingPopupActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".3" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".35"
+            android:gravity="center"
+            android:text="Giá/giờ"
+            android:textColor="#000"
+            android:textStyle="italic|bold"
+            android:textSize="20dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".35"
+            android:textStyle="italic|bold"
+            android:gravity="center"
+            android:text="Phạt/giờ"
+            android:textColor="#000"
+            android:textSize="20dp" />
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/listPricing"
+        android:layout_width="match_parent"
+        android:layout_weight=".8"
+        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/btn_nor_height"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/btn_reverse"
+        android:onClick="cancel"
+        android:text="Đóng"
+        android:textColor="#006699"
+        android:textSize="18dp" />
+</LinearLayout>

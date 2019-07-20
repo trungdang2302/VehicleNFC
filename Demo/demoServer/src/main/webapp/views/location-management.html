@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Page</title>
+    <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/vendor/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/assets/vendor/linearicons/style.css">
+    <!-- MAIN CSS -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
+    <!--<link rel="stylesheet" href="/assets/vendor/chartist/css/chartist-custom.css">-->
+    <link rel="stylesheet" href="/css/location.css">
+    <!-- ICONS -->
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/apple-icon.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicon.png">
+    <!--<link rel="stylesheet" href="/assets/css/jquery-clockpicker.min.css">-->
+</head>
+<body>
+<div class="main">
+<!-- MAIN CONTENT -->
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="panel panel-headline">
+            <div class="panel-body" id="location-container">
+                <table class="table table-hover" id="location-table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Location</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th colspan="2">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+                <div class="row">
+                    <ul class="nav nav-pills" id="pagination"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="myForm">
+        <form action="" id="create-policy" method="POST">
+            <div class="modal fade" id="createPolicy" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="savePricingModal"><strong>Save Pricing</strong></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <div class="left-form-group">
+                                    <label class="col-form-label">Location:</label>
+                                    <input type="text" class="form-control" id="location">
+                                </div>
+                                <div class="right-form-group">
+                                    <label class="col-form-label">Status</label>
+                                    <input type="text" class="form-control" id="location">
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label">Vehicle Type:</label>
+                                <fieldset id="vehicleTypeArr">
+
+                                </fieldset>
+                                <!--<input type="text" class="form-group" id="vehicleType">-->
+                            </div>
+
+                            <div class="from-group clockpickerFrom" style="width:48%; float: left; margin-right: 2%;">
+                                <label for="allowedParkingFrom" class="col-form-label">Allowed Parking From:</label>
+                                <input type="text" class="form-control" id="ParkingFrom">
+                                <span class="input-group-addon">
+                                 <span class="glyphicon glyphicon-time"></span>
+                                </span>
+                            </div>
+                            <input type="hidden" id="allowedParkingFrom">
+                            <div class="from-group clockpickerTo" style="width:48%; float: left; margin-left: 2%;">
+                                <label for="allowedParkingTo" class="col-form-label">Allowed Parking To:</label>
+                                <input type="text" class="form-control" id="ParkingTo">
+                                <span class="input-group-addon">
+                                 <span class="glyphicon glyphicon-time"></span>
+                                </span>
+                            </div>
+                            <input type="hidden" id="allowedParkingTo">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                            </button>
+                            <input type="submit" class="btn btn-primary" value="Save"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+<!-- Modal -->
+<div class="modal fade" id="policyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="width:auto; display: inline-block;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover" id="policy-table">
+                    <thead>
+                    <tr>
+                        <th>VehicleType</th>
+                        <th>AllowedParkingFrom</th>
+                        <th>AllowedParkingTo</th>
+                        <th>Hour</th>
+                        <th>Price</th>
+                        <th>Fine</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/vendor/jquery/jquery.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/assets/vendor/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<script src="/js/location-management.js"></script>
+    <script src="/assets/scripts/klorofil-common.js"></script>
+<!--<script src="/assets/scripts/jquery-clockpicker.min.js"></script>-->
+</body>
+</html>

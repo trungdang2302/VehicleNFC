@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.pratap.cardviews1.MainActivity">
+    <item
+        android:id="@+id/lbl_name"
+        android:orderInCategory="100"
+        android:title="User ABC" />
+    <item
+        android:id="@+id/action_add"
+        android:orderInCategory="100"
+        android:title="Thông tin"/>
+    <item
+        android:id="@+id/action_delete"
+        android:orderInCategory="100"
+        android:title="Lịch sử đỗ xe" />
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="cài đặt" />
+    <item
+        android:id="@+id/action_search"
+        android:orderInCategory="100"
+        android:title="đăng xuất" />
+</menu>

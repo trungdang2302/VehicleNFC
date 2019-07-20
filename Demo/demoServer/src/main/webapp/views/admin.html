@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Parking With NFC</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!-- VENDOR CSS -->
+    <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/vendor/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/assets/vendor/linearicons/style.css">
+    <link rel="stylesheet" href="/assets/vendor/chartist/css/chartist-custom.css">
+    <!-- MAIN CSS -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <!-- FOR DEMO PURPOSES ONLY. You should remove this in your project -->
+    <link rel="stylesheet" href="/assets/css/demo.css">
+    <!-- GOOGLE FONTS -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
+    <!-- ICONS -->
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/apple-icon.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/img/logo.png">
+    <link href="/assets/fontawesome-free-5.4.2-web/css/all.css" rel="stylesheet">
+</head>
+
+<body class="main-body">
+<!-- WRAPPER -->
+<div id="wrapper">
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="brand">
+            <!--<img src="/assets/img/logo2.png" alt="Logo"-->
+            <!--class="img-responsive logo">-->
+            <!--<p>Parking With NFC</p>-->
+        </div>
+        <div class="container-fluid header-bar">
+            <div id="navbar-menu">
+                <ul class="nav navbar-nav" id="content-title-holder">
+                    <p id="content-title">Parking With NFC</p>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span>Staff</span> <i class="icon-submenu lnr lnr-chevron-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#"><i class="lnr lnr-user"></i> <span>Change Password</span></a></li>
+                            <li><a href="#"><i class="lnr lnr-exit"></i> <span>Logout</span></a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle icon-menu" data-toggle="dropdown" onclick="checkNotiBox()">
+                            <i class="lnr lnr-alarm"></i>
+                            <span id="bell-noti" class="badge bg-danger">0</span>
+                        </a>
+                        <ul class="dropdown-menu notifications" id="noti-container">
+
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- END NAVBAR -->
+    <!-- LEFT SIDEBAR -->
+    <div id="sidebar-nav" class="sidebar">
+        <div class="sidebar-scroll">
+            <nav>
+                <ul class="nav">
+                    <li>
+                        <div class="brand">
+                            <img src="/assets/img/logo2.png" alt="Logo"
+                                 class="img-responsive logo">
+                            <span class="title">Management Web</span>
+                        </div>
+                    </li>
+                    <li>
+                    <li><a onclick="openHideList($(this),true)" id="vehicleHolder" isOpen="false"
+                           class="active pointer menu"><i
+                            class="lnr lnr-car"></i> <span class="title">Vehicles</span><i
+                            class="lnr lnr-chevron-left float-right menu-icon" id="vehicleHolderIcon"></i></a>
+                    </li>
+                    <li><a onclick="switchContentFragment('/vehicle/get-verify',$('#vehicleHolder'))"
+                           class="pointer sub-menu vehicleHolder"><i class="far fa-check-square"></i><span
+                            class="title">Verify Vehicles</span></a></li>
+                    <li><a onclick="switchContentFragment('/vehicle/index',$('#vehicleHolder'))"
+                           class="pointer sub-menu vehicleHolder"><i
+                            class="lnr lnr-eye"></i> <span class="title">View Vehicles</span></a></li>
+                    <li>
+                    <li><a onclick="switchContentFragment('/vehicle/lookup-vehicle',$('#vehicleHolder'))"
+                           class="pointer sub-menu vehicleHolder"><i
+                            class="lnr lnr-magnifier"></i> <span class="title">Look up Vehicles</span></a></li>
+                    <li><a onclick="openHideList($(this),true)" id="userHolder" isOpen="false"
+                           class="pointer menu"><i
+                            class="lnr lnr-user"></i> <span class="title">Users</span><i
+                            class="lnr lnr-chevron-left float-right menu-icon" id="userHolderIcon"></i></a>
+                    </li>
+                    <li><a onclick="switchContentFragment('/user/get-verify',$('#userHolder'))"
+                           class="pointer sub-menu userHolder"><i class="far fa-check-square"></i><span class="title">Verify Users</span></a>
+                    </li>
+                    <li><a onclick="switchContentFragment('/user/get-user',$('#userHolder'))"
+                           class="pointer sub-menu userHolder"><i
+                            class="lnr lnr-eye"></i> <span class="title">View Users</span></a></li>
+                    <li><a onclick="switchContentFragment('/user/get-create',$('#userHolder'))"
+                           class="pointer sub-menu userHolder"><i class="fas fa-plus-square"></i><span class="title">Create a new User</span></a>
+                    </li>
+                    <li>
+                    <li><a onclick="switchContentFragment('/location/index',$(this))"
+                           class="pointer menu"><i
+                            class="lnr lnr-map-marker"></i> <span class="title">Locations</span></a></li>
+
+                    <li><a onclick="switchContentFragment('/policy/create',$(this))" class="pointer menu"><i
+                            class="lnr lnr-book"></i>
+                        <span class="title">Policies</span></a>
+                    </li>
+                    <li><a onclick="switchContentFragment('/order/index',$(this))" class="pointer menu"><i
+                            class="lnr lnr-file-empty"></i> <span class="title">Orders</span></a>
+                    </li>
+                    <li id="shortenNavBar" onclick="shortenNavBar()" class="pointer">
+                        <a class="menu"><i
+                                id="shortenNavBarIcon" class="lnr lnr-chevron-left"></i> <span class="title">Hide</span></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <!-- END LEFT SIDEBAR -->
+    <!-- MAIN -->
+    <div id="main">
+        <!-- MAIN CONTENT -->
+        <iframe class="main-content" id="main-content" frameborder="0">
+        </iframe>
+        <!-- END MAIN CONTENT -->
+    </div>
+    <!-- END MAIN -->
+</div>
+<!-- END WRAPPER -->
+<!-- Javascript -->
+<script src="https://www.gstatic.com/firebasejs/5.5.5/firebase.js"></script>
+<script src="/assets/vendor/jquery/jquery.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--<script src="/assets/vendor/jquery-slimscroll/jquery.slimscroll.min.js"></script>-->
+<script src="/assets/vendor/jquery.easy-pie-chart/jquery.easypiechart.min.js"></script>
+<script src="/assets/vendor/chartist/js/chartist.min.js"></script>
+<script src="/assets/scripts/klorofil-common.js"></script>
+<script src="/js/main.js"></script>
+<script>
+    $(function () {
+        var data, options;
+
+        // headline charts
+        data = {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            series: [
+                [23, 29, 24, 40, 25, 24, 35],
+                [14, 25, 18, 34, 29, 38, 44],
+            ]
+        };
+
+        options = {
+            height: 300,
+            showArea: true,
+            showLine: false,
+            showPoint: false,
+            fullWidth: true,
+            axisX: {
+                showGrid: false
+            },
+            lineSmooth: false,
+        };
+
+        new Chartist.Line('#headline-chart', data, options);
+
+
+        // visits trend charts
+        data = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            series: [{
+                name: 'series-real',
+                data: [200, 380, 350, 320, 410, 450, 570, 400, 555, 620, 750, 900],
+            }, {
+                name: 'series-projection',
+                data: [240, 350, 360, 380, 400, 450, 480, 523, 555, 600, 700, 800],
+            }]
+        };
+
+        options = {
+            fullWidth: true,
+            lineSmooth: false,
+            height: "270px",
+            low: 0,
+            high: 'auto',
+            series: {
+                'series-projection': {
+                    showArea: true,
+                    showPoint: false,
+                    showLine: false
+                },
+            },
+            axisX: {
+                showGrid: false,
+
+            },
+            axisY: {
+                showGrid: false,
+                onlyInteger: true,
+                offset: 0,
+            },
+            chartPadding: {
+                left: 20,
+                right: 20
+            }
+        };
+
+        new Chartist.Line('#visits-trends-chart', data, options);
+
+
+        // visits chart
+        data = {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            series: [
+                [6384, 6342, 5437, 2764, 3958, 5068, 7654]
+            ]
+        };
+
+        options = {
+            height: 300,
+            axisX: {
+                showGrid: false
+            },
+        };
+
+        new Chartist.Bar('#visits-chart', data, options);
+
+
+        // real-time pie chart
+        var sysLoad = $('#system-load').easyPieChart({
+            size: 130,
+            barColor: function (percent) {
+                return "rgb(" + Math.round(200 * percent / 100) + ", " + Math.round(200 * (1.1 - percent / 100)) + ", 0)";
+            },
+            trackColor: 'rgba(245, 245, 245, 0.8)',
+            scaleColor: false,
+            lineWidth: 5,
+            lineCap: "square",
+            animate: 800
+        });
+
+        var updateInterval = 3000; // in milliseconds
+
+        setInterval(function () {
+            var randomVal;
+            randomVal = getRandomInt(0, 100);
+
+            // sysLoad.data('easyPieChart').update(randomVal);
+            sysLoad.find('.percent').text(randomVal);
+        }, updateInterval);
+
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+    });
+    switchContentFragment('/vehicle/index', null);
+</script>
+</body>
+
+</html>

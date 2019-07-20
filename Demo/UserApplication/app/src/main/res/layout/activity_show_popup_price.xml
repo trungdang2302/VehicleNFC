@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/cell_shape"
+    android:gravity="center_horizontal">
+
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:paddingLeft="15dp">
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Đỗ xe từ:"
+                android:textColor="#000000"
+                android:textSize="22dp"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="30dp"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/txtTime"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="5:00 -> 10:00 "
+                android:textColor="#000000"
+                android:textSize="22dp"
+                android:textStyle="bold|italic" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="20dp"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/txtTaoLao"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Bảng Giá Chi Tiết"
+                android:textColor="#000000"
+                android:textSize="22dp"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:gravity="left">
+
+            <TextView
+                android:id="@+id/txtThongBao"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="left"
+                android:text="Đỗ xe từ:"
+                android:layout_marginLeft="15dp"
+                android:textColor="#000000"
+                android:visibility="visible"
+                android:textSize="18dp" />
+        </TableRow>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/listHistoryPricing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </android.support.v7.widget.RecyclerView>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center_vertical|end">
+
+            <TextView
+                android:id="@+id/txtTotal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="right"
+                android:paddingRight="2dp"
+                android:text="5:00 -> 10:00 "
+                android:textColor="#000000"
+                android:textSize="22dp"
+                android:textStyle="bold|italic" />
+        </TableRow>
+
+    </TableLayout>
+
+</LinearLayout>
